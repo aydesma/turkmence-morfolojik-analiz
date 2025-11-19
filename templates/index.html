@@ -16,7 +16,8 @@
                         darkbg: '#0f172a',
                         darkcard: '#1e293b',
                         primary: '#4f46e5',
-                        accent: '#38bdf8' 
+                        accent: '#38bdf8',
+                        success: '#22c55e'
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -28,20 +29,17 @@
     </script>
 
     <style>
-        /* Geçiş Animasyonları */
         body { transition: background-color 0.3s, color 0.3s; }
         
-        /* Özel Font Ayarları */
         .code-normal { font-weight: 700; font-size: 1.25rem; }
         .code-hal-wrapper { display: inline-flex; align-items: baseline; font-weight: 700; font-size: 1.25rem; }
         .code-hal-sub { font-size: 0.65em; margin-left: 1px; }
 
         /* Dark Mode İnce Ayarlar */
-        .dark .code-badge { color: #38bdf8; } /* Açık Mavi */
+        .dark .code-badge { color: #38bdf8; }
         .dark .result-box { background-color: #0f172a; border-color: #334155; color: #e2e8f0; }
         .dark .input-field { background-color: #334155; border-color: #475569; color: white; }
         
-        /* Klavye Tuşları */
         .kb-key { 
             transition: all 0.1s; 
             box-shadow: 0 2px 0 rgba(0,0,0,0.1);
@@ -53,8 +51,8 @@
 
     <div class="w-full max-w-3xl flex justify-between items-center mb-6">
         <div class="flex items-center gap-2">
-            <div class="h-8 w-1 bg-indigo-600 dark:bg-accent rounded-full"></div>
-            <h1 class="text-2xl font-bold tracking-tight">Türkmence NLP</h1>
+            <div class="h-8 w-1 bg-indigo-600 dark:bg-success rounded-full"></div>
+            <h1 class="text-2xl font-bold tracking-tight">Türkmence Morfolojik Analiz</h1>
         </div>
         <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-yellow-400 hover:ring-2 ring-indigo-400 transition focus:outline-none">
             <svg id="sun-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -69,7 +67,7 @@
             <div>
                 <div class="flex justify-between items-end mb-2">
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kök Kelime</label>
-                    <button type="button" onclick="fillRandom()" class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
+                    <button type="button" onclick="fillRandom()" class="text-xs text-indigo-600 dark:text-success hover:underline font-medium flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         Örnek Getir
                     </button>
@@ -118,12 +116,12 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Düşüm (Hal)</label>
                     <select name="hal" class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer">
-                        <option value="H1">A¹ Yalın (Baş düşüm)</option>
-                        <option value="H2">A² İlgi (Eýelik düşüm)</option>
+                        <option value="H1">A₁ Yalın (Baş düşüm)</option>
+                        <option value="H2">A₂ İlgi (Eýelik düşüm)</option>
                         <option value="H3">A³ Yönelme (Ýöneliş düşüm)</option>
-                        <option value="H4">A⁴ Belirtme (Ýeniş düşüm)</option>
-                        <option value="H5">A⁵ Bulunma (Wagt orun düşüm)</option>
-                        <option value="H6">A⁶ Çıkma (Çykyş düşüm)</option>
+                        <option value="H4">A₄ Belirtme (Ýeniş düşüm)</option>
+                        <option value="H5">A₅ Bulunma (Wagt orun düşüm)</option>
+                        <option value="H6">A₆ Çıkma (Çykyş düşüm)</option>
                     </select>
                 </div>
             </div>
@@ -163,13 +161,13 @@
                 {% endfor %}
             </div>
 
-            <div class="relative group text-center bg-indigo-50 dark:bg-gray-800 dark:border-gray-600 rounded-xl p-6 border border-indigo-100 transition-colors">
-                <p class="text-xs text-indigo-500 dark:text-indigo-400 mb-2 uppercase tracking-wider font-bold">Oluşturulan Kelime</p>
+            <div class="relative group text-center bg-green-50 dark:bg-gray-900 rounded-xl p-6 border border-green-200 dark:border-green-800 transition-colors">
+                <p class="text-xs text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider font-bold">Oluşturulan Kelime</p>
                 
                 <div class="flex justify-center items-center gap-3">
-                    <p id="finalWord" class="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{ final_word }}</p>
+                    <p id="finalWord" class="text-4xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">{{ final_word }}</p>
                     
-                    <button onclick="copyResult()" class="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-accent transition rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700" title="Kopyala">
+                    <button onclick="copyResult()" class="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-gray-800" title="Kopyala">
                         <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                         <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </button>
@@ -193,13 +191,12 @@
     </div>
 
     <script>
-        // --- 1. KARANLIK MOD YÖNETİMİ ---
         const themeToggle = document.getElementById('theme-toggle');
         const sunIcon = document.getElementById('sun-icon');
         const moonIcon = document.getElementById('moon-icon');
         const htmlElement = document.documentElement;
 
-        // Kayıtlı temayı yükle
+        // Tema Yükle
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             htmlElement.classList.add('dark');
             sunIcon.classList.remove('hidden');
@@ -223,20 +220,34 @@
             }
         });
 
-        // --- 2. KLAVYE & INPUT YÖNETİMİ ---
         function addChar(char) {
             const input = document.getElementById('rootInput');
             input.value += char;
             input.focus();
         }
 
+        // --- 50 KELİMELİK RASTGELE HAVUZU ---
         function fillRandom() {
-            const words = ["mekdep", "mugallym", "kitap", "talyp", "göz", "baş", "el", "öý", "mekan", "vatan", "toprak", "alma"];
+            const words = [
+                // Eğitim & Okul
+                "mekdep", "mugallym", "kitap", "defter", "galam", "okuwçy", "talyp", "klas",
+                // Aile & İnsan
+                "eje", "kaka", "ata", "ene", "dogan", "aýal", "erkek", "çaga", "dost", "goňşy",
+                // Vücut
+                "göz", "baş", "el", "aýak", "barmak", "diş", "gulak", "ýürek",
+                // Ev & Eşya
+                "öý", "gapy", "aýna", "stol", "otag", "bag", "telefon", "kompýuter",
+                // Doğa & Çevre
+                "suw", "dag", "derýa", "deňiz", "agaç", "gül", "ýaprak", "asman", "ýagyş",
+                // Hayvanlar
+                "at", "it", "pişik", "guş", "goýun", "sygyr",
+                // Soyut & Toplum
+                "watan", "baýdak", "şäher", "oba", "ýol", "gün", "aý", "wagt"
+            ];
             const randomWord = words[Math.floor(Math.random() * words.length)];
             document.getElementById('rootInput').value = randomWord;
         }
 
-        // --- 3. KOPYALAMA YÖNETİMİ ---
         function copyResult() {
             const text = document.getElementById('finalWord').innerText;
             navigator.clipboard.writeText(text).then(() => {
@@ -249,9 +260,7 @@
             });
         }
 
-        // --- 4. GEÇMİŞ YÖNETİMİ ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Yeni sonuç varsa kaydet
             {% if result %}
                 const newEntry = {
                     root: "{{ root }}",
@@ -264,7 +273,6 @@
                 };
                 saveToHistory(newEntry);
             {% endif %}
-
             renderHistory();
         });
 
@@ -284,7 +292,6 @@
                 container.style.display = 'none';
                 return;
             }
-
             container.style.display = 'block';
             list.innerHTML = '';
 
@@ -298,7 +305,6 @@
                             let num = part.code.substring(1);
                             codeDisplay = `${letter}<sub>${num}</sub>`;
                         }
-                        
                         partsHtml += `
                         <span class="bg-indigo-50 dark:bg-gray-700 text-indigo-600 dark:text-accent px-2 py-1 rounded border border-indigo-100 dark:border-gray-600 font-semibold ml-1 text-xs">
                             ${codeDisplay}
