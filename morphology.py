@@ -10,15 +10,16 @@ def son_harf_unlu_mu(kelime):
     return kelime[-1].lower() in unluler
 
 def kelimedeki_unlu_niteligi(kelime):
-    # İlk versiyondaki mantık (Kullanıcı isteği üzerine korundu)
-    for h in kelime.lower():
+    # DÜZELTME: Kelimeyi ters çevirip (reversed) tarıyoruz.
+    # Böylece 'gözler' kelimesinde 'e' harfini bulup ona göre karar veriyor.
+    for h in reversed(kelime.lower()):
         if h in kalin_unluler: return "kalin"
         elif h in ince_unluler: return "ince"
     return "ince"
 
 def kelimedeki_unlu_niteligi_tam(kelime):
-    # İlk versiyondaki mantık (Kullanıcı isteği üzerine korundu)
-    for h in kelime.lower():
+    # DÜZELTME: Burada da tersten tarama yapıyoruz.
+    for h in reversed(kelime.lower()):
         if h in kalin_unluler:
             return "kalin-duz" if h in duz_unluler else "kalin-yuvarlak"
         elif h in ince_unluler:
@@ -134,9 +135,8 @@ def analyze(root, s_code, i_code, h_code):
 
     # 3. Hal
     if h_code in hal_func:
-        if h_code != "H1": # H1 boş ektir
+        if h_code != "H1": 
             current_word, suffix = hal_func[h_code](current_word)
-            # Ekranda 'H' yerine 'A' görünsün diye kodu değiştiriyoruz: H3 -> A3
             display_code = h_code.replace('H', 'A') 
             parts.append({"text": suffix, "type": "Hal", "code": display_code})
             
