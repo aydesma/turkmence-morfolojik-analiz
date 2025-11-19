@@ -8,7 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .code-badge { font-weight: 700; color: #4f46e5; }
+        
+        /* İyelik ve Sayı için Font Ayarı (Normal Görünüm) */
+        .code-normal { font-weight: 700; color: #4f46e5; font-size: 1.25rem; }
+
+        /* Hal Eki için Özel Font Ayarı (Sayı Altta) */
+        .code-hal-wrapper { display: inline-flex; align-items: baseline; font-weight: 700; color: #4f46e5; font-size: 1.25rem; }
+        .code-hal-sub { font-size: 0.65em; margin-left: 1px; }
     </style>
 </head>
 <body class="flex flex-col items-center min-h-screen py-10 px-4">
@@ -22,7 +28,7 @@
             
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Kök Kelime</label>
-                <input type="text" name="root" required placeholder="örn: defter, alma" 
+                <input type="text" name="root" required placeholder="örn: defter" 
                        class="w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition text-lg">
             </div>
 
@@ -55,12 +61,12 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Düşüm (Hal)</label>
                     <select name="hal" class="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-indigo-500 cursor-pointer">
-                        <option value="H1">A¹ (Baş düşüm)</option>
-                        <option value="H2">A² (Eýelik düşüm)</option>
-                        <option value="H3">A³ (Ýöneliş düşüm)</option>
-                        <option value="H4">A⁴ (Ýeniş düşüm)</option>
-                        <option value="H5">A⁵ (Wagt orun düşüm)</option>
-                        <option value="H6">A⁶ (Çykyş düşüm)</option>
+                        <option value="H1">A₁ (Baş düşüm)</option>
+                        <option value="H2">A₂ (Eýelik düşüm)</option>
+                        <option value="H3">A₃ (Ýöneliş düşüm)</option>
+                        <option value="H4">A₄ (Ýeniş düşüm)</option>
+                        <option value="H5">A₅ (Wagt orun düşüm)</option>
+                        <option value="H6">A₆ (Çykyş düşüm)</option>
                     </select>
                 </div>
             </div>
@@ -78,13 +84,17 @@
                 {% for part in result %}
                     <div class="flex flex-col items-center group">
                         
-                        <span class="code-badge text-lg mb-1 font-serif italic">
+                        <div class="mb-1">
                             {% if part.type == 'Hal' %}
-                                {{ part.code[0] }}<sub class="text-sm not-italic">{{ part.code[1:] }}</sub>
+                                <span class="code-hal-wrapper">
+                                    {{ part.code[0] }}<span class="code-hal-sub">{{ part.code[1:] }}</span>
+                                </span>
                             {% else %}
-                                {{ part.code }}
+                                <span class="code-normal">
+                                    {{ part.code }}
+                                </span>
                             {% endif %}
-                        </span>
+                        </div>
                         
                         <div class="bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm group-hover:border-indigo-300 transition">
                             {{ part.text }}
@@ -104,42 +114,104 @@
         {% endif %}
     </div>
     
-    {% if history %}
-    <div class="w-full max-w-3xl">
+    <div class="w-full max-w-3xl" id="history-container" style="display:none;">
         <div class="flex items-center justify-between mb-4 px-2">
-            <h3 class="text-lg font-bold text-gray-700">Geçmiş Aramalar</h3>
-            <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{{ history|length }} kayıt</span>
+            <h3 class="text-lg font-bold text-gray-700">Geçmiş Aramalar (Cihaz Geçmişi)</h3>
+            <button onclick="clearHistory()" class="text-xs text-red-500 hover:text-red-700 underline">Geçmişi Temizle</button>
         </div>
-        
-        <div class="grid gap-3">
-            {% for item in history %}
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition flex justify-between items-center">
-                <div>
-                    <span class="text-xs text-gray-400 font-mono block mb-1">Kök: {{ item.root }}</span>
-                    <span class="text-lg font-bold text-gray-800">{{ item.word }}</span>
-                </div>
-                <div class="flex gap-2 text-xs">
-                    {% for part in item.parts %}
-                        {% if part.code != 'Kök' %}
-                        <span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded border border-indigo-100 font-semibold">
-                             {% if part.type == 'Hal' %}
-                                {{ part.code[0] }}<sub>{{ part.code[1:] }}</sub>
-                            {% else %}
-                                {{ part.code }}
-                            {% endif %}
-                        </span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+        <div class="grid gap-3" id="history-list">
             </div>
-            {% endfor %}
-        </div>
     </div>
-    {% endif %}
     
     <div class="mt-12 text-gray-400 text-sm font-medium">
         &copy; 2025 Türkmence Morfolojik Analiz Projesi - Esma Aydın
     </div>
+
+    <script>
+        // Sayfa Yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Eğer yeni bir sonuç varsa, kaydet
+            {% if result %}
+                const newEntry = {
+                    root: "{{ root }}",
+                    word: "{{ final_word }}",
+                    parts: [
+                        {% for part in result %}
+                        { text: "{{ part.text }}", code: "{{ part.code }}", type: "{{ part.type }}" },
+                        {% endfor %}
+                    ]
+                };
+                saveToHistory(newEntry);
+            {% endif %}
+
+            // 2. Geçmişi Göster
+            renderHistory();
+        });
+
+        function saveToHistory(entry) {
+            let history = JSON.parse(localStorage.getItem('turkmenHistory')) || [];
+            // Aynı kelime tekrar eklenmesin diye kontrol (opsiyonel)
+            // history = history.filter(item => item.word !== entry.word); 
+            
+            history.unshift(entry); // En başa ekle
+            if (history.length > 20) history.pop(); // Son 20 taneyi tut
+            localStorage.setItem('turkmenHistory', JSON.stringify(history));
+        }
+
+        function renderHistory() {
+            let history = JSON.parse(localStorage.getItem('turkmenHistory')) || [];
+            const container = document.getElementById('history-container');
+            const list = document.getElementById('history-list');
+
+            if (history.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            list.innerHTML = '';
+
+            history.forEach(item => {
+                let partsHtml = '';
+                item.parts.forEach(part => {
+                    if (part.code !== 'Kök') {
+                        // Hal kodu ise sub tag kullan, değilse normal
+                        let codeDisplay = part.code;
+                        if(part.type === 'Hal') {
+                            let letter = part.code.charAt(0);
+                            let num = part.code.substring(1);
+                            codeDisplay = `${letter}<sub>${num}</sub>`;
+                        }
+                        
+                        partsHtml += `
+                        <span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded border border-indigo-100 font-semibold ml-1">
+                            ${codeDisplay}
+                        </span>`;
+                    }
+                });
+
+                const html = `
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 font-mono block mb-1">Kök: ${item.root}</span>
+                        <span class="text-lg font-bold text-gray-800">${item.word}</span>
+                    </div>
+                    <div class="flex gap-1 text-xs">
+                        ${partsHtml}
+                    </div>
+                </div>`;
+                list.innerHTML += html;
+            });
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('turkmenHistory');
+            renderHistory();
+        }
+    </script>
+
+</body>
+</html>
 
 </body>
 </html>
