@@ -10,12 +10,14 @@ def son_harf_unlu_mu(kelime):
     return kelime[-1].lower() in unluler
 
 def kelimedeki_unlu_niteligi(kelime):
+    # İlk versiyondaki mantık (Kullanıcı isteği üzerine korundu)
     for h in kelime.lower():
         if h in kalin_unluler: return "kalin"
         elif h in ince_unluler: return "ince"
     return "ince"
 
 def kelimedeki_unlu_niteligi_tam(kelime):
+    # İlk versiyondaki mantık (Kullanıcı isteği üzerine korundu)
     for h in kelime.lower():
         if h in kalin_unluler:
             return "kalin-duz" if h in duz_unluler else "kalin-yuvarlak"
@@ -30,22 +32,22 @@ def sayi_S2(kelime):
     suffix = "lar" if nitelik == "kalin" else "ler"
     return kelime + suffix, suffix
 
-# İyelik (Değişlilik)
-def iyelik_A1(kelime): # 1. Tekil (m)
+# İyelik (Degislilik)
+def iyelik_A1(kelime): 
     if son_harf_unlu_mu(kelime): return kelime + "m", "m"
     nitelik = kelimedeki_unlu_niteligi_tam(kelime)
     map_ek = {"kalin-duz": "ym", "kalin-yuvarlak": "um", "ince-duz": "im", "ince-yuvarlak": "üm"}
     suffix = map_ek.get(nitelik, "im")
     return kelime + suffix, suffix
 
-def iyelik_A2(kelime): # 2. Tekil (ň)
+def iyelik_A2(kelime): 
     if son_harf_unlu_mu(kelime): return kelime + "ň", "ň"
     nitelik = kelimedeki_unlu_niteligi_tam(kelime)
     map_ek = {"kalin-duz": "yň", "kalin-yuvarlak": "uň", "ince-duz": "iň", "ince-yuvarlak": "üň"}
     suffix = map_ek.get(nitelik, "iň")
     return kelime + suffix, suffix
 
-def iyelik_A3(kelime): # 3. Tekil/Çoğul
+def iyelik_A3(kelime): 
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
@@ -53,7 +55,7 @@ def iyelik_A3(kelime): # 3. Tekil/Çoğul
     else: suffix = "y" if kalin else "i"
     return kelime + suffix, suffix
 
-def iyelik_B1(kelime): # 1. Çoğul (mız)
+def iyelik_B1(kelime): 
     nitelik_tam = kelimedeki_unlu_niteligi_tam(kelime)
     kalin = nitelik_tam.startswith("kalin")
     if son_harf_unlu_mu(kelime): 
@@ -63,7 +65,7 @@ def iyelik_B1(kelime): # 1. Çoğul (mız)
         suffix = map_ek.get(nitelik_tam, "imiz")
     return kelime + suffix, suffix
 
-def iyelik_B2(kelime): # 2. Çoğul (ňız)
+def iyelik_B2(kelime): 
     nitelik_tam = kelimedeki_unlu_niteligi_tam(kelime)
     kalin = nitelik_tam.startswith("kalin")
     if son_harf_unlu_mu(kelime): 
@@ -74,12 +76,12 @@ def iyelik_B2(kelime): # 2. Çoğul (ňız)
     return kelime + suffix, suffix
 
 # Hal (Düşüm)
-def hal_H1(kelime): return kelime, "" # Yalın
-def hal_H2(kelime): # İlgi (Genitive) - İyelik A2 ile benzer mantıkta basitleştirildi
+def hal_H1(kelime): return kelime, "" 
+def hal_H2(kelime): 
     res, suf = iyelik_A2(kelime)
     return res, suf
 
-def hal_H3(kelime): # Yönelme (Dative)
+def hal_H3(kelime): 
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
@@ -87,7 +89,7 @@ def hal_H3(kelime): # Yönelme (Dative)
     else: suffix = "a" if kalin else "e"
     return kelime + suffix, suffix
 
-def hal_H4(kelime): # Belirtme (Accusative)
+def hal_H4(kelime): 
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
@@ -95,7 +97,7 @@ def hal_H4(kelime): # Belirtme (Accusative)
     else: suffix = "y" if kalin else "i"
     return kelime + suffix, suffix
 
-def hal_H5(kelime): # Bulunma (Locative)
+def hal_H5(kelime): 
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
@@ -103,7 +105,7 @@ def hal_H5(kelime): # Bulunma (Locative)
     else: suffix = "da" if kalin else "de"
     return kelime + suffix, suffix
 
-def hal_H6(kelime): # Çıkma (Ablative)
+def hal_H6(kelime): 
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
@@ -128,13 +130,14 @@ def analyze(root, s_code, i_code, h_code):
     # 2. İyelik
     if i_code in iyelik_func:
         current_word, suffix = iyelik_func[i_code](current_word)
-        parts.append({"text": suffix, "type": "İyelik", "code": i_code})
+        parts.append({"text": suffix, "type": "Degislilik", "code": i_code})
 
     # 3. Hal
     if h_code in hal_func:
-        # H1 boş ektir, onu eklemeyelim görsel olarak
-        if h_code != "H1":
+        if h_code != "H1": # H1 boş ektir
             current_word, suffix = hal_func[h_code](current_word)
-            parts.append({"text": suffix, "type": "Hal", "code": h_code})
+            # Ekranda 'H' yerine 'A' görünsün diye kodu değiştiriyoruz: H3 -> A3
+            display_code = h_code.replace('H', 'A') 
+            parts.append({"text": suffix, "type": "Hal", "code": display_code})
             
     return parts, current_word
