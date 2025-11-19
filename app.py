@@ -3,6 +3,9 @@ from morphology import analyze
 
 app = Flask(__name__)
 
+# Geçici hafıza (Veritabanı olmadığı için sunucu kapanana kadar tutar)
+history = []
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     result = None
@@ -10,7 +13,6 @@ def index():
     
     if request.method == 'POST':
         root = request.form.get('root', '').strip()
-        # Boş gelirse varsayılan değer ata
         s_code = request.form.get('sayi')
         i_code = request.form.get('iyelik')
         h_code = request.form.get('hal')
@@ -19,7 +21,14 @@ def index():
             parts, final_word = analyze(root, s_code, i_code, h_code)
             result = parts
             
-    return render_template('index.html', result=result, final_word=final_word)
+            # Geçmişe ekle (En başa ekler ki en yenisi üstte olsun)
+            history.insert(0, {
+                "word": final_word,
+                "root": root,
+                "parts": parts
+            })
+            
+    return render_template('index.html', result=result, final_word=final_word, history=history)
 
 if __name__ == '__main__':
     app.run(debug=True)
