@@ -7,105 +7,139 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .scientific { font-family: 'Times New Roman', serif; font-style: italic; }
-        .sub-text { vertical-align: sub; font-size: 0.7em; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .code-badge { font-weight: 700; color: #4f46e5; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen py-10 px-4">
+<body class="flex flex-col items-center min-h-screen py-10 px-4">
 
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-8">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-8 mb-8">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Türkmence Morfolojik Analiz</h1>
-            <p class="text-gray-500 mt-2">İsim Çekim Modülü</p>
+            <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Türkmence Morfolojik Analiz</h1>
         </div>
 
         <form method="POST" class="space-y-6">
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kök Kelime</label>
-                <input type="text" name="root" required placeholder="örn: defter" 
-                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Kök Kelime</label>
+                <input type="text" name="root" required placeholder="örn: defter, alma" 
+                       class="w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition text-lg">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">San (Sayı)</label>
-                    <select name="sayi" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-indigo-500">
-                        <option value="">S<span class="sub-text">1</span> (Tekil - Ø)</option>
-                        <option value="S2">S<span class="sub-text">2</span> (Çoğul - +lar)</option>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">San (Sayı)</label>
+                    <select name="sayi" class="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-indigo-500 cursor-pointer">
+                        <option value="">S1 (Tekil)</option>
+                        <option value="S2">S2 (Çoğul)</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Değişlilik (İyelik)</label>
-                    <select name="iyelik" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-indigo-500">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Degislilik (İyelik)</label>
+                    <select name="iyelik" class="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-indigo-500 cursor-pointer">
                         <option value="">Yok (Ø)</option>
                         <optgroup label="Teklik (Birlik)">
-                            <option value="A1">A<span class="sub-text">1</span> (1. Tekil)</option>
-                            <option value="A2">A<span class="sub-text">2</span> (2. Tekil)</option>
-                            <option value="A3">A<span class="sub-text">3</span> (3. Tekil)</option>
+                            <option value="A1">A1 (1. Tekil)</option>
+                            <option value="A2">A2 (2. Tekil)</option>
+                            <option value="A3">A3 (3. Tekil)</option>
                         </optgroup>
                         <optgroup label="Çoğulluk (Köplük)">
-                            <option value="B1">B<span class="sub-text">1</span> (1. Çoğul)</option>
-                            <option value="B2">B<span class="sub-text">2</span> (2. Çoğul)</option>
-                            <option value="B3">B<span class="sub-text">3</span> (3. Çoğul)</option>
+                            <option value="B1">B1 (1. Çoğul)</option>
+                            <option value="B2">B2 (2. Çoğul)</option>
+                            <option value="B3">B3 (3. Çoğul)</option>
                         </optgroup>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Düşüm (Hal)</label>
-                    <select name="hal" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-indigo-500">
-                        <option value="H1">A<span class="sub-text">1</span> (Yalın)</option>
-                        <option value="H2">A<span class="sub-text">2</span> (İlgi)</option>
-                        <option value="H3">A<span class="sub-text">3</span> (Yönelme)</option>
-                        <option value="H4">A<span class="sub-text">4</span> (Belirtme)</option>
-                        <option value="H5">A<span class="sub-text">5</span> (Bulunma)</option>
-                        <option value="H6">A<span class="sub-text">6</span> (Çıkış)</option>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Düşüm (Hal)</label>
+                    <select name="hal" class="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-indigo-500 cursor-pointer">
+                        <option value="H1">A¹ (Baş düşüm)</option>
+                        <option value="H2">A² (Eýelik düşüm)</option>
+                        <option value="H3">A³ (Ýöneliş düşüm)</option>
+                        <option value="H4">A⁴ (Ýeniş düşüm)</option>
+                        <option value="H5">A⁵ (Wagt orun düşüm)</option>
+                        <option value="H6">A⁶ (Çykyş düşüm)</option>
                     </select>
                 </div>
             </div>
 
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition duration-200">
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 Analiz Et
             </button>
         </form>
 
         {% if result %}
-        <div class="mt-10 border-t pt-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Analiz Sonucu</h2>
+        <div class="mt-10 border-t border-gray-100 pt-8 animate-fade-in">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Analiz Sonucu</h2>
             
-            <div class="flex flex-wrap justify-center items-center gap-2 mb-6 text-lg">
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
                 {% for part in result %}
-                    <div class="flex flex-col items-center">
-                        <span class="text-indigo-600 font-bold scientific text-xl">
-                            {% if part.code == 'Kök' %}
-                                Kök
+                    <div class="flex flex-col items-center group">
+                        
+                        <span class="code-badge text-lg mb-1 font-serif italic">
+                            {% if part.type == 'Hal' %}
+                                {{ part.code[0] }}<sub class="text-sm not-italic">{{ part.code[1:] }}</sub>
                             {% else %}
-                                {{ part.code[0] }}<sub class="text-sm">{{ part.code[1:] }}</sub>
+                                {{ part.code }}
                             {% endif %}
                         </span>
-                        <div class="bg-gray-100 border-2 border-gray-300 px-4 py-2 rounded-lg mt-1 font-mono">
+                        
+                        <div class="bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm group-hover:border-indigo-300 transition">
                             {{ part.text }}
                         </div>
                     </div>
                     {% if not loop.last %}
-                        <span class="text-gray-400 text-2xl font-light">+</span>
+                        <span class="text-gray-300 text-2xl font-light mt-6">+</span>
                     {% endif %}
                 {% endfor %}
             </div>
 
-            <div class="text-center bg-green-50 rounded-xl p-6 border border-green-200">
-                <p class="text-sm text-green-600 mb-1 uppercase tracking-wide font-bold">Oluşturulan Kelime</p>
-                <p class="text-4xl font-bold text-gray-900">{{ final_word }}</p>
+            <div class="text-center bg-indigo-50 rounded-xl p-6 border border-indigo-100">
+                <p class="text-xs text-indigo-500 mb-2 uppercase tracking-wider font-bold">Oluşturulan Kelime</p>
+                <p class="text-4xl font-bold text-gray-900 tracking-tight">{{ final_word }}</p>
             </div>
         </div>
         {% endif %}
     </div>
     
-    <div class="fixed bottom-4 text-gray-400 text-xs">
-        &copy; 2025 Türkmence NLP Projesi
+    {% if history %}
+    <div class="w-full max-w-3xl">
+        <div class="flex items-center justify-between mb-4 px-2">
+            <h3 class="text-lg font-bold text-gray-700">Geçmiş Aramalar</h3>
+            <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{{ history|length }} kayıt</span>
+        </div>
+        
+        <div class="grid gap-3">
+            {% for item in history %}
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition flex justify-between items-center">
+                <div>
+                    <span class="text-xs text-gray-400 font-mono block mb-1">Kök: {{ item.root }}</span>
+                    <span class="text-lg font-bold text-gray-800">{{ item.word }}</span>
+                </div>
+                <div class="flex gap-2 text-xs">
+                    {% for part in item.parts %}
+                        {% if part.code != 'Kök' %}
+                        <span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded border border-indigo-100 font-semibold">
+                             {% if part.type == 'Hal' %}
+                                {{ part.code[0] }}<sub>{{ part.code[1:] }}</sub>
+                            {% else %}
+                                {{ part.code }}
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+    {% endif %}
+    
+    <div class="mt-12 text-gray-400 text-sm font-medium">
+        &copy; 2025 Türkmence Morfolojik Analiz Projesi - Esma Aydın
+    </div>
+
 </body>
 </html>
