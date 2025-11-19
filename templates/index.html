@@ -13,16 +13,15 @@
             theme: {
                 extend: {
                     colors: {
-                        // Daha koyu ve gri tonlu arka planlar
-                        darkbg: '#09090b',  // Zinc 950
-                        darkcard: '#18181b', // Zinc 900
+                        darkbg: '#09090b',
+                        darkcard: '#18181b',
+                        primary: '#4f46e5', 
+                        darkprimary: '#8b5cf6', // Mor (Violet)
+                        accent: '#a78bfa',      // Açık Mor
                         
-                        // Morumsu tema renkleri
-                        primary: '#4f46e5', // Aydınlık mod için Indigo
-                        darkprimary: '#8b5cf6', // Karanlık mod için Violet (Mor)
-                        accent: '#a78bfa',      // Yazılar için açık mor
-                        
-                        success: '#22c55e'
+                        // Özel Koyu Yeşil Arka Plan Rengi
+                        deepgreen: '#064e3b',   // Koyu Yeşil
+                        lightergreen: '#065f46' // Hover için
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -42,7 +41,6 @@
 
         /* Dark Mode İnce Ayarlar */
         .dark .code-badge { color: #a78bfa; }
-        /* Kutu arka planını biraz daha belirgin gri yap */
         .dark .result-box { background-color: #27272a; border-color: #3f3f46; color: #e4e4e7; }
         .dark .input-field { background-color: #27272a; border-color: #3f3f46; color: white; }
         
@@ -58,7 +56,7 @@
     <div class="w-full max-w-3xl flex justify-between items-center mb-6">
         <div class="flex items-center gap-2">
             <div class="h-8 w-1 bg-indigo-600 dark:bg-darkprimary rounded-full"></div>
-            <h1 class="text-2xl font-bold tracking-tight">Türkmence NLP</h1>
+            <h1 class="text-2xl font-bold tracking-tight">Türkmence Morfolojik Analiz</h1>
         </div>
         <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-zinc-800 text-gray-600 dark:text-yellow-400 hover:ring-2 ring-indigo-400 dark:ring-violet-400 transition focus:outline-none">
             <svg id="sun-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -144,7 +142,6 @@
             <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
                 {% for part in result %}
                     <div class="flex flex-col items-center group">
-                        
                         <div class="mb-1">
                             {% if part.type == 'Hal' %}
                                 <span class="code-hal-wrapper text-indigo-600 dark:text-accent">
@@ -156,7 +153,6 @@
                                 </span>
                             {% endif %}
                         </div>
-                        
                         <div class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
                             {{ part.text }}
                         </div>
@@ -167,17 +163,18 @@
                 {% endfor %}
             </div>
 
-            <div class="relative group text-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
-                <p class="text-sm font-bold text-green-600 dark:text-green-500 mb-2 uppercase tracking-wider">Oluşturulan Kelime</p>
+            <div class="relative flex flex-col justify-center items-center bg-green-100 dark:bg-deepgreen rounded-xl p-6 border border-green-300 dark:border-green-700 transition-colors">
                 
-                <div class="flex justify-center items-center gap-3">
-                    <p id="finalWord" class="text-4xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">{{ final_word }}</p>
-                    
-                    <button onclick="copyResult()" class="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800" title="Kopyala">
-                        <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    </button>
+                <p class="text-sm font-bold text-green-700 dark:text-green-300 mb-2 uppercase tracking-wider">Oluşturulan Kelime</p>
+                
+                <div class="w-full text-center">
+                    <p id="finalWord" class="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{ final_word }}</p>
                 </div>
+                
+                <button onclick="copyResult()" class="absolute right-4 md:right-6 p-2 text-green-700 dark:text-green-300 hover:text-green-900 dark:hover:text-white transition rounded-full hover:bg-green-200 dark:hover:bg-white/10" title="Kopyala">
+                    <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <svg id="checkIcon" class="w-6 h-6 text-green-600 dark:text-green-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </button>
             </div>
         </div>
         {% endif %}
@@ -232,7 +229,6 @@
             input.focus();
         }
 
-        // 50 Kelimelik Rastgele Havuzu
         function fillRandom() {
             const words = [
                 "mekdep", "mugallym", "kitap", "defter", "galam", "okuwçy", "talyp", "klas",
