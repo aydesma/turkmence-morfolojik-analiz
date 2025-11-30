@@ -60,28 +60,40 @@
         </button>
     </div>
 
+    <!-- Tab Butonları -->
+    <div class="w-full max-w-3xl mb-4 flex gap-2">
+        <button onclick="switchTab('isim')" id="tab-isim" class="tab-button flex-1 py-3 px-6 rounded-t-xl font-semibold transition-all bg-indigo-600 dark:bg-violet-600 text-white shadow-lg">
+            İsim Çekim
+        </button>
+        <button onclick="switchTab('fiil')" id="tab-fiil" class="tab-button flex-1 py-3 px-6 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
+            Fiil Çekim
+        </button>
+    </div>
+
     <div class="bg-white dark:bg-darkcard rounded-2xl shadow-xl w-full max-w-3xl p-6 md:p-8 mb-8 border border-gray-100 dark:border-zinc-800 transition-colors">
         
-        <form method="POST" class="space-y-6">
+        <!-- İsim Çekim Formu -->
+        <form method="POST" id="form-isim" class="space-y-6">
+            <input type="hidden" name="mode" value="isim">
             
             <div>
                 <div class="flex justify-between items-end mb-2">
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kök Kelime</label>
-                    <button type="button" onclick="fillRandom()" class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
+                    <button type="button" onclick="fillRandom('isim')" class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         Örnek Getir
                     </button>
                 </div>
-                <input type="text" id="rootInput" name="root" required placeholder="örn: defter" 
-                       value="{{ root if root else '' }}"
+                <input type="text" id="rootInput-isim" name="root" required placeholder="örn: defter" 
+                       value="{{ root if root and mode == 'isim' else '' }}"
                        class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
                 
-                    <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
-                        <button type="button" onclick="addChar('ä')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
-                        <button type="button" onclick="addChar('ň')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
-                        <button type="button" onclick="addChar('ž')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
-                        <button type="button" onclick="addChar('ý')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
-                    </div>
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addChar('ä', 'isim')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addChar('ň', 'isim')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addChar('ž', 'isim')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addChar('ý', 'isim')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -128,47 +140,169 @@
             </button>
         </form>
 
-        {% if result %}
-        <div class="mt-10 border-t border-gray-100 dark:border-zinc-800 pt-8 animate-fade-in">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">Analiz Sonucu</h2>
+        <!-- Fiil Çekim Formu -->
+        <form method="POST" id="form-fiil" class="space-y-6 hidden">
+            <input type="hidden" name="mode" value="fiil">
             
-            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
-                {% for part in result %}
-                    <div class="flex flex-col items-center group">
-                        <div class="mb-1">
-                            {% if part.type == 'Hal' %}
-                                <span class="code-hal-wrapper text-indigo-600 dark:text-accent">
-                                    {{ part.code[0] }}<span class="code-hal-sub">{{ part.code[1:] }}</span>
-                                </span>
-                            {% else %}
-                                <span class="code-normal text-indigo-600 dark:text-accent">
-                                    {{ part.code }}
-                                </span>
-                            {% endif %}
-                        </div>
-                        <div class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
-                            {{ part.text }}
-                        </div>
-                    </div>
-                    {% if not loop.last %}
-                        <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
-                    {% endif %}
-                {% endfor %}
+            <div>
+                <div class="flex justify-between items-end mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kök Kelime</label>
+                    <button type="button" onclick="fillRandom('fiil')" class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Örnek Getir
+                    </button>
+                </div>
+                <input type="text" id="rootInput-fiil" name="root" required placeholder="örn: gel" 
+                       value="{{ root if root and mode == 'fiil' else '' }}"
+                       class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
+                
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addChar('ä', 'fiil')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addChar('ň', 'fiil')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addChar('ž', 'fiil')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addChar('ý', 'fiil')" class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
             </div>
 
-            <div class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
-                
-                <p class="text-sm font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">Oluşturulan Kelime</p>
-                
-                <div class="w-full text-center">
-                    <p id="finalWord" class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{ final_word }}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Zaman</label>
+                    <select name="zaman" required class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <optgroup label="Öten Zaman">
+                            <option value="T1" {% if selected_zaman == 'T1' %}selected{% endif %}>T1 - Anyk Öten Zaman</option>
+                            <option value="T2" {% if selected_zaman == 'T2' %}selected{% endif %}>T2 - Daş Öten Zaman</option>
+                        </optgroup>
+                        <optgroup label="Häzirki Zaman">
+                            <option value="H1" {% if selected_zaman == 'H1' %}selected{% endif %}>H1 - Umumy Häzirki Zaman</option>
+                            <option value="H2" {% if selected_zaman == 'H2' %}selected{% endif %}>H2 - Anyk Häzirki Zaman</option>
+                        </optgroup>
+                        <optgroup label="Geljek Zaman">
+                            <option value="G1" {% if selected_zaman == 'G1' %}selected{% endif %}>G1 - Mälim Geljek Zaman</option>
+                            <option value="G2" {% if selected_zaman == 'G2' %}selected{% endif %}>G2 - Nämälim Geljek Zaman</option>
+                        </optgroup>
+                    </select>
                 </div>
-                
-                <button onclick="copyResult()" class="absolute right-4 md:right-6 p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800" title="Kopyala">
-                    <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                    <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </button>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Şahıs</label>
+                    <select name="sahis" required class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <optgroup label="Teklik (Birlik)">
+                            <option value="A1" {% if selected_sahis == 'A1' %}selected{% endif %}>A1 - Men (1. Tekil)</option>
+                            <option value="A2" {% if selected_sahis == 'A2' %}selected{% endif %}>A2 - Sen (2. Tekil)</option>
+                            <option value="A3" {% if selected_sahis == 'A3' %}selected{% endif %}>A3 - Ol (3. Tekil)</option>
+                        </optgroup>
+                        <optgroup label="Çoğulluk (Köplük)">
+                            <option value="B1" {% if selected_sahis == 'B1' %}selected{% endif %}>B1 - Biz (1. Çoğul)</option>
+                            <option value="B2" {% if selected_sahis == 'B2' %}selected{% endif %}>B2 - Siz (2. Çoğul)</option>
+                            <option value="B3" {% if selected_sahis == 'B3' %}selected{% endif %}>B3 - Olar (3. Çoğul)</option>
+                        </optgroup>
+                    </select>
+                </div>
             </div>
+
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="olumsuz" name="olumsuz" value="on" {% if selected_olumsuz %}checked{% endif %}
+                       class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-violet-500">
+                <label for="olumsuz" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Olumsuzluk</label>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-violet-600 dark:hover:bg-violet-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Analiz Et
+            </button>
+        </form>
+
+        {% if result %}
+        <div class="mt-10 border-t border-gray-100 dark:border-zinc-800 pt-8 animate-fade-in">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
+                Analiz Sonucu
+            </h2>
+            
+            {% if mode == 'fiil' %}
+                <!-- Fiil Çekim Sonucu -->
+                {% if result[0].type == 'Hata' %}
+                    <!-- Hata durumu -->
+                    <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                        <div class="flex flex-col items-center group">
+                            <div class="mb-1">
+                                <span class="code-normal text-red-600 dark:text-red-400">
+                                    Hata
+                                </span>
+                            </div>
+                            <div class="result-box bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                                {{ result[0].text }}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Normal sonuç -->
+                    <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                        {% for part in result %}
+                            <div class="flex flex-col items-center group">
+                                <div class="mb-1">
+                                    <span class="code-normal text-indigo-600 dark:text-accent">
+                                        {{ part.code }}
+                                    </span>
+                                </div>
+                                <div class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                                    {{ part.text }}
+                                </div>
+                            </div>
+                            {% if not loop.last %}
+                                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {% if final_word %}
+                    <div class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
+                        <p class="text-base font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">Oluşturulan Kelime</p>
+                        <div class="w-full text-center">
+                            <p id="finalWord" class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{ final_word }}</p>
+                        </div>
+                        <button onclick="copyResult()" class="absolute right-4 md:right-6 p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800" title="Kopyala">
+                            <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </button>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <!-- İsim Çekim Sonucu -->
+                <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                    {% for part in result %}
+                        <div class="flex flex-col items-center group">
+                            <div class="mb-1">
+                                {% if part.type == 'Hal' %}
+                                    <span class="code-hal-wrapper text-indigo-600 dark:text-accent">
+                                        {{ part.code[0] }}<span class="code-hal-sub">{{ part.code[1:] }}</span>
+                                    </span>
+                                {% else %}
+                                    <span class="code-normal text-indigo-600 dark:text-accent">
+                                        {{ part.code }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                                {{ part.text }}
+                            </div>
+                        </div>
+                        {% if not loop.last %}
+                            <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
+                    <p class="text-base font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">Oluşturulan Kelime</p>
+                    <div class="w-full text-center">
+                        <p id="finalWord" class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{ final_word }}</p>
+                    </div>
+                    <button onclick="copyResult()" class="absolute right-4 md:right-6 p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800" title="Kopyala">
+                        <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </button>
+                </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>
@@ -216,8 +350,33 @@
             }
         });
 
-        function addChar(char) {
-            const input = document.getElementById('rootInput');
+        // Tab Yönetimi
+        function switchTab(tab) {
+            const isimTab = document.getElementById('tab-isim');
+            const fiilTab = document.getElementById('tab-fiil');
+            const isimForm = document.getElementById('form-isim');
+            const fiilForm = document.getElementById('form-fiil');
+            
+            if (tab === 'isim') {
+                isimTab.classList.remove('bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300');
+                isimTab.classList.add('bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg');
+                fiilTab.classList.remove('bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg');
+                fiilTab.classList.add('bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300');
+                isimForm.classList.remove('hidden');
+                fiilForm.classList.add('hidden');
+            } else {
+                fiilTab.classList.remove('bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300');
+                fiilTab.classList.add('bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg');
+                isimTab.classList.remove('bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg');
+                isimTab.classList.add('bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300');
+                fiilForm.classList.remove('hidden');
+                isimForm.classList.add('hidden');
+            }
+        }
+
+        function addChar(char, mode) {
+            const inputId = mode === 'fiil' ? 'rootInput-fiil' : 'rootInput-isim';
+            const input = document.getElementById(inputId);
     
             // Eğer kutu boşsa harfi BÜYÜK ekle, doluysa küçük ekle
             if (input.value.length === 0) {
@@ -229,18 +388,32 @@
             input.focus();
         }
 
-        function fillRandom() {
-            const words = [
-                "mekdep", "mugallym", "kitap", "defter", "galam", "okuwçy", "talyp", "klas",
-                "eje", "kaka", "ata", "ene", "dogan", "aýal", "erkek", "çaga", "dost", "goňşy",
-                "göz", "baş", "el", "aýak", "barmak", "diş", "gulak", "ýürek",
-                "öý", "gapy", "aýna", "stol", "otag", "bag", "telefon", "kompýuter",
-                "suw", "dag", "derýa", "deňiz", "agaç", "gül", "ýaprak", "asman", "ýagyş",
-                "at", "it", "pişik", "guş", "goýun", "sygyr",
-                "watan", "baýdak", "şäher", "oba", "ýol", "gün", "aý", "wagt"
-            ];
-            const randomWord = words[Math.floor(Math.random() * words.length)];
-            document.getElementById('rootInput').value = randomWord;
+        function fillRandom(mode) {
+            if (mode === 'fiil') {
+                const verbs = [
+                    "gel", "git", "ok", "yaz", "oku", "al", "ber", "gör", "bil", "et",
+                    "iç", "iý", "ýat", "dur", "otur", "ýör", "ýatyr", "otyr", "bar", "görkez",
+                    "aç", "ýap", "getir", "götür", "de", "söyle", "sor", "tap", "bul", "ýaz",
+                    "oýna", "ýüre", "eşit", "öwren", "öýret", "ýasa", "sat", "satyn", "ýyk", "ýyg",
+                    "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg",
+                    "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg",
+                    "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg"
+                ];
+                const randomVerb = verbs[Math.floor(Math.random() * verbs.length)];
+                document.getElementById('rootInput-fiil').value = randomVerb;
+            } else {
+                const words = [
+                    "mekdep", "mugallym", "kitap", "defter", "galam", "okuwçy", "talyp", "klas",
+                    "eje", "kaka", "ata", "ene", "dogan", "aýal", "erkek", "çaga", "dost", "goňşy",
+                    "göz", "baş", "el", "aýak", "barmak", "diş", "gulak", "ýürek",
+                    "öý", "gapy", "aýna", "stol", "otag", "bag", "telefon", "kompýuter",
+                    "suw", "dag", "derýa", "deňiz", "agaç", "gül", "ýaprak", "asman", "ýagyş",
+                    "at", "it", "pişik", "guş", "goýun", "sygyr",
+                    "watan", "baýdak", "şäher", "oba", "ýol", "gün", "aý", "wagt"
+                ];
+                const randomWord = words[Math.floor(Math.random() * words.length)];
+                document.getElementById('rootInput-isim').value = randomWord;
+            }
         }
 
         function copyResult() {
@@ -256,10 +429,18 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            const currentMode = "{{ mode if mode else 'isim' }}";
+            if (currentMode === 'fiil') {
+                switchTab('fiil');
+            } else {
+                switchTab('isim');
+            }
+            
             {% if result %}
                 const newEntry = {
                     root: "{{ root }}",
                     word: "{{ final_word }}",
+                    mode: "{{ mode if mode else 'isim' }}",
                     parts: [
                         {% for part in result %}
                         { text: "{{ part.text }}", code: "{{ part.code }}", type: "{{ part.type }}" },
@@ -307,10 +488,11 @@
                     }
                 });
 
+                const modeLabel = item.mode === 'fiil' ? 'Fiil Çekim' : 'İsim Çekim';
                 const html = `
                 <div class="bg-white dark:bg-darkcard p-4 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 hover:shadow-md transition flex justify-between items-center">
                     <div>
-                        <span class="text-xs text-gray-400 font-mono block mb-1">Kök: ${item.root}</span>
+                        <span class="text-xs text-gray-400 font-mono block mb-1">Kök: ${item.root} <span class="text-indigo-600 dark:text-accent">(${modeLabel})</span></span>
                         <span class="text-lg font-bold text-gray-800 dark:text-gray-200">${item.word}</span>
                     </div>
                     <div class="flex gap-1 text-xs">

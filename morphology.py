@@ -141,3 +141,204 @@ def analyze(root, s_code, i_code, h_code):
             parts.append({"text": suffix, "type": "Hal", "code": display_code})
             
     return parts, current_word
+
+# ==============================================================================
+# FİİL ÇEKİMİ FONKSİYONLARI
+# ==============================================================================
+
+# Zamirler
+fiil_zamirler = {
+    "A1": "Men", "A2": "Sen", "A3": "Ol",
+    "B1": "Biz", "B2": "Siz", "B3": "Olar"
+}
+
+def ek_sec_fiil(kelime, kalin_ek, ince_ek):
+    """Ünlü niteliğine göre ek seçer (fiil çekimi için)."""
+    nitelik = kelimedeki_unlu_niteligi(kelime)
+    return kalin_ek if nitelik == "kalin" else ince_ek
+
+# ------------------------------------------------------------------------------
+# I. ZAMAN EKLERİ VE ŞAHIS ÇEKİMLERİ (Öten Zaman)
+# ------------------------------------------------------------------------------
+
+def cekim_T1(kok, sahis_kodu, olumsuz=False):
+    """Anyk Öten Zaman (-dy, -di / -mady, -medi)"""
+    zaman_eki = ek_sec_fiil(kok, "dy", "di")
+    if olumsuz:
+        zaman_eki = ek_sec_fiil(kok, "mady", "medi")
+    govde = kok + zaman_eki
+    sahis_ekleri = {"A1": "m", "A2": "ň", "A3": "", "B1": "k", "B2": "ňiz", "B3": "ler"}
+    if sahis_kodu == "B3" and not olumsuz:
+        return fiil_zamirler.get(sahis_kodu, "") + " " + kok + ek_sec_fiil(kok, "dy", "di") + "ler"
+    return fiil_zamirler.get(sahis_kodu, "") + " " + govde + sahis_ekleri.get(sahis_kodu, "")
+
+def cekim_T2(kok, sahis_kodu, olumsuz=False):
+    """Daş Öten Zaman (Düzeltilmiş: -ypdy/di + Şahıs Ekleri / -mandy/-mändi + Şahıs Ekleri)"""
+    sahis_ekleri = {"A1": "m", "A2": "ň", "A3": "", "B1": "k", "B2": "ňiz", "B3": "ler"} 
+    kok_unlu_ile_bitiyor = kok[-1].lower() in "aäeeyiıioöuü"
+    if olumsuz:
+        olumsuz_eki = ek_sec_fiil(kok, "mandy", "mändi")
+        govde = kok + olumsuz_eki 
+        if sahis_kodu == "B3":
+             return fiil_zamirler.get(sahis_kodu, "") + " " + govde + ek_sec_fiil(kok, "lar", "ler")
+        return fiil_zamirler.get(sahis_kodu, "") + " " + govde + sahis_ekleri.get(sahis_kodu, "")
+    else:
+        # Yuvarlaklık kontrolü (Basitleştirilmiş)
+        ilk_unlu_kalin = kelimedeki_unlu_niteligi(kok) == "kalin"
+        if ilk_unlu_kalin:
+            temel_ek = "yp" if "o" not in kok and "u" not in kok else "up"
+        else:
+            temel_ek = "ip" if "ö" not in kok and "ü" not in kok else "üp"
+        # KRİTİK DÜZELTME: Kök ünlü ile bitiyorsa, temel ekteki ünlü düşer.
+        if kok_unlu_ile_bitiyor:
+            temel_ek = temel_ek[1] # 'yp' -> 'p', 'up' -> 'p', vb.
+        gecmis_eki = ek_sec_fiil(kok, "dy", "di") 
+        govde = kok + temel_ek + gecmis_eki 
+        if sahis_kodu == "B3":
+            return fiil_zamirler.get(sahis_kodu, "") + " " + govde + ek_sec_fiil(kok, "lar", "ler")
+        return fiil_zamirler.get(sahis_kodu, "") + " " + govde + sahis_ekleri.get(sahis_kodu, "")
+
+# ------------------------------------------------------------------------------
+# II. ZAMAN EKLERİ VE ŞAHIS ÇEKİMLERİ (Häzirki Zaman)
+# ------------------------------------------------------------------------------
+
+def cekim_H1(kok, sahis_kodu, olumsuz=False):
+    """Umumy Häzirki Zaman (-ýar, -ýär / -maýar, -meýär)"""
+    zaman_eki = ek_sec_fiil(kok, "ýar", "ýär")
+    if olumsuz:
+        zaman_eki = ek_sec_fiil(kok, "maýar", "meýär")
+    govde = kok + zaman_eki
+    sahis_ekleri = {"A1": "yn", "A2": "syň", "A3": "", "B1": "ys", "B2": "syňyz", "B3": "lar"}
+    return fiil_zamirler.get(sahis_kodu, "") + " " + govde + sahis_ekleri.get(sahis_kodu, "")
+
+def cekim_H2(kok, sahis_kodu, olumsuz=False):
+    """Anyk Häzirki Zaman (Otyr-, ýatyr-, dur-, ýör-)"""
+    if kok not in ["otyr", "ýatyr", "dur", "ýör"]:
+        return fiil_zamirler.get(sahis_kodu, "") + " ❗ Bu zaman formy diňe 'otyr', 'ýatyr', 'dur', 'ýör' işlikleri üçin ulanylýar."
+    govde = kok
+    sahis_ekleri = {"A1": "yn", "A2": "syň", "A3": "", "B1": "ys", "B2": "syňyz", "B3": "lar"}
+    return fiil_zamirler.get(sahis_kodu, "") + " " + govde + sahis_ekleri.get(sahis_kodu, "")
+
+# ------------------------------------------------------------------------------
+# III. ZAMAN EKLERİ VE ŞAHIS ÇEKİMLERİ (Geljek Zaman)
+# ------------------------------------------------------------------------------
+
+def cekim_G1(kok, sahis_kodu, olumsuz=False):
+    """Mälim Geljek Zaman (-jak, -jek / + däl) - Şahıs Eki Yok"""
+    zaman_eki = ek_sec_fiil(kok, "jak", "jek")
+    fiil_formu = kok + zaman_eki
+    sonuc = fiil_zamirler.get(sahis_kodu, "Zamir") + " " + fiil_formu
+    if olumsuz:
+        return sonuc + " däl"
+    return sonuc
+
+def cekim_G2(kok, sahis_kodu, olumsuz=False):
+    """Nämälim Geljek Zaman / Geniş Zaman (-ar, -er / -maz, -mez)"""
+    sahis_ekleri = {"A1": "in", "A2": "siň", "A3": "", "B1": "is", "B2": "siňiz", "B3": "ler"}
+    if not olumsuz:
+        zaman_eki = ek_sec_fiil(kok, "ar", "er")
+        govde = kok + zaman_eki
+        ek = sahis_ekleri.get(sahis_kodu, "")
+        return fiil_zamirler.get(sahis_kodu, "") + " " + govde + ek
+    else:
+        zaman_eki = ek_sec_fiil(kok, "maz", "mez")
+        govde = kok + zaman_eki
+        if sahis_kodu in ["A1", "A2", "B1", "B2"]:
+            ek = sahis_ekleri.get(sahis_kodu, "") 
+            return fiil_zamirler.get(sahis_kodu, "") + " " + govde + ek
+        else:
+            if sahis_kodu == "B3":
+                 return fiil_zamirler.get(sahis_kodu, "") + " " + govde + ek_sec_fiil(kok, "lar", "ler")
+            return fiil_zamirler.get(sahis_kodu, "") + " " + govde
+
+# Fiil çekim fonksiyonları sözlüğü
+fiil_cekim_fonksiyonlari = {
+    "T1": cekim_T1, "T2": cekim_T2,
+    "H1": cekim_H1, "H2": cekim_H2,
+    "G1": cekim_G1, "G2": cekim_G2
+}
+
+def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
+    """Fiil çekimi analiz fonksiyonu - ekleri ayrı ayrı hesaplayıp döndürür"""
+    if zaman_kodu not in fiil_cekim_fonksiyonlari or sahis_kodu not in fiil_zamirler:
+        return None, None
+    
+    fonk = fiil_cekim_fonksiyonlari[zaman_kodu]
+    sonuc = fonk(root, sahis_kodu, olumsuz)
+    
+    # Hata kontrolü (sonuçta ❗ varsa hata var demektir)
+    if "❗" in sonuc:
+        return [{"text": sonuc.split(" ", 1)[1] if " " in sonuc else sonuc, "type": "Hata", "code": "HATA"}], ""
+    
+    # Parts oluştur - sıralama: Şahıs -> Kök -> Zaman -> Olumsuzluk
+    parts = []
+    
+    # Şahıs bilgisini en başa ekle
+    parts.append({"text": fiil_zamirler.get(sahis_kodu, ""), "type": "Şahıs", "code": sahis_kodu})
+    
+    # Kök
+    parts.append({"text": root, "type": "Kök", "code": "Kök"})
+    
+    # Zaman ekini hesapla
+    zaman_eki = ""
+    if zaman_kodu == "T1":
+        zaman_eki = ek_sec_fiil(root, "mady", "medi") if olumsuz else ek_sec_fiil(root, "dy", "di")
+    elif zaman_kodu == "T2":
+        if olumsuz:
+            zaman_eki = ek_sec_fiil(root, "mandy", "mändi")
+        else:
+            kok_unlu_ile_bitiyor = root[-1].lower() in "aäeeyiıioöuü"
+            ilk_unlu_kalin = kelimedeki_unlu_niteligi(root) == "kalin"
+            if ilk_unlu_kalin:
+                temel_ek = "yp" if "o" not in root and "u" not in root else "up"
+            else:
+                temel_ek = "ip" if "ö" not in root and "ü" not in root else "üp"
+            if kok_unlu_ile_bitiyor:
+                temel_ek = temel_ek[1]  # 'yp' -> 'p', 'up' -> 'p', vb.
+            gecmis_eki = ek_sec_fiil(root, "dy", "di")
+            zaman_eki = temel_ek + gecmis_eki
+    elif zaman_kodu == "H1":
+        zaman_eki = ek_sec_fiil(root, "maýar", "meýär") if olumsuz else ek_sec_fiil(root, "ýar", "ýär")
+    elif zaman_kodu == "H2":
+        zaman_eki = ""  # H2 için zaman eki yok, kök aynen kalıyor
+    elif zaman_kodu == "G1":
+        zaman_eki = ek_sec_fiil(root, "jak", "jek")
+    elif zaman_kodu == "G2":
+        zaman_eki = ek_sec_fiil(root, "maz", "mez") if olumsuz else ek_sec_fiil(root, "ar", "er")
+    
+    if zaman_eki:
+        parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+    
+    # Şahıs ekini hesapla
+    sahis_eki = ""
+    if zaman_kodu == "G1":
+        sahis_eki = ""  # G1'de şahıs eki yok
+    elif zaman_kodu in ["T1", "T2"]:
+        sahis_ekleri = {"A1": "m", "A2": "ň", "A3": "", "B1": "k", "B2": "ňiz", "B3": "ler"}
+        if sahis_kodu == "B3" and zaman_kodu == "T1" and not olumsuz:
+            sahis_eki = ek_sec_fiil(root, "lar", "ler")
+        else:
+            sahis_eki = sahis_ekleri.get(sahis_kodu, "")
+    elif zaman_kodu in ["H1", "H2"]:
+        sahis_ekleri = {"A1": "yn", "A2": "syň", "A3": "", "B1": "ys", "B2": "syňyz", "B3": "lar"}
+        sahis_eki = sahis_ekleri.get(sahis_kodu, "")
+    elif zaman_kodu == "G2":
+        sahis_ekleri = {"A1": "in", "A2": "siň", "A3": "", "B1": "is", "B2": "siňiz", "B3": "ler"}
+        if olumsuz and sahis_kodu == "B3":
+            sahis_eki = ek_sec_fiil(root, "lar", "ler")
+        elif olumsuz and sahis_kodu == "A3":
+            sahis_eki = ""
+        else:
+            sahis_eki = sahis_ekleri.get(sahis_kodu, "")
+    
+    if sahis_eki:
+        parts.append({"text": sahis_eki, "type": "Şahıs Eki", "code": sahis_kodu})
+    
+    # Olumsuzluk (sadece G1'de "däl" olarak eklenir)
+    if olumsuz and zaman_kodu == "G1":
+        parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+    elif olumsuz and zaman_kodu != "G1":
+        # Diğer zamanlarda olumsuzluk zaman eki içinde
+        pass
+    
+    return parts, sonuc
