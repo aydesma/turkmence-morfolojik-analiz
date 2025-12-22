@@ -5,6 +5,9 @@ ince_unluler = set("eäiüö")
 duz_unluler = set("aäeyi")
 yuvarlak_unluler = set("oöuü")
 
+# Ünlü düşmesine meyilli kelimeler
+dusmeye_meyilli = {"burun", "alın", "agyz", "göbek", "ogul", "erin"}
+
 def son_harf_unlu_mu(kelime):
     if not kelime: return False
     return kelime[-1].lower() in unluler
@@ -26,6 +29,13 @@ def kelimedeki_unlu_niteligi_tam(kelime):
             return "ince-duz" if h in duz_unluler else "ince-yuvarlak"
     return "ince-duz"
 
+def kural_hece_dusmesi(kok):
+    """Ünlü düşmesi kuralı: burun → burnum (u düşer)"""
+    if kok.lower() in dusmeye_meyilli:
+        # Son ünlüyü bul ve düşür
+        return kok[:-2] + kok[-1]  # sondan ikinci harfi (ünlüyü) at
+    return kok
+
 # --- EKLER ---
 # Sayı (San)
 def sayi_S2(kelime):
@@ -36,10 +46,12 @@ def sayi_S2(kelime):
 # İyelik (Degislilik)
 def iyelik_A1(kelime): 
     if son_harf_unlu_mu(kelime): return kelime + "m", "m"
-    nitelik = kelimedeki_unlu_niteligi_tam(kelime)
+    # Ünlü düşmesi uygula
+    kelime_islem = kural_hece_dusmesi(kelime)
+    nitelik = kelimedeki_unlu_niteligi_tam(kelime_islem)
     map_ek = {"kalin-duz": "ym", "kalin-yuvarlak": "um", "ince-duz": "im", "ince-yuvarlak": "üm"}
     suffix = map_ek.get(nitelik, "im")
-    return kelime + suffix, suffix
+    return kelime_islem + suffix, suffix
 
 def iyelik_A2(kelime): 
     if son_harf_unlu_mu(kelime): return kelime + "ň", "ň"
@@ -57,14 +69,19 @@ def iyelik_A3(kelime):
     return kelime + suffix, suffix
 
 def iyelik_B1(kelime): 
-    nitelik_tam = kelimedeki_unlu_niteligi_tam(kelime)
-    kalin = nitelik_tam.startswith("kalin")
-    if son_harf_unlu_mu(kelime): 
+    if son_harf_unlu_mu(kelime):
+        nitelik_tam = kelimedeki_unlu_niteligi_tam(kelime)
+        kalin = nitelik_tam.startswith("kalin")
         suffix = "myz" if kalin else "miz"
+        return kelime + suffix, suffix
     else:
+        # Ünlü düşmesi uygula
+        kelime_islem = kural_hece_dusmesi(kelime)
+        nitelik_tam = kelimedeki_unlu_niteligi_tam(kelime_islem)
+        kalin = nitelik_tam.startswith("kalin")
         map_ek = {"kalin-duz": "ymyz", "kalin-yuvarlak": "umyz", "ince-duz": "imiz", "ince-yuvarlak": "ümiz"}
         suffix = map_ek.get(nitelik_tam, "imiz")
-    return kelime + suffix, suffix
+        return kelime_islem + suffix, suffix
 
 def iyelik_B2(kelime): 
     nitelik_tam = kelimedeki_unlu_niteligi_tam(kelime)
@@ -347,10 +364,27 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
     # Kök
     parts.append({"text": root, "type": "Kök", "code": "Kök"})
     
+    # Olumsuzluk eki (me/ma) - Ö1 için ayrı göster
+    olumsuzluk_eki = ""
+    if olumsuz and zaman_kodu == "Ö1":
+        kalin = kelimedeki_unlu_niteligi(root) == "kalin"
+        olumsuzluk_eki = "ma" if kalin else "me"
+        parts.append({"text": olumsuzluk_eki, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+    
     # Zaman ekini hesapla
     zaman_eki = ""
     if zaman_kodu == "Ö1":
-        zaman_eki = get_T1_suffix(root, olumsuz)
+        # Olumsuzluk ekini çıkardık, sadece di/dy/ti/ty kalsın
+        kalin = kelimedeki_unlu_niteligi(root) == "kalin"
+        is_voiceless = root[-1].lower() in voiceless_consonants
+        if olumsuz:
+            # "medi" yerine sadece "di" - çünkü "me" ayrı eklendi
+            zaman_eki = "dy" if kalin else "di"
+        else:
+            if is_voiceless:
+                zaman_eki = "ty" if kalin else "ti"
+            else:
+                zaman_eki = "dy" if kalin else "di"
     elif zaman_kodu == "Ö2":
         if olumsuz:
             zaman_eki = ek_sec_fiil(root, "mandy", "mändi")
