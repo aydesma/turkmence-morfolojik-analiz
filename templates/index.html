@@ -469,6 +469,10 @@
             <!-- İsim Çekim Sonucu -->
             <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
                 {% for part in result %}
+                {% if part.text %}<!-- Boş ek gösterilmez -->
+                {% if not loop.first %}
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                {% endif %}
                 <div class="flex flex-col items-center group">
                     <div class="mb-1">
                         {% if part.type == 'Hal' %}
@@ -486,8 +490,6 @@
                         {{ part.text }}
                     </div>
                 </div>
-                {% if not loop.last %}
-                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
                 {% endif %}
                 {% endfor %}
             </div>
@@ -760,7 +762,8 @@
                 </div>`;
 
                 item.parts.forEach(part => {
-                    if (part.code !== 'Kök') {
+                    // Boş text'leri ve Kök'ü atla
+                    if (part.code !== 'Kök' && part.text && part.text.trim() !== '') {
                         let codeDisplay = part.code;
                         if (part.type === 'Hal') {
                             let letter = part.code.charAt(0);
