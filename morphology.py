@@ -44,6 +44,16 @@ def sayi_S2(kelime):
     return kelime + suffix, suffix
 
 # İyelik (Degislilik)
+# Ünsüz yumuşaması fonksiyonu
+def unsuz_yumusamasi(kelime):
+    """Sonu p,t,ç,k ile biten kelimelerde ünlü ile başlayan ek gelince yumuşama: p->b, t->d, ç->c, k->g"""
+    if not kelime: return kelime
+    degisim = {'p': 'b', 't': 'd', 'ç': 'c', 'k': 'g'}
+    son_harf = kelime[-1].lower()
+    if son_harf in degisim:
+        return kelime[:-1] + degisim[son_harf]
+    return kelime
+
 def iyelik_A1(kelime): 
     if son_harf_unlu_mu(kelime): return kelime + "m", "m"
     # Ünlü düşmesi uygula
@@ -51,6 +61,9 @@ def iyelik_A1(kelime):
     nitelik = kelimedeki_unlu_niteligi_tam(kelime_islem)
     map_ek = {"kalin-duz": "ym", "kalin-yuvarlak": "um", "ince-duz": "im", "ince-yuvarlak": "üm"}
     suffix = map_ek.get(nitelik, "im")
+    # Ünsüz yumuşaması uygula (ek ünlü ile başlıyorsa)
+    if suffix and suffix[0] in unluler:
+        kelime_islem = unsuz_yumusamasi(kelime_islem)
     return kelime_islem + suffix, suffix
 
 def iyelik_A2(kelime): 
@@ -64,8 +77,12 @@ def iyelik_A3(kelime):
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
-    if son_harf_unlu_mu(kelime): suffix = "sy" if kalin else "si"
-    else: suffix = "y" if kalin else "i"
+    if son_harf_unlu_mu(kelime): 
+        suffix = "sy" if kalin else "si"
+    else: 
+        suffix = "y" if kalin else "i"
+        # Ünsüz yumuşaması uygula (ek ünlü ile başlıyorsa)
+        kelime = unsuz_yumusamasi(kelime)
     return kelime + suffix, suffix
 
 def iyelik_B1(kelime): 
@@ -103,9 +120,17 @@ def hal_H3(kelime):
     nitelik = kelimedeki_unlu_niteligi(kelime)
     kalin = nitelik == "kalin"
     suffix = ""
-    if kelime.endswith(("sy", "si", "y", "i")): suffix = "na" if kalin else "ne"
-    else: suffix = "a" if kalin else "e"
-    return kelime + suffix, suffix
+    # 3. şahıs iyelik eki varsa (sy, si, y, i ile bitiyorsa) -na/-ne
+    if kelime.endswith(("sy", "si", "y", "i")): 
+        suffix = "na" if kalin else "ne"
+        return kelime + suffix, suffix
+    # Sonu ünlü ile bitiyorsa: ünlü aşınması (alma + a → alma) - ek gösterilmez
+    elif son_harf_unlu_mu(kelime):
+        suffix = "" # Aşınma olduğu için ek yok
+        return kelime, suffix
+    else: 
+        suffix = "a" if kalin else "e"
+        return kelime + suffix, suffix
 
 def hal_H4(kelime): 
     nitelik = kelimedeki_unlu_niteligi(kelime)
