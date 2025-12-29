@@ -458,7 +458,7 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
             sahis_eki = sahis_ekleri.get(sahis_kodu, "")
     
     if sahis_eki:
-        parts.append({"text": sahis_eki, "type": "Şahıs Eki", "code": sahis_kodu})
+        parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
     
     # Olumsuzluk (sadece G1'de "däl" olarak eklenir)
     if olumsuz and zaman_kodu == "G1":
