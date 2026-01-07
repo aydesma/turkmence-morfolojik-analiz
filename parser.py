@@ -103,7 +103,7 @@ def parse_isim(kelime):
     for kod, ek_listesi in EK_SOZLUGU["HAL"].items():
         for ek in ek_listesi:
             if temp.endswith(ek) and len(temp) > len(ek) + 1:
-                ekler.insert(0, {"ek": ek, "tip": "Hal", "kod": kod})
+                ekler.insert(0, {"ek": ek, "tip": "Düşüm", "kod": kod})
                 temp = temp[:-len(ek)]
                 # Ses değişimi geri al
                 if ek[0] in unluler or ek.startswith("n"):
@@ -118,7 +118,7 @@ def parse_isim(kelime):
     for kod, ek_listesi in EK_SOZLUGU["IYELIK"].items():
         for ek in ek_listesi:
             if temp.endswith(ek) and len(temp) > len(ek) + 1:
-                ekler.insert(0, {"ek": ek, "tip": "İyelik", "kod": kod})
+                ekler.insert(0, {"ek": ek, "tip": "Degişlilik", "kod": kod})
                 temp = temp[:-len(ek)]
                 if ek[0] in unluler:
                     temp = yumusamayi_geri_al(temp)
@@ -132,7 +132,7 @@ def parse_isim(kelime):
     for kod, ek_listesi in EK_SOZLUGU["COKL"].items():
         for ek in ek_listesi:
             if temp.endswith(ek) and len(temp) > len(ek):
-                ekler.insert(0, {"ek": ek, "tip": "Çoğul", "kod": kod})
+                ekler.insert(0, {"ek": ek, "tip": "San", "kod": kod})
                 temp = temp[:-len(ek)]
                 break
         else:
@@ -185,7 +185,7 @@ def parse_isim_multi(kelime):
                 for ek in ek_listesi:
                     if temp.endswith(ek) and len(temp) > len(ek) + 1:
                         kalan = temp[:-len(ek)]
-                        tip = {"HAL": "Hal", "IYELIK": "İyelik", "COKL": "Çoğul"}[kategori]
+                        tip = {"HAL": "Düşüm", "IYELIK": "Degişlilik", "COKL": "San"}[kategori]
                         yeni_ekler = [{"ek": ek, "tip": tip, "kod": kod}] + list(ekler)
                         ziyaret_key = f"{kalan}|{kod}"
                         parse_yol(kalan, yeni_ekler, ziyaret_key)

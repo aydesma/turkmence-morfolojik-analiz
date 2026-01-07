@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v12.0
+TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v15.1
 Sentez (üretim) tabanlı isim ve fiil çekimi
 """
+
+# Tüm fonksiyonlar (unlu_niteligi, dusme_kontrol, isim_cekimle, fiil_cekimle) 
+# yukarıdaki v15.0 kurallarını içerecek şekilde bu blokta birleşmiştir.
 
 yogyn = set("aouy")
 ince = set("eäöiü")
 unluler = yogyn | ince
-
-# Sabit İstisnalar ve Özel Gruplar
+zamirler = {"A1": "Men", "A2": "Sen", "A3": "Ol", "B1": "Biz", "B2": "Siz", "B3": "Olar"}
 istisnalar = {"asyl": "asl", "pasyl": "pasl", "nesil": "nesl", "ylym": "ylm", "mähir": "mähr"}
 yon_sozcukleri = {"bäri", "aňry", "ýokary", "ileri"}
-zamirler = {"A1": "Men", "A2": "Sen", "A3": "Ol", "B1": "Biz", "B2": "Siz", "B3": "Olar"}
-
-# --- FONETİK MOTOR FONKSİYONLARI ---
+genel_dusme_adaylari = {"burun", "alyn", "agyz", "gobek", "ogul", "erin", "bagyr", "sabyr"}
 
 def unlu_niteligi(kelime):
     for h in reversed(kelime.lower()):
@@ -24,156 +24,88 @@ def unlu_niteligi(kelime):
 def hece_sayisi(kelime):
     return sum(1 for h in kelime if h in unluler)
 
-def kural_yumusama(kok):
-    degisim = {'p': 'b', 'ç': 'c', 't': 'd', 'k': 'g'}
-    return kok[:-1] + degisim[kok[-1]] if kok and kok[-1] in degisim else kok
+def tam_yumusama(kok):
+    degisim = {'p': 'b', 'ç': 'j', 't': 'd', 'k': 'g'}
+    if kok and kok[-1] in degisim:
+        return kok[:-1] + degisim[kok[-1]]
+    return kok
 
-def dusme_algoritmasi(kok, ek):
-    res_kok = kok.lower()
-    ek_lower = ek.lower()
-    if not ek_lower: return res_kok
-
-    # 1. Yön Sözcükleri (Bäri + de -> Bärde)
-    if res_kok in yon_sozcukleri and ek_lower[0] in set("dklrs"):
-        return res_kok[:-1]
-
-    # 2. Ünlü ile başlayan eklerde düşme kontrolleri
-    if ek_lower[0] in unluler:
-        # a) İstisnalar (Ylym -> ylmy)
-        if res_kok in istisnalar: return istisnalar[res_kok]
-        
-        # b) Türetilmiş Ekler (-ýyş -> ýaşaýşym)
-        if res_kok.endswith(("ýyş", "ýiş")):
-            return res_kok[:-2] + res_kok[-1]
-            
-        # c) Genel Kural (2 heceli, z,l,n,r,s,ş bitişli, zdj olmayan)
-        if hece_sayisi(res_kok) == 2 and res_kok[-1] in set("zlnrsş"):
-            u_list = [h for h in res_kok if h in unluler]
-            if len(u_list) >= 2:
-                dar_unlu = u_list[1]
-                if dar_unlu in set("yiuü"):
-                    pos = res_kok.rfind(dar_unlu)
-                    if pos > 0 and res_kok[pos-1] not in set("zdj"):
-                        return res_kok[:pos] + res_kok[pos+1:]
-    return res_kok
-
-# --- MODÜL 1: İSİM ÇEKİMİ (AT) ---
+def dusme_kontrol(kok, ek):
+    k = kok.lower()
+    e = ek.lower()
+    if not e: return k
+    if k in yon_sozcukleri and e[0] in set("dklrs"): return k[:-1]
+    if e[0] in unluler:
+        if k in istisnalar: return istisnalar[k]
+        if k in genel_dusme_adaylari: return k[:-2] + k[-1]
+        if k.endswith(("ýyş", "ýiş")): return k[:-2] + k[-1]
+        if hece_sayisi(k) == 2 and k[-1] in set("zlnrsş"):
+            u_list = [h for h in k if h in unluler]
+            if len(u_list) == 2 and u_list[1] in set("yiuü"):
+                pos = k.rfind(u_list[1]); 
+                if pos > 0 and k[pos-1] not in set("zdj"): return k[:pos] + k[pos+1:]
+    return k
 
 def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
     res = kok.lower()
     yol = [kok]
-    
     if cokluk:
         ek = "lar" if unlu_niteligi(res) == "yogyn" else "ler"
-        res += ek
-        yol.append(ek)
-
+        res += ek; yol.append(ek)
     if iyelik:
-        nit = unlu_niteligi(res)
-        is_unlu = res[-1] in unluler
-        h_say = hece_sayisi(res)
-        
-        # İyelik eki belirleme (A3+ ve A3- kuralları dahil)
+        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler
         if iyelik == "A1":
-            if is_unlu: ek = "m" if i_tip=="tek" else ("myz" if nit=="yogyn" else "miz")
-            else:
-                base = ("um" if nit=="yogyn" else "üm") if (h_say < 2 and any(h in "oöuü" for h in res)) else ("ym" if nit=="yogyn" else "im")
-                ek = base if i_tip=="tek" else (base + ("yz" if nit=="yogyn" else "iz"))
+            ek = "m" if is_unlu else ("ym" if nit=="yogyn" else "im")
+            if i_tip == "cog": ek = "myz" if is_unlu else (ek + "yz" if nit=="yogyn" else ek + "iz")
         elif iyelik == "A2":
-            if is_unlu: ek = "ň" if i_tip=="tek" else ("ňyz" if nit=="yogyn" else "ňiz")
-            else:
-                base = ("uň" if nit=="yogyn" else "üň") if (h_say < 2 and any(h in "oöuü" for h in res)) else ("yň" if nit=="yogyn" else "iň")
-                ek = base if i_tip=="tek" else (base + ("yz" if nit=="yogyn" else "iz"))
+            ek = "ň" if is_unlu else ("yň" if nit=="yogyn" else "iň")
+            if i_tip == "cog": ek = "ňyz" if is_unlu else (ek + "yz" if nit=="yogyn" else ek + "iz")
         elif iyelik == "A3":
             ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
-        elif iyelik == "B1":
-            if is_unlu: ek = "myz" if nit=="yogyn" else "miz"
-            else:
-                base = ("um" if nit=="yogyn" else "üm") if (h_say < 2 and any(h in "oöuü" for h in res)) else ("ym" if nit=="yogyn" else "im")
-                ek = base + ("yz" if nit=="yogyn" else "iz")
-        elif iyelik == "B2":
-            if is_unlu: ek = "ňyz" if nit=="yogyn" else "ňiz"
-            else:
-                base = ("uň" if nit=="yogyn" else "üň") if (h_say < 2 and any(h in "oöuü" for h in res)) else ("yň" if nit=="yogyn" else "iň")
-                ek = base + ("yz" if nit=="yogyn" else "iz")
-        elif iyelik == "B3":
-            ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
-        else:
-            ek = ""
-
-        res = dusme_algoritmasi(res, ek)
-        if ek and ek[0] in unluler: res = kural_yumusama(res)
-        res += ek
-        yol.append(ek)
-
+        res = dusme_kontrol(res, ek)
+        if not is_unlu and ek[0] in unluler: res = tam_yumusama(res)
+        res += ek; yol.append(ek)
     if hal:
-        nit = unlu_niteligi(res)
-        n_kay = "n" if iyelik == "A3" or iyelik == "B3" else ""
-        if hal == "A3": # Ýöneliş
-            ek = "a" if nit == "yogyn" else "e"
-            if iyelik == "A3" or iyelik == "B3": 
-                res += "na" if nit == "yogyn" else "ne"
-                yol.append("na" if nit == "yogyn" else "ne")
-            elif res[-1] in unluler:
-                son = res[-1]
-                if son == "a": ek = ""
-                elif son == "e": res = res[:-1] + "ä"; ek = ""
-                elif son == "y": res = res[:-1] + "a"; ek = ""
-                elif son == "i": res = res[:-1] + "ä"; ek = ""
-                res += ek
-                yol.append(ek if ek else "(uzun)")
-            else: 
-                res = kural_yumusama(res)
-                res += ek
-                yol.append(ek)
-        else: # A2, A4, A5, A6
-            base = {"A2":"yň", "A4":"y", "A5":"da", "A6":"dan"}
-            ek = base[hal] if nit == "yogyn" else base[hal].replace("a","e").replace("y","i")
-            res = dusme_algoritmasi(res, n_kay + ek)
-            res += n_kay + ek
-            yol.append(n_kay + ek)
-            
+        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; n_kay = "n" if iyelik == "A3" else "" 
+        if hal == "A2": ek = n_kay + ("nyň" if is_unlu else ("yň" if nit=="yogyn" else "iň"))
+        elif hal == "A3":
+            if n_kay: ek = "na" if nit=="yogyn" else "ne"
+            elif is_unlu:
+                son = res[-1]; res = res[:-1]
+                ek = "a" if son in "ay" else "ä"
+            else: ek = "a" if nit=="yogyn" else "e"
+        elif hal == "A4": ek = n_kay + ("ny" if is_unlu else ("y" if nit=="yogyn" else "i"))
+        elif hal == "A5": ek = n_kay + ("da" if nit == "yogyn" else "de")
+        elif hal == "A6": ek = n_kay + ("dan" if nit == "yogyn" else "den")
+        res_temp = dusme_kontrol(res, ek)
+        if hal in ["A2", "A3", "A4"] and not is_unlu: res_temp = tam_yumusama(res_temp)
+        res = res_temp + ek; yol.append(ek)
     return res, " + ".join(yol)
 
-
-# --- MODÜL 2: FİİL ÇEKİMİ (İŞLİK) ---
-
 def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
-    res = kok.lower()
-    nit = unlu_niteligi(res)
-    is_unlu = res[-1] in unluler
-    zamir = zamirler[sahis]
-    
+    res = kok.lower(); nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; zamir = zamirler[sahis]
     if zaman == "6": # Mälim Geljek
         z_ek = "jak" if nit == "yogyn" else "jek"
         final = res + z_ek + (" däl" if olumsuz else "")
         return f"{zamir} {final}", f"{zamir} + {kok} + {z_ek}" + (" + däl" if olumsuz else "")
-
     if zaman == "5": # Anyk Häzirki
-        tablo = {"otyr":{"A1":"yn","A2":"syň","A3":"","B1":"ys","B2":"syňyz","B3":"lar"},
-                 "dur":{"A1":"un","A2":"suň","A3":"","B1":"us","B2":"suňyz","B3":"lar"},
-                 "ýatyr":{"A1":"yn","A2":"syň","A3":"","B1":"ys","B2":"syňyz","B3":"lar"},
-                 "ýör":{"A1":"ün","A2":"siň","A3":"","B1":"üs","B2":"siňiz","B3":"ler"}}
+        tablo = {"otyr":{"A1":"yn","A2":"syň","A3":"","B1":"ys","B2":"syňyz","B3":"lar"}, "dur":{"A1":"un","A2":"suň","A3":"","B1":"us","B2":"suňyz","B3":"lar"}, "ýatyr":{"A1":"yn","A2":"syň","A3":"","B1":"ys","B2":"syňyz","B3":"lar"}, "ýör":{"A1":"ün","A2":"siň","A3":"","B1":"üs","B2":"siňiz","B3":"ler"}}
         if res not in tablo:
             return f"HATA: '{kok}' fiili Anyk Häzirki zamanda çekimlenemez", ""
         s_ek = tablo[res][sahis]
-        return f"{zamir} {res + s_ek}", f"{zamir} + {kok} + {s_ek if s_ek else '(0)'}"
-
+        return (res + s_ek), f"{kok} + {s_ek if s_ek else '(0)'}"
     o_ek = ("ma" if nit=="yogyn" else "me") if olumsuz else ""
     if zaman == "1": # Anyk Öten
-        z_ek = "dy" if nit=="yogyn" else "di"
-        s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
+        z_ek = "dy" if nit=="yogyn" else "di"; s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
     elif zaman == "4": # Umumy Häzirki
-        z_ek = "ýar" if nit=="yogyn" else "ýär"
-        s_ek = {"A1":"yn" if nit=="yogyn" else "in","A2":"syň" if nit=="yogyn" else "siň","A3":"","B1":"ys" if nit=="yogyn" else "is","B2":"syňyz" if nit=="yogyn" else "siňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
+        z_ek = "ýar" if nit=="yogyn" else "ýär"; s_ek = {"A1":"ym" if nit=="yogyn" else "im","A2":"syň" if nit=="yogyn" else "siň","A3":"","B1":"yk" if nit=="yogyn" else "ik","B2":"syňyz" if nit=="yogyn" else "siňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
     elif zaman == "7": # Nämälim Geljek
         if olumsuz: z_ek = "maz" if nit=="yogyn" else "mez"
         else: z_ek = "r" if is_unlu else ("ar" if nit=="yogyn" else "er")
         s_ek = {"A1":"yn" if nit=="yogyn" else "in","A2":"syň" if nit=="yogyn" else "siň","A3":"","B1":"ys" if nit=="yogyn" else "is","B2":"syňyz" if nit=="yogyn" else "siňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
     else:
         return f"HATA: Geçersiz zaman kodu '{zaman}'", ""
-
-    return f"{zamir} {res + o_ek + z_ek + s_ek}", f"{zamir} + {kok} + {o_ek + ' + ' if o_ek else ''}{z_ek} + {s_ek if s_ek else '(0)'}"
+    return (res + o_ek + z_ek + s_ek), f"{kok} + {o_ek + ' + ' if o_ek else ''}{z_ek} + {s_ek if s_ek else '(0)'}"
 
 
 # --- FLASK API UYUMLULUĞU ---
@@ -275,7 +207,7 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
         else:
             z_ek = "ýar" if nit == "yogyn" else "ýär"
         parts.append({"text": z_ek, "type": "Zaman", "code": zaman_kodu})
-        s_ekleri = {"A1":"yn" if nit=="yogyn" else "in","A2":"syň" if nit=="yogyn" else "siň","A3":"","B1":"ys" if nit=="yogyn" else "is","B2":"syňyz" if nit=="yogyn" else "siňiz","B3":"lar" if nit=="yogyn" else "ler"}
+        s_ekleri = {"A1":"ym" if nit=="yogyn" else "im","A2":"syň" if nit=="yogyn" else "siň","A3":"","B1":"yk" if nit=="yogyn" else "ik","B2":"syňyz" if nit=="yogyn" else "siňiz","B3":"lar" if nit=="yogyn" else "ler"}
         s_ek = s_ekleri[sahis_kodu]
         if s_ek:
             parts.append({"text": s_ek, "type": "Şahıs", "code": sahis_kodu})
@@ -312,23 +244,22 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
 
 def baslat():
     while True:
-        print("\n" + "="*45 + "\n🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v12.0 (Sentez)\n" + "="*45)
-        mode = input("[1] İsim (At) Çekimle\n[2] Fiil (İşlik) Çekimle\n[Q] Çıkış\nSeçim: ").lower()
+        print("\n" + "="*50 + "\n🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v15.1\n" + "="*50)
+        mode = input("[1] İsim (At)  [2] Fiil (İşlik)  [Q] Çıkış\nSeçim: ").lower()
         if mode == 'q': break
         
-        kok = input("Kök: ").lower()
+        kok = input("Kök Söz: ").lower()
         if mode == '1':
-            c = input("San (lar/ler) [e/h]: ").lower() == 'e'
+            c = input("Çokluk (lar/ler) [e/h]: ").lower() == 'e'
             i = input("İyelik [1, 2, 3 veya boş]: ")
-            i_t = "cog" if i and input("İyelik Tipi [1] Tekil [2] Çoğul: ") == "2" else "tek"
-            h = input("Hal [A2, A3, A4, A5, A6 veya boş]: ").upper()
-            res, anl = isim_cekimle(kok, c, "A"+i if i else None, i_t, h if h else None)
-        else:
+            it = "cog" if i and input("Tip [1] Tekil [2] Çoğul: ") == "2" else "tek"
+            h = input("Hal [A2-A6 veya boş]: ").upper()
+            res, anl = isim_cekimle(kok, c, "A"+i if i else None, it, h if h else None)
+        elif mode == '2':
             print("[1] Anyk Öten [4] Umumy Häzirki [5] Anyk Häzirki [6] Mälim Geljek [7] Nämälim Geljek")
-            z = input("Zaman: ")
-            s = input("Şahıs [A1...B3]: ").upper()
-            o = input("Olumsuz mu? [e/h]: ").lower() == 'e'
+            z = input("Zaman Seçimi: "); s = input("Şahıs [A1-B3]: ").upper(); o = input("Olumsuz mu? [e/h]: ").lower() == 'e'
             res, anl = fiil_cekimle(kok, z, s, o)
+        else: continue
         
         print(f"\nNETİCE: {res}\nŞECERE: {anl}")
 

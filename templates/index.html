@@ -108,15 +108,15 @@
     <div class="w-full max-w-3xl mb-4 flex gap-2">
         <button onclick="switchTab('isim')" id="tab-isim"
             class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-indigo-600 dark:bg-violet-600 text-white shadow-lg">
-            İsim Çekim
+            At çekimi
         </button>
         <button onclick="switchTab('fiil')" id="tab-fiil"
             class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
-            Fiil Çekim
+            Işlik çekimi
         </button>
         <button onclick="switchTab('cozumle')" id="tab-cozumle"
             class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
-            Çözümle
+            Derňew
         </button>
     </div>
 
@@ -130,7 +130,7 @@
 
             <div>
                 <div class="flex justify-between items-end mb-2">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kök Kelime</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
                     <button type="button" onclick="fillRandom('isim')"
                         class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,10 +138,10 @@
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                             </path>
                         </svg>
-                        Örnek Getir
+                        Mysal getir
                     </button>
                 </div>
-                <input type="text" id="rootInput-isim" name="root" required placeholder="örn: defter"
+                <input type="text" id="rootInput-isim" name="root" required placeholder="Mysal: defter"
                     value="{{ root if root and mode == 'isim' and action == 'cekimle' else '' }}"
                     class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
 
@@ -159,43 +159,42 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">San (Sayı)</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">San kategoriýasy</label>
                     <select name="sayi"
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
-                        <option value="">S1 (Tekil)</option>
-                        <option value="S2">S2 (Çoğul)</option>
+                        <option value="">S- Birlik</option>
+                        <option value="S2">S+ Köplük</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Degislilik
-                        (İyelik)</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Degişlilik kategoriýasy</label>
                     <select name="iyelik"
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
-                        <option value="">Yok (Ø)</option>
-                        <optgroup label="Teklik (Birlik)">
-                            <option value="A1">A1 (1. Tekil)</option>
-                            <option value="A2">A2 (2. Tekil)</option>
-                            <option value="A3">A3 (3. Tekil)</option>
+                        <option value="">Ø</option>
+                        <optgroup label="Birlik">
+                            <option value="A1">A1 (1. Birlik)</option>
+                            <option value="A2">A2 (2. Birlik)</option>
+                            <option value="A3">A3 (3. Birlik)</option>
                         </optgroup>
-                        <optgroup label="Çoğulluk (Köplük)">
-                            <option value="B1">B1 (1. Çoğul)</option>
-                            <option value="B2">B2 (2. Çoğul)</option>
-                            <option value="B3">B3 (3. Çoğul)</option>
+                        <optgroup label="Köplük">
+                            <option value="B1">B1 (1. Köplük)</option>
+                            <option value="B2">B2 (2. Köplük)</option>
+                            <option value="B3">B3 (3. Köplük)</option>
                         </optgroup>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Düşüm (Hal)</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Düşüm kategoriýasy</label>
                     <select name="hal"
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
-                        <option value="H1">A₁ Yalın (Baş düşüm)</option>
-                        <option value="H2">A₂ İlgi (Eýelik düşüm)</option>
-                        <option value="H3">A₃ Yönelme (Ýöneliş düşüm)</option>
-                        <option value="H4">A₄ Belirtme (Ýeniş düşüm)</option>
-                        <option value="H5">A₅ Bulunma (Wagt orun düşüm)</option>
-                        <option value="H6">A₆ Çıkma (Çykyş düşüm)</option>
+                        <option value="H1">A₁ Baş düşüm</option>
+                        <option value="H2">A₂ Eýelik düşüm</option>
+                        <option value="H3">A₃ Ýöneliş düşüm</option>
+                        <option value="H4">A₄ Ýeniş düşüm</option>
+                        <option value="H5">A₅ Wagt-orun düşüm</option>
+                        <option value="H6">A₆ Çykyş düşüm</option>
                     </select>
                 </div>
             </div>
@@ -212,7 +211,7 @@
 
             <div>
                 <div class="flex justify-between items-end mb-2">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Kök Kelime</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
                     <button type="button" onclick="fillRandom('fiil')"
                         class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,10 +219,10 @@
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                             </path>
                         </svg>
-                        Örnek Getir
+                        Mysal getir
                     </button>
                 </div>
-                <input type="text" id="rootInput-fiil" name="root" required placeholder="örn: gel"
+                <input type="text" id="rootInput-fiil" name="root" required placeholder="Mysal: gel"
                     value="{{ root if root and mode == 'fiil' else '' }}"
                     class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
 
@@ -310,7 +309,7 @@
 
             <div>
                 <div class="flex justify-between items-end mb-2">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Çekimli Kelime</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
                     <button type="button" onclick="fillRandomParse()"
                         class="text-xs text-red-600 dark:text-red-400 hover:underline font-medium flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -318,10 +317,10 @@
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                             </path>
                         </svg>
-                        Örnek Getir
+                        Mysal getir
                     </button>
                 </div>
-                <input type="text" id="parseInput" name="root" required placeholder="örn: kitaplarymyzdan"
+                <input type="text" id="parseInput" name="root" required placeholder="Mysal: kitaplarymyzdan"
                     value="{{ root if root and action == 'parse' else '' }}"
                     class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
 
