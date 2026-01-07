@@ -62,11 +62,17 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
             if i_tip == "cog": ek = "ňyz" if is_unlu else (ek + "yz" if nit=="yogyn" else ek + "iz")
         elif iyelik == "A3":
             ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
+        elif iyelik == "B1":
+            ek = "myz" if is_unlu else ("ymyz" if nit=="yogyn" else "imiz")
+        elif iyelik == "B2":
+            ek = "ňyz" if is_unlu else ("yňyz" if nit=="yogyn" else "iňiz")
+        elif iyelik == "B3":
+            ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
         res = dusme_kontrol(res, ek)
         if not is_unlu and ek[0] in unluler: res = tam_yumusama(res)
         res += ek; yol.append(ek)
     if hal:
-        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; n_kay = "n" if iyelik == "A3" else "" 
+        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; n_kay = "n" if iyelik in ["A3", "B3"] else "" 
         if hal == "A2": ek = n_kay + ("nyň" if is_unlu else ("yň" if nit=="yogyn" else "iň"))
         elif hal == "A3":
             if n_kay: ek = "na" if nit=="yogyn" else "ne"
