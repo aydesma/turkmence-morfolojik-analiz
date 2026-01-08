@@ -12,7 +12,8 @@ ince_unluler = set("eäiüö")
 # Ünlü düşmesine meyilli kelimeler
 dusme_sozlugu = {
     "burun": "burn", "alyn": "aln", "agyz": "agz", 
-    "göbek": "göbk", "ogul": "ogl", "erin": "ern"
+    "göbek": "göbk", "ogul": "ogl", "erin": "ern",
+    "kömür": "kömr", "bagyr": "bagr", "sabyr": "sabr"
 }
 
 # Tersine çevrilmiş düşme sözlüğü (düşmüş -> orijinal)

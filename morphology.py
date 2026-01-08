@@ -1,25 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v15.1
+TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v15.3
 Sentez (üretim) tabanlı isim ve fiil çekimi
 """
 
 # Tüm fonksiyonlar (unlu_niteligi, dusme_kontrol, isim_cekimle, fiil_cekimle) 
-# yukarıdaki v15.0 kurallarını içerecek şekilde bu blokta birleşmiştir.
+# yukarıdaki v15.3 kurallarını içerecek şekilde bu blokta birleşmiştir.
 
 yogyn = set("aouy")
 ince = set("eäöiü")
+dodak = set("oöuü")
 unluler = yogyn | ince
 zamirler = {"A1": "Men", "A2": "Sen", "A3": "Ol", "B1": "Biz", "B2": "Siz", "B3": "Olar"}
 istisnalar = {"asyl": "asl", "pasyl": "pasl", "nesil": "nesl", "ylym": "ylm", "mähir": "mähr"}
 yon_sozcukleri = {"bäri", "aňry", "ýokary", "ileri"}
-genel_dusme_adaylari = {"burun", "alyn", "agyz", "gobek", "ogul", "erin", "bagyr", "sabyr"}
+genel_dusme_adaylari = {"burun", "alyn", "agyz", "gobek", "ogul", "erin", "bagyr", "sabyr", "kömür"}
 
 def unlu_niteligi(kelime):
     for h in reversed(kelime.lower()):
         if h in yogyn: return "yogyn"
         if h in ince: return "ince"
     return "yogyn"
+
+def yuvarlak_mi(kelime):
+    return any(h in dodak for h in kelime.lower())
 
 def hece_sayisi(kelime):
     return sum(1 for h in kelime if h in unluler)
@@ -53,32 +57,29 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
         ek = "lar" if unlu_niteligi(res) == "yogyn" else "ler"
         res += ek; yol.append(ek)
     if iyelik:
-        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler
+        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; is_dodak = yuvarlak_mi(res)
         if iyelik == "A1":
-            ek = "m" if is_unlu else ("ym" if nit=="yogyn" else "im")
-            if i_tip == "cog": ek = "myz" if is_unlu else (ek + "yz" if nit=="yogyn" else ek + "iz")
+            if is_unlu: ek = "m" if i_tip=="tek" else ("myz" if nit=="yogyn" else "miz")
+            else:
+                base = ("um" if nit=="yogyn" else "üm") if is_dodak else ("ym" if nit=="yogyn" else "im")
+                ek = base if i_tip=="tek" else (base + ("yz" if nit=="yogyn" else "iz"))
         elif iyelik == "A2":
-            ek = "ň" if is_unlu else ("yň" if nit=="yogyn" else "iň")
-            if i_tip == "cog": ek = "ňyz" if is_unlu else (ek + "yz" if nit=="yogyn" else ek + "iz")
+            if is_unlu: ek = "ň" if i_tip=="tek" else ("ňyz" if nit=="yogyn" else "ňiz")
+            else:
+                base = ("uň" if nit=="yogyn" else "üň") if is_dodak else ("yň" if nit=="yogyn" else "iň")
+                ek = base if i_tip=="tek" else (base + ("yz" if nit=="yogyn" else "iz"))
         elif iyelik == "A3":
             ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
-        elif iyelik == "B1":
-            ek = "myz" if is_unlu else ("ymyz" if nit=="yogyn" else "imiz")
-        elif iyelik == "B2":
-            ek = "ňyz" if is_unlu else ("yňyz" if nit=="yogyn" else "iňiz")
-        elif iyelik == "B3":
-            ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
         res = dusme_kontrol(res, ek)
-        if not is_unlu and ek[0] in unluler: res = tam_yumusama(res)
+        if ek and ek[0] in unluler: res = tam_yumusama(res)
         res += ek; yol.append(ek)
     if hal:
-        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; n_kay = "n" if iyelik in ["A3", "B3"] else "" 
+        nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; n_kay = "n" if iyelik == "A3" else "" 
         if hal == "A2": ek = n_kay + ("nyň" if is_unlu else ("yň" if nit=="yogyn" else "iň"))
         elif hal == "A3":
             if n_kay: ek = "na" if nit=="yogyn" else "ne"
             elif is_unlu:
-                son = res[-1]; res = res[:-1]
-                ek = "a" if son in "ay" else "ä"
+                son = res[-1]; res = res[:-1]; ek = "a" if son in "ay" else "ä"
             else: ek = "a" if nit=="yogyn" else "e"
         elif hal == "A4": ek = n_kay + ("ny" if is_unlu else ("y" if nit=="yogyn" else "i"))
         elif hal == "A5": ek = n_kay + ("da" if nit == "yogyn" else "de")
@@ -250,7 +251,7 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
 
 def baslat():
     while True:
-        print("\n" + "="*50 + "\n🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v15.1\n" + "="*50)
+        print("\n" + "="*50 + "\n🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v15.3\n" + "="*50)
         mode = input("[1] İsim (At)  [2] Fiil (İşlik)  [Q] Çıkış\nSeçim: ").lower()
         if mode == 'q': break
         
