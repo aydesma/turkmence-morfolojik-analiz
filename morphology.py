@@ -104,6 +104,15 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
     o_ek = ("ma" if nit=="yogyn" else "me") if olumsuz else ""
     if zaman == "1": # Anyk Öten
         z_ek = "dy" if nit=="yogyn" else "di"; s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
+    elif zaman == "2": # Daş Öten (Ö2)
+        # -ypdy/-ipdi eki (ünsüz sonrası), -pdy/-pdi (ünlü sonrası)
+        if is_unlu:
+            z_ek = "pdy" if nit=="yogyn" else "pdi"
+        else:
+            z_ek = "ypdy" if nit=="yogyn" else "ipdi"
+        s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
+    elif zaman == "3": # Dowamly Öten (Ö3)
+        z_ek = "ýardy" if nit=="yogyn" else "ýärdi"; s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
     elif zaman == "4": # Umumy Häzirki
         z_ek = "ýar" if nit=="yogyn" else "ýär"; s_ek = {"A1":"ym" if nit=="yogyn" else "im","A2":"syň" if nit=="yogyn" else "siň","A3":"","B1":"yk" if nit=="yogyn" else "ik","B2":"syňyz" if nit=="yogyn" else "siňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis]
     elif zaman == "7": # Nämälim Geljek
@@ -203,6 +212,30 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
             olumsuz_eki = "ma" if nit == "yogyn" else "me"
             parts.append({"text": olumsuz_eki, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
         z_ek = "dy" if nit == "yogyn" else "di"
+        parts.append({"text": z_ek, "type": "Zaman", "code": zaman_kodu})
+        s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz" if nit=="yogyn" else "ňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis_kodu]
+        if s_ek:
+            parts.append({"text": s_ek, "type": "Şahıs", "code": sahis_kodu})
+    
+    elif zaman_kodu == "Ö2":
+        is_unlu = root[-1].lower() in unluler
+        if olumsuz:
+            olumsuz_eki = "ma" if nit == "yogyn" else "me"
+            parts.append({"text": olumsuz_eki, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+        if is_unlu:
+            z_ek = "pdy" if nit == "yogyn" else "pdi"
+        else:
+            z_ek = "ypdy" if nit == "yogyn" else "ipdi"
+        parts.append({"text": z_ek, "type": "Zaman", "code": zaman_kodu})
+        s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz" if nit=="yogyn" else "ňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis_kodu]
+        if s_ek:
+            parts.append({"text": s_ek, "type": "Şahıs", "code": sahis_kodu})
+    
+    elif zaman_kodu == "Ö3":
+        if olumsuz:
+            olumsuz_eki = "ma" if nit == "yogyn" else "me"
+            parts.append({"text": olumsuz_eki, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+        z_ek = "ýardy" if nit == "yogyn" else "ýärdi"
         parts.append({"text": z_ek, "type": "Zaman", "code": zaman_kodu})
         s_ek = {"A1":"m","A2":"ň","A3":"","B1":"k","B2":"ňyz" if nit=="yogyn" else "ňiz","B3":"lar" if nit=="yogyn" else "ler"}[sahis_kodu]
         if s_ek:
