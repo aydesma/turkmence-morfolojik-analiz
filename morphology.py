@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v15.3
+TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v26.0
 Sentez (üretim) tabanlı isim ve fiil çekimi
+[cite_start]Gökçür (2018) ve Kullanıcı Tanımlı Anlam Sözlüğü [cite: 347-389]
 """
 
 # Tüm fonksiyonlar (unlu_niteligi, dusme_kontrol, isim_cekimle, fiil_cekimle) 
@@ -15,6 +16,21 @@ zamirler = {"A1": "Men", "A2": "Sen", "A3": "Ol", "B1": "Biz", "B2": "Siz", "B3"
 istisnalar = {"asyl": "asl", "pasyl": "pasl", "nesil": "nesl", "ylym": "ylm", "mähir": "mähr"}
 yon_sozcukleri = {"bäri", "aňry", "ýokary", "ileri"}
 genel_dusme_adaylari = {"burun", "alyn", "agyz", "gobek", "ogul", "erin", "bagyr", "sabyr", "kömür"}
+
+# [v26.0] Eş yazılımlı kelimeler - p, ç, t, k ile bitenlerde çift çekim
+dual_cekilecekler = {
+    "at": {"kisa": "At, beygir", "uzun": "Ad, isim"},
+    "but": {"kisa": "Evin temelini ayakta tutan taş", "uzun": "İnsan vücudunun kalça ile diz arasındaki bölümü"},
+    "gurt": {"kisa": "Kurutulmuş, süzme", "uzun": "Kurt"},
+    "saç": {"kisa": "Baş derisini kaplayan kıllar", "uzun": "Yassı demir çelik ürünü, sac"},
+    "yok": {"kisa": "Kalıntı, iz", "uzun": "Var olmayan, yok"}
+}
+
+diger_es_sesliler = {
+    "baş": "1. Kafa, baş. 2. Yara, çıban.",
+    "biz": "1. Şahıs zamiri. 2. Tığ, çuvaldız.",
+    "daş": "1. Uzak, dış. 2. Taş, kaya."
+}
 
 def unlu_niteligi(kelime):
     for h in reversed(kelime.lower()):
@@ -50,9 +66,15 @@ def dusme_kontrol(kok, ek):
                 if pos > 0 and k[pos-1] not in set("zdj"): return k[:pos] + k[pos+1:]
     return k
 
-def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
+def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True):
     res = kok.lower()
     yol = [kok]
+    
+    # [v26.0] BERDİ HOCA ÖZEL KURALI: Guzy/Süri Yuvarlaklaşması
+    # Sadece San (Çokluk), A3 ve B3 kategorilerinde kök değişir.
+    if res in ["guzy", "süri"] and (cokluk or iyelik in ["A3", "B3"]):
+        res = "guzu" if res == "guzy" else "sürü"
+    
     if cokluk:
         ek = "lar" if unlu_niteligi(res) == "yogyn" else "ler"
         res += ek; yol.append(ek)
@@ -69,9 +91,14 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
                 base = ("uň" if nit=="yogyn" else "üň") if is_dodak else ("yň" if nit=="yogyn" else "iň")
                 ek = base if i_tip=="tek" else (base + ("yz" if nit=="yogyn" else "iz"))
         elif iyelik == "A3":
-            ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
+            # [v26.0] Ol (3. Tekil): Suffix rounds if stem is rounded (sürüsü)
+            if is_unlu: ek = ("su" if is_dodak else "sy") if nit=="yogyn" else ("sü" if is_dodak else "si")
+            else: ek = "u" if (nit=="yogyn" and is_dodak) else ("ü" if is_dodak else ("y" if nit=="yogyn" else "i"))
+        elif iyelik == "B3":
+            # [v26.0] Olar (3. Çoğul): Suffix stays unrounded (sürüsi)
+            ek = ("sy" if nit=="yogyn" else "si") if is_unlu else ("y" if nit=="yogyn" else "i")
         res = dusme_kontrol(res, ek)
-        if ek and ek[0] in unluler: res = tam_yumusama(res)
+        if ek and ek[0] in unluler and yumusama_izni: res = tam_yumusama(res)
         res += ek; yol.append(ek)
     if hal:
         nit = unlu_niteligi(res); is_unlu = res[-1] in unluler; n_kay = "n" if iyelik == "A3" else "" 
@@ -284,17 +311,32 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
 
 def baslat():
     while True:
-        print("\n" + "="*50 + "\n🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v15.3\n" + "="*50)
+        print("\n" + "="*60 + "\n🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v26.0\n" + "="*60)
         mode = input("[1] İsim (At)  [2] Fiil (İşlik)  [Q] Çıkış\nSeçim: ").lower()
         if mode == 'q': break
         
-        kok = input("Kök Söz: ").lower()
+        kok = input("Kök Söz (örn: süri, guzy, at, saç, yok): ").lower()
         if mode == '1':
             c = input("Çokluk (lar/ler) [e/h]: ").lower() == 'e'
-            i = input("İyelik [1, 2, 3 veya boş]: ")
-            it = "cog" if i and input("Tip [1] Tekil [2] Çoğul: ") == "2" else "tek"
+            i = input("İyelik [1:Men, 2:Sen, 3:Ol, 4:Olar, boş]: ")
+            iy_kod = {"1":"A1", "2":"A2", "3":"A3", "4":"B3"}.get(i)
+            it = "cog" if i in ["1", "2"] and input("Tip [1] Tekil [2] Çoğul: ") == "2" else "tek"
             h = input("Hal [A2-A6 veya boş]: ").upper()
-            res, anl = isim_cekimle(kok, c, "A"+i if i else None, it, h if h else None)
+            
+            # [v26.0] Eş yazılımlı kelime kontrolü
+            if kok in dual_cekilecekler:
+                print(f"\n💡 '{kok}' eş yazılımlı çekimleri:")
+                res_k, _ = isim_cekimle(kok, c, iy_kod, it, h if h else None, yumusama_izni=False)
+                print(f"✅ {dual_cekilecekler[kok]['kisa']}: {res_k}")
+                res_u, _ = isim_cekimle(kok, c, iy_kod, it, h if h else None, yumusama_izni=True)
+                print(f"✅ {dual_cekilecekler[kok]['uzun']}: {res_u}")
+                continue
+            elif kok in diger_es_sesliler:
+                res, anl = isim_cekimle(kok, c, iy_kod, it, h if h else None)
+                print(f"\nNETİCE: {res}\n📖 Anlamlar: {diger_es_sesliler[kok]}")
+                continue
+            else:
+                res, anl = isim_cekimle(kok, c, iy_kod, it, h if h else None)
         elif mode == '2':
             print("[1] Anyk Öten [4] Umumy Häzirki [5] Anyk Häzirki [6] Mälim Geljek [7] Nämälim Geljek")
             z = input("Zaman Seçimi: "); s = input("Şahıs [A1-B3]: ").upper(); o = input("Olumsuz mu? [e/h]: ").lower() == 'e'
