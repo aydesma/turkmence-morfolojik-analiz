@@ -90,6 +90,18 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
             else:
                 base = ("uň" if nit=="yogyn" else "üň") if is_dodak else ("yň" if nit=="yogyn" else "iň")
                 ek = base if i_tip=="tek" else (base + ("yz" if nit=="yogyn" else "iz"))
+        elif iyelik == "B1":
+            # Biz (1. Çoğul)
+            if is_unlu: ek = ("myz" if nit=="yogyn" else "miz")
+            else:
+                base = ("um" if nit=="yogyn" else "üm") if is_dodak else ("ym" if nit=="yogyn" else "im")
+                ek = base + ("yz" if nit=="yogyn" else "iz")
+        elif iyelik == "B2":
+            # Siz (2. Çoğul)
+            if is_unlu: ek = ("ňyz" if nit=="yogyn" else "ňiz")
+            else:
+                base = ("uň" if nit=="yogyn" else "üň") if is_dodak else ("yň" if nit=="yogyn" else "iň")
+                ek = base + ("yz" if nit=="yogyn" else "iz")
         elif iyelik == "A3":
             # [v26.0] Ol (3. Tekil): Suffix rounds if stem is rounded (sürüsü)
             if is_unlu: ek = ("su" if is_dodak else "sy") if nit=="yogyn" else ("sü" if is_dodak else "si")
