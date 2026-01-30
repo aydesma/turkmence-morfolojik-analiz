@@ -215,6 +215,16 @@ def analyze(root, s_code, i_code, h_code):
                 display_code = h_code.replace('H', 'A')
                 parts.append({"text": hal_eki, "type": "Hal", "code": display_code})
     
+    # [Display] A1..B3 kodlarını D₁b..D₃k formatına çevir
+    display_map = {
+        "A1": "D₁b", "A2": "D₂b", "A3": "D₃b", 
+        "B1": "D₁k", "B2": "D₂k", "B3": "D₃k"
+    }
+    
+    for part in parts:
+        if part.get("code") in display_map:
+            part["code"] = display_map[part["code"]]
+            
     return parts, result
 
 

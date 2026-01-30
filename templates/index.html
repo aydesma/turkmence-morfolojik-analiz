@@ -175,14 +175,14 @@
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
                         <option value="">Ø</option>
                         <optgroup label="Birlik">
-                            <option value="A1">A1 (1. Birlik)</option>
-                            <option value="A2">A2 (2. Birlik)</option>
-                            <option value="A3">A3 (3. Birlik)</option>
+                            <option value="A1">D₁b (1. Birlik)</option>
+                            <option value="A2">D₂b (2. Birlik)</option>
+                            <option value="A3">D₃b (3. Birlik)</option>
                         </optgroup>
                         <optgroup label="Köplük">
-                            <option value="B1">B1 (1. Köplük)</option>
-                            <option value="B2">B2 (2. Köplük)</option>
-                            <option value="B3">B3 (3. Köplük)</option>
+                            <option value="B1">D₁k (1. Köplük)</option>
+                            <option value="B2">D₂k (2. Köplük)</option>
+                            <option value="B3">D₃k (3. Köplük)</option>
                         </optgroup>
                     </select>
                 </div>
@@ -753,36 +753,61 @@
             list.innerHTML = '';
 
             history.forEach(item => {
-                // Kök kutusu
-                let partsHtml = `
-                <div class="flex flex-col items-center">
-                    <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Kök</span>
-                    <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
-                        ${item.root}
-                    </span>
-                    <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">&nbsp;</span>
-                </div>`;
+                let partsHtml = '';
 
-                item.parts.forEach(part => {
-                    // Boş text'leri ve Kök'ü atla
-                    if (part.code !== 'Kök' && part.text && part.text.trim() !== '') {
-                        let codeDisplay = part.code;
-                        if (part.type === 'Hal') {
-                            let letter = part.code.charAt(0);
-                            let num = part.code.substring(1);
-                            codeDisplay = `${letter}<sub>${num}</sub>`;
+                // Fiil modunda parçaları olduğu gibi sırala (Şahıs zamir başta)
+                // İsim modunda Kök başa konur
+                if (item.mode === 'fiil') {
+                    // Fiil: parts'ı olduğu gibi render et
+                    item.parts.forEach(part => {
+                        if (part.text && part.text.trim() !== '') {
+                            let codeDisplay = part.code;
+                            if (part.type === 'Hal') {
+                                let letter = part.code.charAt(0);
+                                let num = part.code.substring(1);
+                                codeDisplay = `${letter}<sub>${num}</sub>`;
+                            }
+                            partsHtml += `
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">${codeDisplay}</span>
+                                <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
+                                    ${part.text}
+                                </span>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">${part.type}</span>
+                            </div>`;
                         }
-                        // Sıra: Kod -> Ek -> Tip (üstten alta)
-                        partsHtml += `
-                        <div class="flex flex-col items-center">
-                            <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">${codeDisplay}</span>
-                            <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
-                                ${part.text}
-                            </span>
-                            <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">${part.type}</span>
-                        </div>`;
-                    }
-                });
+                    });
+                } else {
+                    // İsim/Çözümle: Kök başa konur
+                    partsHtml = `
+                    <div class="flex flex-col items-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Kök</span>
+                        <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
+                            ${item.root}
+                        </span>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">&nbsp;</span>
+                    </div>`;
+
+                    item.parts.forEach(part => {
+                        // Boş text'leri ve Kök'ü atla
+                        if (part.code !== 'Kök' && part.text && part.text.trim() !== '') {
+                            let codeDisplay = part.code;
+                            if (part.type === 'Hal') {
+                                let letter = part.code.charAt(0);
+                                let num = part.code.substring(1);
+                                codeDisplay = `${letter}<sub>${num}</sub>`;
+                            }
+                            partsHtml += `
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">${codeDisplay}</span>
+                                <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
+                                    ${part.text}
+                                </span>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">${part.type}</span>
+                            </div>`;
+                        }
+                    });
+                }
 
                 // Mode label ve renk
                 let modeLabel, modeBg, modeText;
