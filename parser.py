@@ -393,6 +393,15 @@ def parse_kelime(kelime):
     isim_sonuc = parse_isim(kelime)
     isim_sonuc["tur"] = "isim"
     
+    # [Display] İsim iyelik kodlarını D₁b..D₃k formatına çevir
+    display_map = {
+        "A1": "D₁b", "A2": "D₂b", "A3": "D₃b", 
+        "B1": "D₁k", "B2": "D₂k", "B3": "D₃k"
+    }
+    for ek in isim_sonuc.get("ekler", []):
+        if ek.get("kod") in display_map:
+            ek["kod"] = display_map[ek["kod"]]
+    
     return isim_sonuc
 
 
