@@ -469,6 +469,55 @@
             {% endif %}
             {% else %}
             <!-- İsim Çekim Sonucu -->
+            {% if is_dual and dual_results %}
+            <!-- Eş Sesli Çift Sonuç: Kök parçaları bir kere -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                {% for part in dual_results[0].parts %}
+                {% if part.text %}
+                {% if not loop.first %}
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                {% endif %}
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        {% if part.type == 'Hal' %}
+                        <span class="code-hal-wrapper text-indigo-600 dark:text-accent">
+                            {{ part.code[0] }}<span class="code-hal-sub">{{ part.code[1:] }}</span>
+                        </span>
+                        {% else %}
+                        <span class="code-normal text-indigo-600 dark:text-accent">
+                            {{ part.code }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div
+                        class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ part.text }}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Oluşturulan Kelimeler -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for dr in dual_results %}
+                <div
+                    class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
+                    <p class="text-sm font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">
+                        Oluşturulan Kelime</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                        {{ dr.anlam }}
+                    </p>
+                    <div class="w-full text-center">
+                        <p class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                            {{ dr.final_word }}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Normal Tek Sonuç -->
             <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
                 {% for part in result %}
                 {% if part.text %}<!-- Boş ek gösterilmez -->
@@ -519,6 +568,7 @@
                     </svg>
                 </button>
             </div>
+            {% endif %}
             {% endif %}
         </div>
         {% endif %}

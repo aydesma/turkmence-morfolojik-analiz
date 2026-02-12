@@ -15,6 +15,10 @@ def index():
     # Parse sonucu için
     parse_result = None
     
+    # Dual (eş sesli) sonuç
+    is_dual = False
+    dual_results = None
+    
     # Seçimleri korumak için değişkenler
     selected_sayi = ""
     selected_iyelik = ""
@@ -46,8 +50,15 @@ def index():
                 selected_hal = h_code if h_code else "H1"
                 
                 if root:
-                    parts, final_word = analyze(root, s_code, i_code, h_code)
-                    result = parts
+                    results_list, is_dual = analyze(root, s_code, i_code, h_code)
+                    if is_dual:
+                        dual_results = results_list
+                        # İlk sonucu varsayılan olarak göster
+                        result = results_list[0]["parts"]
+                        final_word = results_list[0]["final_word"]
+                    else:
+                        result = results_list[0]["parts"]
+                        final_word = results_list[0]["final_word"]
             else:
                 # Fiil çekimi
                 zaman_kodu = request.form.get('zaman', '').strip().upper()
@@ -82,6 +93,8 @@ def index():
                          mode=mode,
                          action=action,
                          parse_result=parse_result,
+                         is_dual=is_dual,
+                         dual_results=dual_results,
                          selected_sayi=selected_sayi,
                          selected_iyelik=selected_iyelik,
                          selected_hal=selected_hal,
@@ -91,4 +104,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
