@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v16.6
+TÜRKMEN TÜRKÇESİ MORFOLOJİK MOTORU v26.0
 
 Sentez (üretim) tabanlı isim ve fiil çekimi motoru.
 Flask web uygulaması ve CLI arayüzü destekler.
@@ -52,14 +52,9 @@ DUSME_ISTISNALARI = {
 # Genel ünlü düşme adayları (son hecedeki ünlü düşer)
 DUSME_ADAYLARI = {
     "burun", "alyn", "agyz", "gobek", "ogul", "erin",
-    "bagyr", "sabyr", "kömür", "sygyr", "deňiz"
-}
-
-# Yuvarlaklasma listesi (bu kelimeler ek aldığında ünlü değişir)
-YUVARLAKLASMA = {
-    "guzy": "guzu",   # guzy → guzu (çokluk: guzular, A3: guzusu)
-    "süri": "sürü",   # süri → sürü (çokluk: sürüler, A3: sürüsü)
-    "guýy": "guýu"    # guýy → guýu
+    "bagyr", "sabyr", "kömür", "sygyr", "deňiz",
+    "goýun", "boýun", "howuz", "tomus", "tizir",
+    "köwüş", "orun", "garyn", "gelin"
 }
 
 
@@ -130,17 +125,16 @@ def dusme_uygula(kok, ek):
 #  İSİM ÇEKİMİ
 # ==============================================================================
 
-def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True):
+def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
     """
-    Türkmen Türkçesi isim çekimi yapar.
+    Türkmen Türkçesi isim çekimi yapar (v26.0).
     
     Parametreler:
-        kok            : Kök kelime (str)
-        cokluk         : Çoğul eki eklensin mi? (bool)
-        iyelik         : İyelik kodu: "A1" (men), "A2" (sen), "A3" (ol) veya None
-        i_tip          : İyelik tipi: "tek" (tekil) veya "cog" (çoğul)
-        hal            : Hal kodu: "A2"-"A6" veya None
-        yumusama_izni  : Ünsüz yumuşaması uygulanabilir mi? (bool)
+        kok    : Kök kelime (str)
+        cokluk : Çoğul eki eklensin mi? (bool)
+        iyelik : İyelik kodu: "A1" (men), "A2" (sen), "A3" (ol) veya None
+        i_tip  : İyelik tipi: "tek" (tekil) veya "cog" (çoğul)
+        hal    : Hal kodu: "A2"-"A6" veya None
     
     Döndürür:
         (çekimlenmiş_kelime, şecere_str)
@@ -150,15 +144,16 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
     """
     govde = kok.lower()
     yol = [kok]
-    yuvarlaklasir = govde in YUVARLAKLASMA
+    nit_ilk = unlu_niteligi(govde)
+    kok_yuvarlak = yuvarlak_mi(govde)
 
     # ------------------------------------------------------------------
     # 1. ÇOKLUK EKİ (-lar / -ler)
     # ------------------------------------------------------------------
     if cokluk:
-        # Yuvarlaklasma kelimelerinde çokluktan önce dönüşüm yapılır
-        if yuvarlaklasir:
-            govde = YUVARLAKLASMA[govde]
+        # Yuvarlaklaşma: son harf y/i ise ve kök yuvarlak ise u/ü'ye dönüşür
+        if kok_yuvarlak and govde[-1] in "yi":
+            govde = govde[:-1] + ("u" if nit_ilk == "yogyn" else "ü")
 
         ek = "lar" if unlu_niteligi(govde) == "yogyn" else "ler"
         govde += ek
@@ -170,79 +165,36 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
     #    i_tip="cog" → çoğul: Biz (A1), Siz (A2)
     # ------------------------------------------------------------------
     if iyelik:
-        sesli_tipi = unlu_niteligi(govde)
-        unluylebiter = govde[-1] in TUM_UNLULER
-        yuvarlak = yuvarlak_mi(govde)
-
-        # A3 iyelikte yuvarlaklasma (tekil, çokluk eki olmadan)
-        if iyelik == "A3" and yuvarlaklasir and not cokluk:
-            govde = YUVARLAKLASMA[govde]
-            # Dönüşüm sonrası değerleri yeniden hesapla
-            sesli_tipi = unlu_niteligi(govde)
-            unluylebiter = govde[-1] in TUM_UNLULER
-            yuvarlak = yuvarlak_mi(govde)
+        nit = unlu_niteligi(govde)
+        is_unlu = govde[-1] in TUM_UNLULER
+        kok_yuvarlak = yuvarlak_mi(govde)
 
         # --- Ek belirleme ---
         if iyelik == "A1":
             # Tekil: -m / -ym / -um     Çoğul: -myz / -ymyz / -umyz
-            if unluylebiter:
-                if i_tip == "tek":
-                    ek = "m"
-                else:
-                    ek = "myz" if sesli_tipi == "yogyn" else "miz"
+            if is_unlu:
+                ek = "m" if i_tip == "tek" else ("myz" if nit == "yogyn" else "miz")
             else:
-                if yuvarlak:
-                    taban = "um" if sesli_tipi == "yogyn" else "üm"
-                else:
-                    taban = "ym" if sesli_tipi == "yogyn" else "im"
-
-                if i_tip == "tek":
-                    ek = taban
-                else:
-                    ek = taban + ("yz" if sesli_tipi == "yogyn" else "iz")
+                taban = ("um" if nit == "yogyn" else "üm") if kok_yuvarlak else ("ym" if nit == "yogyn" else "im")
+                ek = taban if i_tip == "tek" else (taban + ("yz" if nit == "yogyn" else "iz"))
 
         elif iyelik == "A2":
             # Tekil: -ň / -yň / -uň     Çoğul: -ňyz / -yňyz / -uňyz
-            if unluylebiter:
-                if i_tip == "tek":
-                    ek = "ň"
-                else:
-                    ek = "ňyz" if sesli_tipi == "yogyn" else "ňiz"
+            if is_unlu:
+                ek = "ň" if i_tip == "tek" else ("ňyz" if nit == "yogyn" else "ňiz")
             else:
-                if yuvarlak:
-                    taban = "uň" if sesli_tipi == "yogyn" else "üň"
-                else:
-                    taban = "yň" if sesli_tipi == "yogyn" else "iň"
-
-                if i_tip == "tek":
-                    ek = taban
-                else:
-                    ek = taban + ("yz" if sesli_tipi == "yogyn" else "iz")
+                taban = ("uň" if nit == "yogyn" else "üň") if kok_yuvarlak else ("yň" if nit == "yogyn" else "iň")
+                ek = taban if i_tip == "tek" else (taban + ("yz" if nit == "yogyn" else "iz"))
 
         elif iyelik == "A3":
-            # 3. tekil iyelik — yuvarlak/düz ayrımı önemli
-            if unluylebiter:
-                # Ünlüyle biten: -sy/-su (kalın) veya -si/-sü (ince)
-                if sesli_tipi == "yogyn":
-                    ek = "su" if yuvarlak else "sy"
-                else:
-                    ek = "sü" if yuvarlak else "si"
-            else:
-                # Ünsüzle biten: -y/-u (kalın) veya -i/-ü (ince)
-                if yuvarlak:
-                    ek = "u" if sesli_tipi == "yogyn" else "ü"
-                else:
-                    ek = "y" if sesli_tipi == "yogyn" else "i"
+            # 3. tekil iyelik — yuvarlaklaşma + sy/si veya y/i
+            if kok_yuvarlak and govde[-1] in "yi":
+                govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
+            ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
 
-        # --- Düşme ve yumuşama ---
-        if ek and ek[0] in TUM_UNLULER:
-            govde_dusen = dusme_uygula(govde, ek)
-            if govde_dusen != govde:
-                govde = govde_dusen
-                yol = [govde]  # Düşme olduğunda şecereyi sıfırla
-            if yumusama_izni:
-                govde = tam_yumusama(govde)
-
+        # --- Düşme ve yumuşama (her zaman uygulanır) ---
+        govde = dusme_uygula(govde, ek)
+        govde = tam_yumusama(govde)
         govde += ek
         yol.append(ek)
 
@@ -252,51 +204,55 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
     #    A5: Bulunma (-da) A6: Çıkma (-dan)
     # ------------------------------------------------------------------
     if hal:
-        # Bazı hal eklerinde yuvarlaklasma (A5, A6)
-        if hal in ["A5", "A6"] and yuvarlaklasir and not cokluk and not iyelik:
-            govde = YUVARLAKLASMA[govde]
+        nit = unlu_niteligi(govde)
+        is_unlu = govde[-1] in TUM_UNLULER
+        kok_yuvarlak = yuvarlak_mi(govde)
 
-        sesli_tipi = unlu_niteligi(govde)
-        unluylebiter = govde[-1] in TUM_UNLULER
+        # 3. iyelikten sonra n-kaynaştırma
+        n_kay = iyelik == "A3"
 
-        # 3. iyelikten sonra bağlayıcı "n" eklenir
-        baglayici_n = "n" if iyelik == "A3" else ""
+        # Orta Hece Yuvarlaklaşma (Ogluny, Burnuny)
+        if n_kay and kok_yuvarlak and govde[-1] in "yi":
+            govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
 
-        if hal == "A2":
-            # İlgi hali: -nyň / -yň / -iň
-            ek = baglayici_n + ("nyň" if unluylebiter else ("yň" if sesli_tipi == "yogyn" else "iň"))
-
-        elif hal == "A3":
-            # Yönelme hali: -na/-ne (iyelikli) / -a/-ä (ünlüyle biten) / -a/-e
-            if baglayici_n:
-                ek = "na" if sesli_tipi == "yogyn" else "ne"
-            elif unluylebiter:
-                son_harf = govde[-1]
-                govde = govde[:-1]  # Son ünlüyü kaldır
-                ek = "a" if son_harf in "ay" else "ä"
+        if hal == "A2":  # İlgi hali
+            if n_kay:
+                ek = "nyň"
+            elif is_unlu:
+                ek = "nyň" if nit == "yogyn" else "niň"
             else:
-                ek = "a" if sesli_tipi == "yogyn" else "e"
-
-        elif hal == "A4":
-            # Belirtme hali: -ny/-ni (iyelikli veya ünlüyle biten) / -y/-i
-            if baglayici_n or unluylebiter:
-                ek = "ny" if sesli_tipi == "yogyn" else "ni"
-            else:
-                ek = "y" if sesli_tipi == "yogyn" else "i"
-
-        elif hal == "A5":
-            # Bulunma hali: -nda / -da / -de
-            ek = baglayici_n + ("da" if sesli_tipi == "yogyn" else "de")
-
-        elif hal == "A6":
-            # Çıkma hali: -ndan / -dan / -den
-            ek = baglayici_n + ("dan" if sesli_tipi == "yogyn" else "den")
-
-        # Düşme ve yumuşama (hal ekleri için)
-        if not baglayici_n and ek and ek[0] in TUM_UNLULER:
-            govde = dusme_uygula(govde, ek)
-            if yumusama_izni and hal in ["A2", "A3", "A4"] and not unluylebiter:
+                if len(kok) <= 4 and kok_yuvarlak:
+                    ek = "uň" if nit == "yogyn" else "üň"
+                else:
+                    ek = "yň" if nit == "yogyn" else "iň"
+                govde = dusme_uygula(govde, ek)
                 govde = tam_yumusama(govde)
+
+        elif hal == "A3":  # Yönelme hali
+            if n_kay:
+                ek = "na" if nit == "yogyn" else "ne"
+            elif is_unlu:
+                son = govde[-1]
+                govde = govde[:-1]
+                govde += "a" if son in "ay" else "ä"
+                ek = ""
+            else:
+                ek = "a" if nit == "yogyn" else "e"
+
+        elif hal == "A4":  # Belirtme hali
+            if n_kay:
+                ek = "ny" if nit == "yogyn" else "ni"
+            elif is_unlu:
+                ek = "ny" if nit == "yogyn" else "ni"
+            else:
+                ek = "y" if nit == "yogyn" else "i"
+                govde = tam_yumusama(govde)
+
+        elif hal == "A5":  # Bulunma hali
+            ek = "nda" if n_kay else ("da" if nit == "yogyn" else "de")
+
+        elif hal == "A6":  # Çıkma hali
+            ek = "ndan" if n_kay else ("dan" if nit == "yogyn" else "den")
 
         govde += ek
         yol.append(ek)
@@ -334,30 +290,35 @@ def _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik):
     """
     Çekim sonucunu 'parts' listesine dönüştürür (template'de gösterim için).
     
+    Tüm ekleri şecere (yol) string'inden çıkarır — isim_cekimle ile tutarlılık sağlar.
     Her part: {"text": ek_metni, "type": ek_türü, "code": görüntüleme_kodu}
     """
+    yol_parts = yol.split(" + ")
     parts = [{"text": root, "type": "Kök", "code": "Kök"}]
 
-    # Çokluk eki
-    if cokluk:
-        ek = "lar" if unlu_niteligi(root) == "yogyn" else "ler"
-        parts.append({"text": ek, "type": "Sayı", "code": s_code})
+    idx = 1  # yol_parts[0] = kök
 
-    # İyelik eki (şecereden çıkarılır)
-    if iyelik:
-        yol_parts = yol.split(" + ")
-        beklenen_pozisyon = 2 if cokluk else 1
-        if len(yol_parts) > beklenen_pozisyon:
-            iyelik_eki = yol_parts[beklenen_pozisyon]
+    # Çokluk eki (şecereden)
+    if cokluk and idx < len(yol_parts):
+        parts.append({"text": yol_parts[idx], "type": "Sayı", "code": s_code})
+        idx += 1
+
+    # İyelik eki (şecereden)
+    if iyelik and idx < len(yol_parts):
+        iyelik_eki = yol_parts[idx]
+        # Hal eki de varsa, iyelik eki sondan bir önceki
+        if h_code and h_code != "H1" and idx + 1 < len(yol_parts):
             parts.append({"text": iyelik_eki, "type": "Degislilik", "code": i_code})
+            idx += 1
+        else:
+            parts.append({"text": iyelik_eki, "type": "Degislilik", "code": i_code})
+            idx += 1
 
     # Hal eki (şecerenin son elemanı)
-    if h_code and h_code != "H1":
-        yol_parts = yol.split(" + ")
-        if len(yol_parts) > 1:
-            hal_eki = yol_parts[-1]
-            display_code = h_code.replace('H', 'A')
-            parts.append({"text": hal_eki, "type": "Hal", "code": display_code})
+    if h_code and h_code != "H1" and idx < len(yol_parts):
+        hal_eki = yol_parts[idx]
+        display_code = h_code.replace('H', 'A')
+        parts.append({"text": hal_eki, "type": "Hal", "code": display_code})
 
     # İyelik kodlarını görüntüleme formatına çevir (A1→D₁b, B1→D₁k, vb.)
     for part in parts:
@@ -401,7 +362,7 @@ def analyze(root, s_code, i_code, h_code):
     if root_lower in ES_SESLILER:
         results = []
         for key, (anlam, yumusama) in ES_SESLILER[root_lower].items():
-            result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal, yumusama_izni=yumusama)
+            result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal)
             parts = _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik)
             results.append({
                 "parts": parts,
@@ -673,14 +634,13 @@ def baslat():
     """Komut satırı arayüzü — test ve geliştirme için."""
     while True:
         print("\n" + "=" * 60)
-        print("🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v16.6")
+        print("🇹🇲 TÜRKMEN MORFOLOJİK MOTOR v26.0")
         print("=" * 60)
         mode = input("[1] İsim (At)  [2] Fiil (İşlik)  [Q] Çıkış\nSeçim: ").lower()
         if mode == 'q':
             break
 
         kok = input("Kök Söz: ").lower()
-        yumusama_izni = True
         secili_anlam = ""
 
         # Eş sesli kelime kontrolü
@@ -689,14 +649,14 @@ def baslat():
             for k, v in ES_SESLILER[kok].items():
                 print(f"[{k}] {v[0]}")
             secim = input("Seçim: ")
-            secili_anlam, yumusama_izni = ES_SESLILER[kok].get(secim, (kok.upper(), True))
+            secili_anlam = ES_SESLILER[kok].get(secim, (kok.upper(), True))[0]
 
         if mode == '1':
             c = input("Çokluk [e/h]: ").lower() == 'e'
             i = input("İyelik [1, 2, 3 veya boş]: ")
             it = "cog" if i and input("Tip [1] Tekil [2] Çoğul: ") == "2" else "tek"
             h = input("Hal [A2-A6 veya boş]: ").upper()
-            res, anl = isim_cekimle(kok, c, "A" + i if i else None, it, h if h else None, yumusama_izni)
+            res, anl = isim_cekimle(kok, c, "A" + i if i else None, it, h if h else None)
             if secili_anlam:
                 print(f"📖 ANLAM: {secili_anlam}")
             print(f"✅ NETİCE: {res}\n🧬 ŞECERE: {anl}")
