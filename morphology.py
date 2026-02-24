@@ -57,6 +57,14 @@ DUSME_ADAYLARI = {
     "köwüş", "orun", "garyn", "gelin"
 }
 
+# Özel yuvarlaklaşma listesi (y/i → u/ü dönüşümü)
+# Bu kelimeler hal ekleri (A5, A6) öncesinde de yuvarlaklaşır.
+YUVARLAKLASMA_LISTESI = {
+    "guzy": "guzu",
+    "süri": "sürü",
+    "guýy": "guýu"
+}
+
 
 # ==============================================================================
 #  YARDIMCI FONKSİYONLAR
@@ -125,9 +133,9 @@ def dusme_uygula(kok, ek):
 #  İSİM ÇEKİMİ
 # ==============================================================================
 
-def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
+def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True):
     """
-    Türkmen Türkçesi isim çekimi yapar (v26.0).
+    Türkmen Türkçesi isim çekimi yapar (v27.0).
     
     Parametreler:
         kok    : Kök kelime (str)
@@ -135,6 +143,7 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
         iyelik : İyelik kodu: "A1" (men), "A2" (sen), "A3" (ol) veya None
         i_tip  : İyelik tipi: "tek" (tekil) veya "cog" (çoğul)
         hal    : Hal kodu: "A2"-"A6" veya None
+        yumusama_izni : Ünsüz yumuşaması uygulanacak mı (eş sesliler için)
     
     Döndürür:
         (çekimlenmiş_kelime, şecere_str)
@@ -192,9 +201,10 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
                 govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
             ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
 
-        # --- Düşme ve yumuşama (her zaman uygulanır) ---
+        # --- Düşme ve yumuşama ---
         govde = dusme_uygula(govde, ek)
-        govde = tam_yumusama(govde)
+        if yumusama_izni:
+            govde = tam_yumusama(govde)
         govde += ek
         yol.append(ek)
 
@@ -227,7 +237,8 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
                 else:
                     ek = "yň" if nit == "yogyn" else "iň"
                 govde = dusme_uygula(govde, ek)
-                govde = tam_yumusama(govde)
+                if yumusama_izni:
+                    govde = tam_yumusama(govde)
 
         elif hal == "A3":  # Yönelme hali
             if n_kay:
@@ -249,12 +260,21 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
                 ek = "ny" if nit == "yogyn" else "ni"
             else:
                 ek = "y" if nit == "yogyn" else "i"
-                govde = tam_yumusama(govde)
+                if yumusama_izni:
+                    govde = tam_yumusama(govde)
 
         elif hal == "A5":  # Bulunma hali
+            # Özel yuvarlaklaşma: guzy→guzuda, süri→sürüde (yalın hal)
+            if not n_kay and not cokluk and not iyelik and govde in YUVARLAKLASMA_LISTESI:
+                govde = YUVARLAKLASMA_LISTESI[govde]
+                nit = unlu_niteligi(govde)
             ek = "nda" if n_kay else ("da" if nit == "yogyn" else "de")
 
         elif hal == "A6":  # Çıkma hali
+            # Özel yuvarlaklaşma: guzy→guzudan, süri→sürüden (yalın hal)
+            if not n_kay and not cokluk and not iyelik and govde in YUVARLAKLASMA_LISTESI:
+                govde = YUVARLAKLASMA_LISTESI[govde]
+                nit = unlu_niteligi(govde)
             ek = "ndan" if n_kay else ("dan" if nit == "yogyn" else "den")
 
         govde += ek
@@ -366,7 +386,8 @@ def analyze(root, s_code, i_code, h_code):
     if root_lower in ES_SESLILER:
         results = []
         for key, (anlam, yumusama) in ES_SESLILER[root_lower].items():
-            result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal)
+            result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal,
+                                       yumusama_izni=yumusama)
             parts = _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik)
             results.append({
                 "parts": parts,
