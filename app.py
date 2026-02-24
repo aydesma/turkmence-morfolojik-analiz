@@ -7,7 +7,7 @@ morphology motorunu çağırır ve sonuçları template'e aktarır.
 """
 from flask import Flask, render_template, request
 from morphology import analyze, analyze_verb
-from parser import parse_kelime
+from parser import parse_kelime, parse_kelime_multi
 
 app = Flask(__name__)
 
@@ -21,6 +21,7 @@ def index():
     final_word = ""
     root_word = ""
     parse_result = None
+    parse_results_all = None
     is_dual = False
     dual_results = None
 
@@ -42,7 +43,17 @@ def index():
 
         # --- Parse işlemi ---
         if action == 'parse' and root:
-            parse_result = parse_kelime(root)
+            # Çoklu sonuç al
+            multi = parse_kelime_multi(root)
+            if multi.get("basarili") and multi.get("sonuclar"):
+                # İlk sonucu ana parse_result olarak göster
+                parse_result = multi["sonuclar"][0]
+                # Birden fazla sonuç varsa hepsini gönder
+                if len(multi["sonuclar"]) > 1:
+                    parse_results_all = multi["sonuclar"]
+            else:
+                # Tek sonuç moduna düş
+                parse_result = parse_kelime(root)
 
         # --- Çekimleme işlemi ---
         elif action == 'cekimle':
@@ -94,6 +105,7 @@ def index():
                            mode=mode,
                            action=action,
                            parse_result=parse_result,
+                           parse_results_all=parse_results_all,
                            is_dual=is_dual,
                            dual_results=dual_results,
                            selected_sayi=selected_sayi,

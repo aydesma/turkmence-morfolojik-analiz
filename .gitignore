@@ -18,3 +18,6 @@ debug_*.py
 # OS
 .DS_Store
 Thumbs.db
+
+# Geliştirme klasörü (ayrı repo)
+turkmen-fst/
