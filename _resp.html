@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="tr" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkmence Morfolojik Analiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#09090b',
+                        darkcard: '#18181b',
+                        primary: '#4f46e5',
+                        darkprimary: '#8b5cf6', // Mor (Violet) - Ana Tema
+                        accent: '#a78bfa',      // Açık Mor
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .code-normal {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .code-hal-wrapper {
+            display: inline-flex;
+            align-items: baseline;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .code-hal-sub {
+            font-size: 0.65em;
+            margin-left: 1px;
+        }
+
+        /* Dark Mode İnce Ayarlar */
+        .dark .code-badge {
+            color: #a78bfa;
+        }
+
+        .dark .result-box {
+            background-color: #27272a;
+            border-color: #3f3f46;
+            color: #e4e4e7;
+        }
+
+        .dark .input-field {
+            background-color: #27272a;
+            border-color: #3f3f46;
+            color: white;
+        }
+
+        .kb-key {
+            transition: all 0.1s;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .kb-key:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 flex flex-col items-center min-h-screen py-8 px-4">
+
+    <div class="w-full max-w-3xl flex justify-between items-center mb-6">
+        <div class="flex items-center gap-2">
+            <div class="h-8 w-1 bg-indigo-600 dark:bg-darkprimary rounded-full"></div>
+            <h1 class="text-2xl font-bold tracking-tight">Türkmence Morfolojik Analiz</h1>
+        </div>
+        <button id="theme-toggle"
+            class="p-2 rounded-full bg-gray-200 dark:bg-zinc-800 text-gray-600 dark:text-yellow-400 hover:ring-2 ring-indigo-400 dark:ring-violet-400 transition focus:outline-none">
+            <svg id="sun-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                </path>
+            </svg>
+            <svg id="moon-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Tab Butonları -->
+    <div class="w-full max-w-3xl mb-4 flex gap-2">
+        <button onclick="switchTab('isim')" id="tab-isim"
+            class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-indigo-600 dark:bg-violet-600 text-white shadow-lg">
+            At çekimi
+        </button>
+        <button onclick="switchTab('fiil')" id="tab-fiil"
+            class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
+            Işlik çekimi
+        </button>
+        <button onclick="switchTab('cozumle')" id="tab-cozumle"
+            class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
+            Derňew
+        </button>
+    </div>
+
+    <div
+        class="bg-white dark:bg-darkcard rounded-2xl shadow-xl w-full max-w-3xl p-6 md:p-8 mb-8 border border-gray-100 dark:border-zinc-800 transition-colors">
+
+        <!-- İsim Çekim Formu -->
+        <form method="POST" id="form-isim" class="space-y-6">
+            <input type="hidden" name="mode" value="isim">
+            <input type="hidden" name="action" value="cekimle">
+
+            <div>
+                <div class="flex justify-between items-end mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
+                    <button type="button" onclick="fillRandom('isim')"
+                        class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Mysal getir
+                    </button>
+                </div>
+                <input type="text" id="rootInput-isim" name="root" required placeholder="Mysal: defter"
+                    value="kitap"
+                    class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
+
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addChar('ä', 'isim')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addChar('ň', 'isim')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addChar('ž', 'isim')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addChar('ý', 'isim')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">San
+                        kategoriýasy</label>
+                    <select name="sayi"
+                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <option value="">S- Birlik</option>
+                        <option value="S2">S+ Köplük</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Degişlilik
+                        kategoriýasy</label>
+                    <select name="iyelik"
+                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <option value="">Ø</option>
+                        <optgroup label="Birlik">
+                            <option value="A1">D₁b (1. Birlik)</option>
+                            <option value="A2">D₂b (2. Birlik)</option>
+                            <option value="A3">D₃b (3. Birlik)</option>
+                        </optgroup>
+                        <optgroup label="Köplük">
+                            <option value="B1">D₁k (1. Köplük)</option>
+                            <option value="B2">D₂k (2. Köplük)</option>
+                            <option value="B3">D₃k (3. Köplük)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Düşüm
+                        kategoriýasy</label>
+                    <select name="hal"
+                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <option value="H1">A₁ Baş düşüm</option>
+                        <option value="H2">A₂ Eýelik düşüm</option>
+                        <option value="H3">A₃ Ýöneliş düşüm</option>
+                        <option value="H4">A₄ Ýeniş düşüm</option>
+                        <option value="H5">A₅ Wagt-orun düşüm</option>
+                        <option value="H6">A₆ Çykyş düşüm</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-violet-600 dark:hover:bg-violet-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Çekimle
+            </button>
+        </form>
+
+        <!-- Fiil Çekim Formu -->
+        <form method="POST" id="form-fiil" class="space-y-6 hidden">
+            <input type="hidden" name="mode" value="fiil">
+
+            <div>
+                <div class="flex justify-between items-end mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
+                    <button type="button" onclick="fillRandom('fiil')"
+                        class="text-xs text-indigo-600 dark:text-accent hover:underline font-medium flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Mysal getir
+                    </button>
+                </div>
+                <input type="text" id="rootInput-fiil" name="root" required placeholder="Mysal: gel"
+                    value=""
+                    class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
+
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addChar('ä', 'fiil')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addChar('ň', 'fiil')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addChar('ž', 'fiil')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addChar('ý', 'fiil')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Zaman</label>
+                    <select name="zaman" required
+                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <optgroup label="Öten Zaman">
+                            <option value="Ö1" >Ö1 - Anyk Öten Zaman
+                            </option>
+                            <option value="Ö2" >Ö2 - Daş Öten Zaman
+                            </option>
+                            <option value="Ö3" >Ö3 - Dowamly Öten Zaman
+                            </option>
+                        </optgroup>
+                        <optgroup label="Häzirki Zaman">
+                            <option value="H1" >H1 - Umumy Häzirki Zaman
+                            </option>
+                            <option value="H2" >H2 - Anyk Häzirki Zaman
+                            </option>
+                        </optgroup>
+                        <optgroup label="Geljek Zaman">
+                            <option value="G1" >G1 - Mälim Geljek Zaman
+                            </option>
+                            <option value="G2" >G2 - Nämälim Geljek
+                                Zaman</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Şahıs</label>
+                    <select name="sahis" required
+                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        <optgroup label="Teklik (Birlik)">
+                            <option value="A1" >A1 - Men (1. Tekil)
+                            </option>
+                            <option value="A2" >A2 - Sen (2. Tekil)
+                            </option>
+                            <option value="A3" >A3 - Ol (3. Tekil)
+                            </option>
+                        </optgroup>
+                        <optgroup label="Çoğulluk (Köplük)">
+                            <option value="B1" >B1 - Biz (1. Çoğul)
+                            </option>
+                            <option value="B2" >B2 - Siz (2. Çoğul)
+                            </option>
+                            <option value="B3" >B3 - Olar (3. Çoğul)
+                            </option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="olumsuz" name="olumsuz" value="on" 
+                    class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-violet-500">
+                <label for="olumsuz" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Olumsuzluk</label>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-violet-600 dark:hover:bg-violet-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Çekimle
+            </button>
+        </form>
+
+        <!-- Çözümle Formu -->
+        <form method="POST" id="form-cozumle" class="space-y-6 hidden">
+            <input type="hidden" name="action" value="parse">
+
+            <div>
+                <div class="flex justify-between items-end mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
+                    <button type="button" onclick="fillRandomParse()"
+                        class="text-xs text-red-600 dark:text-red-400 hover:underline font-medium flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Mysal getir
+                    </button>
+                </div>
+                <input type="text" id="parseInput" name="root" required placeholder="Mysal: kitaplarymyzdan"
+                    value=""
+                    class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
+
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addCharParse('ä')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addCharParse('ň')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addCharParse('ž')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addCharParse('ý')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Çözümle
+            </button>
+        </form>
+
+        
+
+        
+        <div class="mt-10 border-t border-gray-100 dark:border-zinc-800 pt-8 animate-fade-in">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
+                Analiz Sonucu
+            </h2>
+
+            
+            <!-- İsim Çekim Sonucu -->
+            
+            <!-- Normal Tek Sonuç -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                
+                <!-- Boş ek gösterilmez -->
+                
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        
+                        <span class="code-normal text-indigo-600 dark:text-accent">
+                            Kök
+                        </span>
+                        
+                    </div>
+                    <div
+                        class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        kitap
+                    </div>
+                </div>
+                
+                
+                <!-- Boş ek gösterilmez -->
+                
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        
+                        <span class="code-normal text-indigo-600 dark:text-accent">
+                            D₁b
+                        </span>
+                        
+                    </div>
+                    <div
+                        class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        ym
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <div
+                class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
+                <p class="text-base font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">
+                    Oluşturulan Kelime</p>
+                <div class="w-full text-center">
+                    <p id="finalWord"
+                        class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">kitabym</p>
+                </div>
+                <button onclick="copyResult()"
+                    class="absolute right-4 md:right-6 p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800"
+                    title="Kopyala">
+                    <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            
+        </div>
+        
+    </div>
+
+    <div class="w-full max-w-3xl" id="history-container" style="display:none;">
+        <div class="flex items-center justify-between mb-4 px-2">
+            <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">Geçmiş Aramalar</h3>
+            <button onclick="clearHistory()" class="text-xs text-red-500 hover:text-red-700 underline">Geçmişi
+                Temizle</button>
+        </div>
+        <div class="grid gap-3" id="history-list">
+        </div>
+    </div>
+
+    <div class="mt-12 text-gray-400 dark:text-gray-600 text-sm font-medium">
+        &copy; 2025 Türkmence Morfolojik Analiz Projesi - Esma Aydın
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const htmlElement = document.documentElement;
+
+        // Tema Yönetimi
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        } else {
+            htmlElement.classList.remove('dark');
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        });
+
+        // Tab Yönetimi (3 ana tab)
+        function switchTab(tab) {
+            const isimTab = document.getElementById('tab-isim');
+            const fiilTab = document.getElementById('tab-fiil');
+            const cozumleTab = document.getElementById('tab-cozumle');
+            const isimForm = document.getElementById('form-isim');
+            const fiilForm = document.getElementById('form-fiil');
+            const cozumleForm = document.getElementById('form-cozumle');
+
+            // Tab stillerini sıfırla
+            const inactiveClasses = ['bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300'];
+            const activeClassesPurple = ['bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg'];
+            const activeClassesRed = ['bg-red-600', 'dark:bg-red-600', 'text-white', 'shadow-lg'];
+
+            [isimTab, fiilTab, cozumleTab].forEach(t => {
+                t.classList.remove(...activeClassesPurple, ...activeClassesRed);
+                t.classList.add(...inactiveClasses);
+            });
+
+            // Formları gizle
+            [isimForm, fiilForm, cozumleForm].forEach(f => f.classList.add('hidden'));
+
+            // Seçili tab'ı aktif et
+            if (tab === 'isim') {
+                isimTab.classList.remove(...inactiveClasses);
+                isimTab.classList.add(...activeClassesPurple);
+                isimForm.classList.remove('hidden');
+            } else if (tab === 'fiil') {
+                fiilTab.classList.remove(...inactiveClasses);
+                fiilTab.classList.add(...activeClassesPurple);
+                fiilForm.classList.remove('hidden');
+            } else if (tab === 'cozumle') {
+                cozumleTab.classList.remove(...inactiveClasses);
+                cozumleTab.classList.add(...activeClassesRed);
+                cozumleForm.classList.remove('hidden');
+            }
+        }
+
+        // Parse input için karakter ekleme
+        function addCharParse(char) {
+            const input = document.getElementById('parseInput');
+            if (input.value.length === 0) {
+                input.value += char.toUpperCase();
+            } else {
+                input.value += char;
+            }
+            input.focus();
+        }
+
+        // Parse için rastgele örnek (sadece Türkmence kelimeler)
+        function fillRandomParse() {
+            const examples = [
+                // İsim örnekleri (çekimli)
+                "kitaplarymyzdan", "mekdepde", "gözleriňiz", "okuwçylar",
+                "mugallymymyz", "watanymyza", "dostlarymyz", "şäherimizde",
+                "öýüňizden", "bagymyzda", "ýollarymyz", "suwdan",
+                "agalarymyz", "kitabym", "talyplar", "daglarymyz",
+                "çagalarymyz", "goňşymyz", "deňizde", "gyzlarymyz",
+                // Fiil örnekleri (Türkmence çekimli)
+                "geldim", "gitdiler", "okadyň", "ýazdyk",
+                "gördüm", "bildik", "aldylar", "berdim",
+                "geldi", "gitdi", "okady", "gidýär"
+            ];
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('parseInput').value = randomExample;
+        }
+
+        function addChar(char, mode) {
+            const inputId = mode === 'fiil' ? 'rootInput-fiil' : 'rootInput-isim';
+            const input = document.getElementById(inputId);
+
+            // Eğer kutu boşsa harfi BÜYÜK ekle, doluysa küçük ekle
+            if (input.value.length === 0) {
+                input.value += char.toUpperCase(); // ä -> Ä
+            } else {
+                input.value += char; // ä -> ä
+            }
+
+            input.focus();
+        }
+
+        function fillRandom(mode) {
+            if (mode === 'fiil') {
+                const verbs = [
+                    "gel", "git", "ok", "yaz", "oku", "al", "ber", "gör", "bil", "et",
+                    "iç", "iý", "ýat", "dur", "otur", "ýör", "ýatyr", "otyr", "bar", "görkez",
+                    "aç", "ýap", "getir", "götür", "de", "söyle", "sor", "tap", "bul", "ýaz",
+                    "oýna", "ýüre", "eşit", "öwren", "öýret", "ýasa", "sat", "satyn", "ýyk", "ýyg",
+                    "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg",
+                    "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg",
+                    "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg", "ýygna", "ýyg"
+                ];
+                const randomVerb = verbs[Math.floor(Math.random() * verbs.length)];
+                document.getElementById('rootInput-fiil').value = randomVerb;
+            } else {
+                const words = [
+                    "mekdep", "mugallym", "kitap", "defter", "galam", "okuwçy", "talyp", "klas",
+                    "eje", "kaka", "ata", "ene", "dogan", "aýal", "erkek", "çaga", "dost", "goňşy",
+                    "göz", "baş", "el", "aýak", "barmak", "diş", "gulak", "ýürek",
+                    "öý", "gapy", "aýna", "stol", "otag", "bag", "telefon", "kompýuter",
+                    "suw", "dag", "derýa", "deňiz", "agaç", "gül", "ýaprak", "asman", "ýagyş",
+                    "at", "it", "pişik", "guş", "goýun", "sygyr",
+                    "watan", "baýdak", "şäher", "oba", "ýol", "gün", "aý", "wagt"
+                ];
+                const randomWord = words[Math.floor(Math.random() * words.length)];
+                document.getElementById('rootInput-isim').value = randomWord;
+            }
+        }
+
+        function copyResult() {
+            const text = document.getElementById('finalWord').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('copyIcon').classList.add('hidden');
+                document.getElementById('checkIcon').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('copyIcon').classList.remove('hidden');
+                    document.getElementById('checkIcon').classList.add('hidden');
+                }, 2000);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentMode = "isim";
+            const currentAction = "cekimle";
+
+            // Parse action ise Çözümle tab'ını aç
+            if (currentAction === 'parse') {
+                switchTab('cozumle');
+            } else if (currentMode === 'fiil') {
+                switchTab('fiil');
+            } else {
+                switchTab('isim');
+            }
+
+            
+            const newEntry = {
+                root: "kitap",
+                word: "kitabym",
+                mode: "isim",
+                parts: [
+                    
+            { text: "kitap", code: "Kök", type: "Kök" },
+            
+            { text: "ym", code: "D₁b", type: "Degislilik" },
+            
+                    ]
+        };
+        saveToHistory(newEntry);
+        
+
+        
+        renderHistory();
+        });
+
+        function saveToHistory(entry) {
+            let history = JSON.parse(localStorage.getItem('turkmenHistory')) || [];
+            history.unshift(entry);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('turkmenHistory', JSON.stringify(history));
+        }
+
+        function renderHistory() {
+            let history = JSON.parse(localStorage.getItem('turkmenHistory')) || [];
+            const container = document.getElementById('history-container');
+            const list = document.getElementById('history-list');
+
+            if (history.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'block';
+            list.innerHTML = '';
+
+            history.forEach(item => {
+                let partsHtml = '';
+
+                // Fiil modunda parçaları olduğu gibi sırala (Şahıs zamir başta)
+                // İsim modunda Kök başa konur
+                if (item.mode === 'fiil') {
+                    // Fiil: parts'ı olduğu gibi render et
+                    item.parts.forEach(part => {
+                        if (part.text && part.text.trim() !== '') {
+                            let codeDisplay = part.code;
+                            if (part.type === 'Hal') {
+                                let letter = part.code.charAt(0);
+                                let num = part.code.substring(1);
+                                codeDisplay = `${letter}<sub>${num}</sub>`;
+                            }
+                            partsHtml += `
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">${codeDisplay}</span>
+                                <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
+                                    ${part.text}
+                                </span>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">${part.type}</span>
+                            </div>`;
+                        }
+                    });
+                } else {
+                    // İsim/Çözümle: Kök başa konur
+                    partsHtml = `
+                    <div class="flex flex-col items-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Kök</span>
+                        <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
+                            ${item.root}
+                        </span>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">&nbsp;</span>
+                    </div>`;
+
+                    item.parts.forEach(part => {
+                        // Boş text'leri ve Kök'ü atla
+                        if (part.code !== 'Kök' && part.text && part.text.trim() !== '') {
+                            let codeDisplay = part.code;
+                            if (part.type === 'Hal') {
+                                let letter = part.code.charAt(0);
+                                let num = part.code.substring(1);
+                                codeDisplay = `${letter}<sub>${num}</sub>`;
+                            }
+                            partsHtml += `
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">${codeDisplay}</span>
+                                <span class="bg-gray-100 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded border border-gray-200 dark:border-zinc-600 font-mono text-xs">
+                                    ${part.text}
+                                </span>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">${part.type}</span>
+                            </div>`;
+                        }
+                    });
+                }
+
+                // Mode label ve renk
+                let modeLabel, modeBg, modeText;
+                if (item.mode === 'çözümle') {
+                    modeLabel = 'Çözümle';
+                    modeBg = 'bg-red-100 dark:bg-red-900/30';
+                    modeText = 'text-red-600 dark:text-red-400';
+                } else if (item.mode === 'fiil') {
+                    modeLabel = 'Fiil Çekim';
+                    modeBg = 'bg-indigo-100 dark:bg-indigo-900/30';
+                    modeText = 'text-indigo-600 dark:text-indigo-400';
+                } else {
+                    modeLabel = 'İsim Çekim';
+                    modeBg = 'bg-indigo-100 dark:bg-indigo-900/30';
+                    modeText = 'text-indigo-600 dark:text-indigo-400';
+                }
+
+                // Gösterilecek kelime (çözümle için input, çekim için sonuç)
+                const displayWord = item.mode === 'çözümle' ? item.word : item.word;
+                const rootDisplay = item.mode === 'çözümle' ? `→ ${item.root}` : `Kök: ${item.root}`;
+
+                const html = `
+                <div class="bg-white dark:bg-darkcard p-4 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 hover:shadow-md transition flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <span class="px-2 py-1 rounded text-xs font-semibold ${modeBg} ${modeText} whitespace-nowrap">${modeLabel}</span>
+                        <div class="min-w-0">
+                            <span class="text-lg font-bold text-gray-800 dark:text-gray-200 block truncate">${displayWord}</span>
+                            <span class="text-xs text-gray-400 font-mono">${rootDisplay}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 flex-shrink-0 items-end">
+                        ${partsHtml}
+                    </div>
+                </div>`;
+                list.innerHTML += html;
+            });
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('turkmenHistory');
+            renderHistory();
+        }
+    </script>
+
+    <!-- Vercel Speed Insights -->
+    <script>
+        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+</body>
+
+</html>

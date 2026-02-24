@@ -207,6 +207,7 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
         nit = unlu_niteligi(govde)
         is_unlu = govde[-1] in TUM_UNLULER
         kok_yuvarlak = yuvarlak_mi(govde)
+        yol_eki = None  # Şecere için ayrı ek (ünlü değiştirme durumlarında)
 
         # 3. iyelikten sonra n-kaynaştırma
         n_kay = iyelik == "A3"
@@ -234,8 +235,10 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
             elif is_unlu:
                 son = govde[-1]
                 govde = govde[:-1]
-                govde += "a" if son in "ay" else "ä"
+                degisen = "a" if son in "ay" else "ä"
+                govde += degisen
                 ek = ""
+                yol_eki = degisen  # Şecere için gerçek eki kaydet
             else:
                 ek = "a" if nit == "yogyn" else "e"
 
@@ -255,7 +258,7 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None):
             ek = "ndan" if n_kay else ("dan" if nit == "yogyn" else "den")
 
         govde += ek
-        yol.append(ek)
+        yol.append(yol_eki if yol_eki is not None else ek)
 
     return govde, " + ".join(yol)
 
