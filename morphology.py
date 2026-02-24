@@ -153,6 +153,14 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
     """
     govde = kok.lower()
     yol = [kok]
+
+    # Berdi Hoca kuralı: Guzy/Süri/Guýy yuvarlaklaşması
+    # Sadece Çokluk ve A3 kategorilerinde kök değişir.
+    yuvarlaklasma_yapildi = False
+    if govde in YUVARLAKLASMA_LISTESI and (cokluk or iyelik == "A3"):
+        govde = YUVARLAKLASMA_LISTESI[govde]
+        yuvarlaklasma_yapildi = True
+
     nit_ilk = unlu_niteligi(govde)
     kok_yuvarlak = yuvarlak_mi(govde)
 
@@ -161,7 +169,7 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
     # ------------------------------------------------------------------
     if cokluk:
         # Yuvarlaklaşma: son harf y/i ise ve kök yuvarlak ise u/ü'ye dönüşür
-        if kok_yuvarlak and govde[-1] in "yi":
+        if not yuvarlaklasma_yapildi and kok_yuvarlak and govde[-1] in "yi":
             govde = govde[:-1] + ("u" if nit_ilk == "yogyn" else "ü")
 
         ek = "lar" if unlu_niteligi(govde) == "yogyn" else "ler"
@@ -196,10 +204,21 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
                 ek = taban if i_tip == "tek" else (taban + ("yz" if nit == "yogyn" else "iz"))
 
         elif iyelik == "A3":
-            # 3. tekil iyelik — yuvarlaklaşma + sy/si veya y/i
-            if kok_yuvarlak and govde[-1] in "yi":
+            # 3. tekil iyelik — yuvarlaklaşma + su/sü veya sy/si
+            yuvarlaklasti = False
+            if not yuvarlaklasma_yapildi and kok_yuvarlak and govde[-1] in "yi":
                 govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
-            ek = ("sy" if nit == "yogyn" else "si") if is_unlu else ("y" if nit == "yogyn" else "i")
+                yuvarlaklasti = True
+            if is_unlu:
+                if yuvarlaklasti or yuvarlaklasma_yapildi:
+                    ek = "su" if nit == "yogyn" else "sü"
+                else:
+                    ek = "sy" if nit == "yogyn" else "si"
+            else:
+                if yuvarlaklasma_yapildi and kok_yuvarlak:
+                    ek = "u" if nit == "yogyn" else "ü"
+                else:
+                    ek = "y" if nit == "yogyn" else "i"
 
         # --- Düşme ve yumuşama ---
         govde = dusme_uygula(govde, ek)
@@ -264,17 +283,9 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
                     govde = tam_yumusama(govde)
 
         elif hal == "A5":  # Bulunma hali
-            # Özel yuvarlaklaşma: guzy→guzuda, süri→sürüde (yalın hal)
-            if not n_kay and not cokluk and not iyelik and govde in YUVARLAKLASMA_LISTESI:
-                govde = YUVARLAKLASMA_LISTESI[govde]
-                nit = unlu_niteligi(govde)
             ek = "nda" if n_kay else ("da" if nit == "yogyn" else "de")
 
         elif hal == "A6":  # Çıkma hali
-            # Özel yuvarlaklaşma: guzy→guzudan, süri→sürüden (yalın hal)
-            if not n_kay and not cokluk and not iyelik and govde in YUVARLAKLASMA_LISTESI:
-                govde = YUVARLAKLASMA_LISTESI[govde]
-                nit = unlu_niteligi(govde)
             ek = "ndan" if n_kay else ("dan" if nit == "yogyn" else "den")
 
         govde += ek
