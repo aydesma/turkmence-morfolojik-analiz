@@ -324,8 +324,9 @@ def _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik):
         parts.append({"text": hal_eki, "type": "Hal", "code": display_code})
 
     # İyelik kodlarını görüntüleme formatına çevir (A1→D₁b, B1→D₁k, vb.)
+    # Sadece iyelik (Degislilik) parçalarına uygula — hal kodları (A2-A6) etkilenmesin
     for part in parts:
-        if part.get("code") in IYELIK_DISPLAY_MAP:
+        if part.get("type") == "Degislilik" and part.get("code") in IYELIK_DISPLAY_MAP:
             part["code"] = IYELIK_DISPLAY_MAP[part["code"]]
 
     return parts
