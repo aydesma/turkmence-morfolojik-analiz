@@ -446,6 +446,15 @@ class MorphologicalAnalyzer:
         # Fiil olarak çözümle
         all_results.extend(self.parse_verb(word))
 
+        # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
+        seen_breakdowns = set()
+        unique_results = []
+        for r in all_results:
+            if r.breakdown not in seen_breakdowns:
+                seen_breakdowns.add(r.breakdown)
+                unique_results.append(r)
+        all_results = unique_results
+
         # Hiç sonuç yoksa bilinmeyen kök olarak döndür
         if not all_results:
             all_results.append(AnalysisResult(

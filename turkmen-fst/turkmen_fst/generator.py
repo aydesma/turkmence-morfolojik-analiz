@@ -492,6 +492,10 @@ class MorphologicalGenerator:
                       case: Optional[str] = None,
                       yumusama_izni: bool = True) -> GenerationResult:
         "İsim çekimi yapar."""
+        # B1/B2 kodlarını A1/A2 + çoğul tipine dönüştür
+        if possessive in ("B1", "B2"):
+            poss_type = "cog"
+            possessive = "A1" if possessive == "B1" else "A2"
         return self.noun_gen.generate(stem, plural, possessive, poss_type, case, yumusama_izni)
 
     def generate_verb(self, stem: str, tense: str, person: str,
