@@ -1,0 +1,15 @@
+# TurkmenFST Requirements
+
+# Core (no external dependencies for base functionality)
+
+# API (optional)
+fastapi>=0.100.0
+uvicorn>=0.20.0
+pydantic>=2.0.0
+
+# Web (optional)
+flask>=2.0.0
+
+# Development
+pytest>=7.0.0
+pytest-cov

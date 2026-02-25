@@ -10,8 +10,11 @@ gerçek morfolojik analiz yapar.
 import os
 import sys
 
-# Sözlük yolu
+# turkmen-fst modülünü import path'ine ekle
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+_FST_DIR = os.path.join(_BASE_DIR, "turkmen-fst")
+if _FST_DIR not in sys.path:
+    sys.path.insert(0, _FST_DIR)
 
 from turkmen_fst.lexicon import Lexicon
 from turkmen_fst.analyzer import MorphologicalAnalyzer
@@ -26,7 +29,7 @@ def _get_analyzer():
     global _lexicon, _analyzer
     if _analyzer is None:
         _lexicon = Lexicon()
-        dict_path = os.path.join(_BASE_DIR, "turkmence_sozluk.txt")
+        dict_path = os.path.join(_FST_DIR, "data", "turkmence_sozluk.txt")
         _lexicon.load(dict_path)
         _analyzer = MorphologicalAnalyzer(_lexicon)
     return _analyzer

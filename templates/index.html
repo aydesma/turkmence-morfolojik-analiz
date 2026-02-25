@@ -118,6 +118,10 @@
             class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
             Derňew
         </button>
+        <button onclick="switchTab('paradigma')" id="tab-paradigma"
+            class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
+            Paradigma
+        </button>
     </div>
 
     <div
@@ -344,6 +348,140 @@
                 Çözümle
             </button>
         </form>
+
+        <!-- Paradigma Formu -->
+        <form method="POST" id="form-paradigma" class="space-y-6 hidden">
+            <input type="hidden" name="action" value="paradigma">
+
+            <div>
+                <div class="flex justify-between items-end mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
+                    <button type="button" onclick="fillRandomParadigma()"
+                        class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Mysal getir
+                    </button>
+                </div>
+                <input type="text" id="paradigmaInput" name="root" required placeholder="Mysal: kitap"
+                    value="{{ root if root and action == 'paradigma' else '' }}"
+                    class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-500 focus:outline-none transition text-lg">
+
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addCharParadigma('ä')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addCharParadigma('ň')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addCharParadigma('ž')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addCharParadigma('ý')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Söz görnüşi</label>
+                <div class="flex gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="paradigma_type" value="noun" checked
+                            class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">At (İsim)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="paradigma_type" value="verb"
+                            class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Işlık (Fiil)</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Paradigma görkez
+            </button>
+        </form>
+
+        {% if paradigma_data %}
+        <!-- Paradigma Sonucu -->
+        <div class="mt-10 border-t border-emerald-200 dark:border-emerald-900/50 pt-8 animate-fade-in">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">
+                Paradigma Tablisy
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ paradigma_data.stem }}</span>
+                sözüniň doly çekim tablisy
+            </p>
+
+            {% if paradigma_data.type == 'noun' %}
+            <!-- İSİM PARADİGMASI -->
+            {% for section_name, section_data in [('Birlik (Tekil)', paradigma_data.singular), ('Köplük (Çoğul)', paradigma_data.plural)] %}
+            <div class="mb-6">
+                <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-400 mb-2 uppercase tracking-wider">
+                    {{ section_name }}
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-emerald-50 dark:bg-emerald-900/20">
+                                <th class="py-2 px-3 text-left font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Düşüm</th>
+                                {% for h in paradigma_data.poss_headers %}
+                                <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">{{ h }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in section_data %}
+                            <tr class="{% if loop.index is odd %}bg-white dark:bg-zinc-900{% else %}bg-gray-50 dark:bg-zinc-800/50{% endif %} hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors">
+                                <td class="py-2 px-3 font-medium text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-zinc-700 whitespace-nowrap">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold">{{ row.code }}</span>
+                                    <span class="text-gray-500 dark:text-gray-400 text-xs ml-1">{{ row.name }}</span>
+                                </td>
+                                {% for form in row.forms %}
+                                <td class="py-2 px-3 text-center font-mono text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-zinc-700">{{ form }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% elif paradigma_data.type == 'verb' %}
+            <!-- FİİL PARADİGMASI -->
+            {% for tense in paradigma_data.tenses %}
+            <div class="mb-6">
+                <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-400 mb-2 uppercase tracking-wider">
+                    {{ tense.name }}
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-emerald-50 dark:bg-emerald-900/20">
+                                <th class="py-2 px-3 text-left font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Şahıs</th>
+                                <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Bolumly (+)</th>
+                                <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Bolumly däl (−)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in tense.rows %}
+                            <tr class="{% if loop.index is odd %}bg-white dark:bg-zinc-900{% else %}bg-gray-50 dark:bg-zinc-800/50{% endif %} hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors">
+                                <td class="py-2 px-3 font-medium text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-zinc-700">{{ row.person }}</td>
+                                <td class="py-2 px-3 text-center font-mono text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-zinc-700">{{ row.positive }}</td>
+                                <td class="py-2 px-3 text-center font-mono text-red-600 dark:text-red-400 border-b border-gray-100 dark:border-zinc-700">{{ row.negative }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
 
         {% if parse_result %}
         <div class="mt-10 border-t border-red-200 dark:border-red-900/50 pt-8 animate-fade-in">
@@ -645,27 +783,30 @@
             }
         });
 
-        // Tab Yönetimi (3 ana tab)
+        // Tab Yönetimi (4 ana tab)
         function switchTab(tab) {
             const isimTab = document.getElementById('tab-isim');
             const fiilTab = document.getElementById('tab-fiil');
             const cozumleTab = document.getElementById('tab-cozumle');
+            const paradigmaTab = document.getElementById('tab-paradigma');
             const isimForm = document.getElementById('form-isim');
             const fiilForm = document.getElementById('form-fiil');
             const cozumleForm = document.getElementById('form-cozumle');
+            const paradigmaForm = document.getElementById('form-paradigma');
 
             // Tab stillerini sıfırla
             const inactiveClasses = ['bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300'];
             const activeClassesPurple = ['bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg'];
             const activeClassesRed = ['bg-red-600', 'dark:bg-red-600', 'text-white', 'shadow-lg'];
+            const activeClassesGreen = ['bg-emerald-600', 'dark:bg-emerald-600', 'text-white', 'shadow-lg'];
 
-            [isimTab, fiilTab, cozumleTab].forEach(t => {
-                t.classList.remove(...activeClassesPurple, ...activeClassesRed);
+            [isimTab, fiilTab, cozumleTab, paradigmaTab].forEach(t => {
+                t.classList.remove(...activeClassesPurple, ...activeClassesRed, ...activeClassesGreen);
                 t.classList.add(...inactiveClasses);
             });
 
             // Formları gizle
-            [isimForm, fiilForm, cozumleForm].forEach(f => f.classList.add('hidden'));
+            [isimForm, fiilForm, cozumleForm, paradigmaForm].forEach(f => f.classList.add('hidden'));
 
             // Seçili tab'ı aktif et
             if (tab === 'isim') {
@@ -680,6 +821,10 @@
                 cozumleTab.classList.remove(...inactiveClasses);
                 cozumleTab.classList.add(...activeClassesRed);
                 cozumleForm.classList.remove('hidden');
+            } else if (tab === 'paradigma') {
+                paradigmaTab.classList.remove(...inactiveClasses);
+                paradigmaTab.classList.add(...activeClassesGreen);
+                paradigmaForm.classList.remove('hidden');
             }
         }
 
@@ -726,6 +871,27 @@
             input.focus();
         }
 
+        function addCharParadigma(char) {
+            const input = document.getElementById('paradigmaInput');
+            if (input.value.length === 0) {
+                input.value += char.toUpperCase();
+            } else {
+                input.value += char;
+            }
+            input.focus();
+        }
+
+        function fillRandomParadigma() {
+            const words = [
+                "kitap", "mekdep", "mugallym", "okuwçy", "öý", "suw", "dag", "derýa",
+                "gül", "agaç", "watan", "şäher", "oba", "göz", "el", "baş",
+                "gel", "git", "oku", "ýaz", "al", "ber", "gör", "bil",
+                "dur", "otur", "aç", "ýap", "iý", "iç"
+            ];
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            document.getElementById('paradigmaInput').value = randomWord;
+        }
+
         function fillRandom(mode) {
             if (mode === 'fiil') {
                 const verbs = [
@@ -770,9 +936,11 @@
             const currentMode = "{{ mode if mode else 'isim' }}";
             const currentAction = "{{ action if action else 'cekimle' }}";
 
-            // Parse action ise Çözümle tab'ını aç
+            // Aktif tab'ı seç
             if (currentAction === 'parse') {
                 switchTab('cozumle');
+            } else if (currentAction === 'paradigma') {
+                switchTab('paradigma');
             } else if (currentMode === 'fiil') {
                 switchTab('fiil');
             } else {

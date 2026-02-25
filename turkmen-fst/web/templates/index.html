@@ -118,6 +118,10 @@
             class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
             Derňew
         </button>
+        <button onclick="switchTab('paradigma')" id="tab-paradigma"
+            class="tab-button flex-1 py-3 px-4 rounded-t-xl font-semibold transition-all bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-600">
+            Paradigma
+        </button>
     </div>
 
     <div
@@ -142,7 +146,7 @@
                     </button>
                 </div>
                 <input type="text" id="rootInput-isim" name="root" required placeholder="Mysal: defter"
-                    value="kitap"
+                    value="{{ root if root and mode == 'isim' and action == 'cekimle' else '' }}"
                     class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
 
                 <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
@@ -226,7 +230,7 @@
                     </button>
                 </div>
                 <input type="text" id="rootInput-fiil" name="root" required placeholder="Mysal: gel"
-                    value=""
+                    value="{{ root if root and mode == 'fiil' else '' }}"
                     class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
 
                 <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
@@ -247,23 +251,23 @@
                     <select name="zaman" required
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
                         <optgroup label="Öten Zaman">
-                            <option value="Ö1" >Ö1 - Anyk Öten Zaman
+                            <option value="Ö1" {% if selected_zaman=='Ö1' %}selected{% endif %}>Ö1 - Anyk Öten Zaman
                             </option>
-                            <option value="Ö2" >Ö2 - Daş Öten Zaman
+                            <option value="Ö2" {% if selected_zaman=='Ö2' %}selected{% endif %}>Ö2 - Daş Öten Zaman
                             </option>
-                            <option value="Ö3" >Ö3 - Dowamly Öten Zaman
+                            <option value="Ö3" {% if selected_zaman=='Ö3' %}selected{% endif %}>Ö3 - Dowamly Öten Zaman
                             </option>
                         </optgroup>
                         <optgroup label="Häzirki Zaman">
-                            <option value="H1" >H1 - Umumy Häzirki Zaman
+                            <option value="H1" {% if selected_zaman=='H1' %}selected{% endif %}>H1 - Umumy Häzirki Zaman
                             </option>
-                            <option value="H2" >H2 - Anyk Häzirki Zaman
+                            <option value="H2" {% if selected_zaman=='H2' %}selected{% endif %}>H2 - Anyk Häzirki Zaman
                             </option>
                         </optgroup>
                         <optgroup label="Geljek Zaman">
-                            <option value="G1" >G1 - Mälim Geljek Zaman
+                            <option value="G1" {% if selected_zaman=='G1' %}selected{% endif %}>G1 - Mälim Geljek Zaman
                             </option>
-                            <option value="G2" >G2 - Nämälim Geljek
+                            <option value="G2" {% if selected_zaman=='G2' %}selected{% endif %}>G2 - Nämälim Geljek
                                 Zaman</option>
                         </optgroup>
                     </select>
@@ -274,19 +278,19 @@
                     <select name="sahis" required
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
                         <optgroup label="Teklik (Birlik)">
-                            <option value="A1" >A1 - Men (1. Tekil)
+                            <option value="A1" {% if selected_sahis=='A1' %}selected{% endif %}>A1 - Men (1. Tekil)
                             </option>
-                            <option value="A2" >A2 - Sen (2. Tekil)
+                            <option value="A2" {% if selected_sahis=='A2' %}selected{% endif %}>A2 - Sen (2. Tekil)
                             </option>
-                            <option value="A3" >A3 - Ol (3. Tekil)
+                            <option value="A3" {% if selected_sahis=='A3' %}selected{% endif %}>A3 - Ol (3. Tekil)
                             </option>
                         </optgroup>
                         <optgroup label="Çoğulluk (Köplük)">
-                            <option value="B1" >B1 - Biz (1. Çoğul)
+                            <option value="B1" {% if selected_sahis=='B1' %}selected{% endif %}>B1 - Biz (1. Çoğul)
                             </option>
-                            <option value="B2" >B2 - Siz (2. Çoğul)
+                            <option value="B2" {% if selected_sahis=='B2' %}selected{% endif %}>B2 - Siz (2. Çoğul)
                             </option>
-                            <option value="B3" >B3 - Olar (3. Çoğul)
+                            <option value="B3" {% if selected_sahis=='B3' %}selected{% endif %}>B3 - Olar (3. Çoğul)
                             </option>
                         </optgroup>
                     </select>
@@ -294,7 +298,8 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <input type="checkbox" id="olumsuz" name="olumsuz" value="on" 
+                <input type="checkbox" id="olumsuz" name="olumsuz" value="on" {% if selected_olumsuz %}checked{% endif
+                    %}
                     class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-violet-500">
                 <label for="olumsuz" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Olumsuzluk</label>
             </div>
@@ -323,7 +328,7 @@
                     </button>
                 </div>
                 <input type="text" id="parseInput" name="root" required placeholder="Mysal: kitaplarymyzdan"
-                    value=""
+                    value="{{ root if root and action == 'parse' else '' }}"
                     class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 focus:outline-none transition text-lg">
 
                 <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
@@ -344,65 +349,272 @@
             </button>
         </form>
 
-        
+        <!-- Paradigma Formu -->
+        <form method="POST" id="form-paradigma" class="space-y-6 hidden">
+            <input type="hidden" name="action" value="paradigma">
 
-        
+            <div>
+                <div class="flex justify-between items-end mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Söz</label>
+                    <button type="button" onclick="fillRandomParadigma()"
+                        class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Mysal getir
+                    </button>
+                </div>
+                <input type="text" id="paradigmaInput" name="root" required placeholder="Mysal: kitap"
+                    value="{{ root if root and action == 'paradigma' else '' }}"
+                    class="input-field w-full p-4 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-500 focus:outline-none transition text-lg">
+
+                <div class="mt-3 flex justify-center gap-2 overflow-x-auto py-1">
+                    <button type="button" onclick="addCharParadigma('ä')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ä</button>
+                    <button type="button" onclick="addCharParadigma('ň')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ň</button>
+                    <button type="button" onclick="addCharParadigma('ž')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ž</button>
+                    <button type="button" onclick="addCharParadigma('ý')"
+                        class="kb-key px-3 py-1 bg-gray-100 dark:bg-zinc-700 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-zinc-600 font-mono text-sm font-bold">ý</button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Söz görnüşi</label>
+                <div class="flex gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="paradigma_type" value="noun" checked
+                            class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">At (İsim)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="paradigma_type" value="verb"
+                            class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Işlık (Fiil)</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Paradigma görkez
+            </button>
+        </form>
+
+        {% if paradigma_data %}
+        <!-- Paradigma Sonucu -->
+        <div class="mt-10 border-t border-emerald-200 dark:border-emerald-900/50 pt-8 animate-fade-in">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">
+                Paradigma Tablisy
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ paradigma_data.stem }}</span>
+                sözüniň doly çekim tablisy
+            </p>
+
+            {% if paradigma_data.type == 'noun' %}
+            <!-- İSİM PARADİGMASI -->
+            {% for section_name, section_data in [('Birlik (Tekil)', paradigma_data.singular), ('Köplük (Çoğul)', paradigma_data.plural)] %}
+            <div class="mb-6">
+                <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-400 mb-2 uppercase tracking-wider">
+                    {{ section_name }}
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-emerald-50 dark:bg-emerald-900/20">
+                                <th class="py-2 px-3 text-left font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Düşüm</th>
+                                {% for h in paradigma_data.poss_headers %}
+                                <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">{{ h }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in section_data %}
+                            <tr class="{% if loop.index is odd %}bg-white dark:bg-zinc-900{% else %}bg-gray-50 dark:bg-zinc-800/50{% endif %} hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors">
+                                <td class="py-2 px-3 font-medium text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-zinc-700 whitespace-nowrap">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold">{{ row.code }}</span>
+                                    <span class="text-gray-500 dark:text-gray-400 text-xs ml-1">{{ row.name }}</span>
+                                </td>
+                                {% for form in row.forms %}
+                                <td class="py-2 px-3 text-center font-mono text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-zinc-700">{{ form }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% elif paradigma_data.type == 'verb' %}
+            <!-- FİİL PARADİGMASI -->
+            {% for tense in paradigma_data.tenses %}
+            <div class="mb-6">
+                <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-400 mb-2 uppercase tracking-wider">
+                    {{ tense.name }}
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-emerald-50 dark:bg-emerald-900/20">
+                                <th class="py-2 px-3 text-left font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Şahıs</th>
+                                <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Bolumly (+)</th>
+                                <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Bolumly däl (−)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in tense.rows %}
+                            <tr class="{% if loop.index is odd %}bg-white dark:bg-zinc-900{% else %}bg-gray-50 dark:bg-zinc-800/50{% endif %} hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors">
+                                <td class="py-2 px-3 font-medium text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-zinc-700">{{ row.person }}</td>
+                                <td class="py-2 px-3 text-center font-mono text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-zinc-700">{{ row.positive }}</td>
+                                <td class="py-2 px-3 text-center font-mono text-red-600 dark:text-red-400 border-b border-gray-100 dark:border-zinc-700">{{ row.negative }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if parse_result %}
+        <div class="mt-10 border-t border-red-200 dark:border-red-900/50 pt-8 animate-fade-in">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 text-center">
+                Çözüm Sonucu
+            </h2>
+
+            {% if parse_results_all and parse_results_all|length > 1 %}
+            <div class="mb-4 text-center">
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ parse_results_all|length }} olasy çözümleme tapyldy
+                </span>
+            </div>
+            {% endif %}
+
+            {% set all_results = parse_results_all if parse_results_all else [parse_result] %}
+            {% for pr in all_results %}
+            {% if all_results|length > 1 %}
+            <div class="mb-2 text-center">
+                <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">Çözümleme {{ loop.index }}</span>
+            </div>
+            {% endif %}
+
+            {% if pr.tur %}
+            <div class="flex justify-center gap-2 mb-3">
+                <span
+                    class="px-4 py-1.5 rounded-full text-base font-semibold {% if pr.tur == 'fiil' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300{% elif pr.tur == 'isim' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300{% else %}bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300{% endif %}">
+                    {% if pr.tur == 'isim' %}At (İsim){% elif pr.tur == 'fiil' %}Işlık (Fiil){% else %}Näbelli{% endif %}
+                </span>
+            </div>
+            {% endif %}
+
+            {% if pr.anlam %}
+            <div class="mb-3 text-center">
+                <span class="text-sm text-amber-600 dark:text-amber-400 font-medium">{{ pr.anlam }}</span>
+            </div>
+            {% endif %}
+
+            {% if pr.uyari %}
+            <div
+                class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg text-center">
+                <p class="text-sm text-yellow-700 dark:text-yellow-300">{{ pr.uyari }}</p>
+            </div>
+            {% endif %}
+
+            <div class="flex flex-wrap justify-center items-start gap-3 mb-6">
+                <!-- Kök -->
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        <span class="text-base font-semibold text-red-600 dark:text-red-400">Kök</span>
+                    </div>
+                    <div
+                        class="result-box bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ pr.kok }}
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400 mt-1">&nbsp;</span>
+                </div>
+
+                {% for ek in pr.ekler %}
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-4">+</span>
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        <span class="text-base font-semibold text-red-600 dark:text-red-400">{{ ek.kod }}</span>
+                    </div>
+                    <div
+                        class="result-box bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ ek.ek }}
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ ek.tip }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if not loop.last %}
+            <hr class="border-red-100 dark:border-red-900/30 mb-4">
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if result %}
         <div class="mt-10 border-t border-gray-100 dark:border-zinc-800 pt-8 animate-fade-in">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
                 Analiz Sonucu
             </h2>
 
-            
-            <!-- İsim Çekim Sonucu -->
-            
-            <!-- Normal Tek Sonuç -->
+            {% if mode == 'fiil' %}
+            <!-- Fiil Çekim Sonucu -->
+            {% if result[0].type == 'Hata' %}
+            <!-- Hata durumu -->
             <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
-                
-                <!-- Boş ek gösterilmez -->
-                
                 <div class="flex flex-col items-center group">
                     <div class="mb-1">
-                        
-                        <span class="code-normal text-indigo-600 dark:text-accent">
-                            Kök
+                        <span class="code-normal text-red-600 dark:text-red-400">
+                            Hata
                         </span>
-                        
+                    </div>
+                    <div
+                        class="result-box bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ result[0].text }}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Normal sonuç -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                {% for part in result %}
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        <span class="code-normal text-indigo-600 dark:text-accent">
+                            {{ part.code }}
+                        </span>
                     </div>
                     <div
                         class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
-                        kitap
+                        {{ part.text }}
                     </div>
                 </div>
-                
-                
-                <!-- Boş ek gösterilmez -->
-                
+                {% if not loop.last %}
                 <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
-                
-                <div class="flex flex-col items-center group">
-                    <div class="mb-1">
-                        
-                        <span class="code-normal text-indigo-600 dark:text-accent">
-                            D₁b
-                        </span>
-                        
-                    </div>
-                    <div
-                        class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
-                        ym
-                    </div>
-                </div>
-                
-                
+                {% endif %}
+                {% endfor %}
             </div>
 
+            {% if final_word %}
             <div
                 class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
                 <p class="text-base font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">
                     Oluşturulan Kelime</p>
                 <div class="w-full text-center">
                     <p id="finalWord"
-                        class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">kitabym</p>
+                        class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{
+                        final_word }}</p>
                 </div>
                 <button onclick="copyResult()"
                     class="absolute right-4 md:right-6 p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800"
@@ -418,10 +630,113 @@
                     </svg>
                 </button>
             </div>
-            
-            
+            {% endif %}
+            {% endif %}
+            {% else %}
+            <!-- İsim Çekim Sonucu -->
+            {% if is_dual and dual_results %}
+            <!-- Eş Sesli Çift Sonuç: Kök parçaları bir kere -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                {% for part in dual_results[0].parts %}
+                {% if part.text %}
+                {% if not loop.first %}
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                {% endif %}
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        {% if part.type == 'Hal' %}
+                        <span class="code-hal-wrapper text-indigo-600 dark:text-accent">
+                            {{ part.code[0] }}<span class="code-hal-sub">{{ part.code[1:] }}</span>
+                        </span>
+                        {% else %}
+                        <span class="code-normal text-indigo-600 dark:text-accent">
+                            {{ part.code }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div
+                        class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ part.text }}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Oluşturulan Kelimeler -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for dr in dual_results %}
+                <div
+                    class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
+                    <p class="text-sm font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">
+                        Oluşturulan Kelime</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                        {{ dr.anlam }}
+                    </p>
+                    <div class="w-full text-center">
+                        <p class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                            {{ dr.final_word }}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Normal Tek Sonuç -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
+                {% for part in result %}
+                {% if part.text %}<!-- Boş ek gösterilmez -->
+                {% if not loop.first %}
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-6">+</span>
+                {% endif %}
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        {% if part.type == 'Hal' %}
+                        <span class="code-hal-wrapper text-indigo-600 dark:text-accent">
+                            {{ part.code[0] }}<span class="code-hal-sub">{{ part.code[1:] }}</span>
+                        </span>
+                        {% else %}
+                        <span class="code-normal text-indigo-600 dark:text-accent">
+                            {{ part.code }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div
+                        class="result-box bg-gray-50 border border-gray-200 text-gray-800 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ part.text }}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div
+                class="relative flex flex-col justify-center items-center bg-green-50 dark:bg-zinc-900 rounded-xl p-6 border border-green-200 dark:border-green-900 transition-colors">
+                <p class="text-base font-bold text-green-600 dark:text-green-400 mb-2 uppercase tracking-wider">
+                    Oluşturulan Kelime</p>
+                <div class="w-full text-center">
+                    <p id="finalWord"
+                        class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{{
+                        final_word }}</p>
+                </div>
+                <button onclick="copyResult()"
+                    class="absolute right-4 md:right-6 p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition rounded-full hover:bg-green-100 dark:hover:bg-zinc-800"
+                    title="Kopyala">
+                    <svg id="copyIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    <svg id="checkIcon" class="w-6 h-6 text-green-500 hidden" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
-        
+        {% endif %}
     </div>
 
     <div class="w-full max-w-3xl" id="history-container" style="display:none;">
@@ -468,27 +783,30 @@
             }
         });
 
-        // Tab Yönetimi (3 ana tab)
+        // Tab Yönetimi (4 ana tab)
         function switchTab(tab) {
             const isimTab = document.getElementById('tab-isim');
             const fiilTab = document.getElementById('tab-fiil');
             const cozumleTab = document.getElementById('tab-cozumle');
+            const paradigmaTab = document.getElementById('tab-paradigma');
             const isimForm = document.getElementById('form-isim');
             const fiilForm = document.getElementById('form-fiil');
             const cozumleForm = document.getElementById('form-cozumle');
+            const paradigmaForm = document.getElementById('form-paradigma');
 
             // Tab stillerini sıfırla
             const inactiveClasses = ['bg-gray-200', 'dark:bg-zinc-700', 'text-gray-700', 'dark:text-gray-300'];
             const activeClassesPurple = ['bg-indigo-600', 'dark:bg-violet-600', 'text-white', 'shadow-lg'];
             const activeClassesRed = ['bg-red-600', 'dark:bg-red-600', 'text-white', 'shadow-lg'];
+            const activeClassesGreen = ['bg-emerald-600', 'dark:bg-emerald-600', 'text-white', 'shadow-lg'];
 
-            [isimTab, fiilTab, cozumleTab].forEach(t => {
-                t.classList.remove(...activeClassesPurple, ...activeClassesRed);
+            [isimTab, fiilTab, cozumleTab, paradigmaTab].forEach(t => {
+                t.classList.remove(...activeClassesPurple, ...activeClassesRed, ...activeClassesGreen);
                 t.classList.add(...inactiveClasses);
             });
 
             // Formları gizle
-            [isimForm, fiilForm, cozumleForm].forEach(f => f.classList.add('hidden'));
+            [isimForm, fiilForm, cozumleForm, paradigmaForm].forEach(f => f.classList.add('hidden'));
 
             // Seçili tab'ı aktif et
             if (tab === 'isim') {
@@ -503,6 +821,10 @@
                 cozumleTab.classList.remove(...inactiveClasses);
                 cozumleTab.classList.add(...activeClassesRed);
                 cozumleForm.classList.remove('hidden');
+            } else if (tab === 'paradigma') {
+                paradigmaTab.classList.remove(...inactiveClasses);
+                paradigmaTab.classList.add(...activeClassesGreen);
+                paradigmaForm.classList.remove('hidden');
             }
         }
 
@@ -549,6 +871,27 @@
             input.focus();
         }
 
+        function addCharParadigma(char) {
+            const input = document.getElementById('paradigmaInput');
+            if (input.value.length === 0) {
+                input.value += char.toUpperCase();
+            } else {
+                input.value += char;
+            }
+            input.focus();
+        }
+
+        function fillRandomParadigma() {
+            const words = [
+                "kitap", "mekdep", "mugallym", "okuwçy", "öý", "suw", "dag", "derýa",
+                "gül", "agaç", "watan", "şäher", "oba", "göz", "el", "baş",
+                "gel", "git", "oku", "ýaz", "al", "ber", "gör", "bil",
+                "dur", "otur", "aç", "ýap", "iý", "iç"
+            ];
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            document.getElementById('paradigmaInput').value = randomWord;
+        }
+
         function fillRandom(mode) {
             if (mode === 'fiil') {
                 const verbs = [
@@ -590,35 +933,48 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            const currentMode = "isim";
-            const currentAction = "cekimle";
+            const currentMode = "{{ mode if mode else 'isim' }}";
+            const currentAction = "{{ action if action else 'cekimle' }}";
 
-            // Parse action ise Çözümle tab'ını aç
+            // Aktif tab'ı seç
             if (currentAction === 'parse') {
                 switchTab('cozumle');
+            } else if (currentAction === 'paradigma') {
+                switchTab('paradigma');
             } else if (currentMode === 'fiil') {
                 switchTab('fiil');
             } else {
                 switchTab('isim');
             }
 
-            
+            {% if result %}
             const newEntry = {
-                root: "kitap",
-                word: "kitabym",
-                mode: "isim",
+                root: "{{ root }}",
+                word: "{{ final_word }}",
+                mode: "{{ mode if mode else 'isim' }}",
                 parts: [
-                    
-            { text: "kitap", code: "Kök", type: "Kök" },
-            
-            { text: "ym", code: "D₁b", type: "Degislilik" },
-            
+                    {% for part in result %}
+            { text: "{{ part.text }}", code: "{{ part.code }}", type: "{{ part.type }}" },
+            {% endfor %}
                     ]
         };
         saveToHistory(newEntry);
-        
+        {% endif %}
 
-        
+        {% if parse_result %}
+        const parseEntry = {
+            root: "{{ parse_result.kok }}",
+            word: "{{ root }}",
+            mode: "çözümle",
+            parts: [
+                { text: "{{ parse_result.kok }}", code: "Kök", type: "Kök" },
+                {% for ek in parse_result.ekler %}
+        { text: "{{ ek.ek }}", code: "{{ ek.kod }}", type: "{{ ek.tip }}" },
+        {% endfor %}
+                ]
+            };
+        saveToHistory(parseEntry);
+        {% endif %}
         renderHistory();
         });
 

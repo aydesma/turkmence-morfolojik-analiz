@@ -1,4 +1,4 @@
-# Python
+# ── Python ──────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,18 +6,46 @@ __pycache__/
 .Python
 *.egg
 *.egg-info/
+dist/
+build/
+.pytest_cache/
 
-# Test files
-test_*.py
-debug_*.py
+# ── Virtual Environment ────────────────────────────
+.venv/
+venv/
+env/
 
-# IDE
+# ── IDE / Editor ───────────────────────────────────
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# OS
+# ── OS ─────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Geliştirme klasörü (ayrı repo)
-turkmen-fst/
+# ── Proje: pushlanmayacak klasörler ───────────────
+# Geliştirme scriptleri ve referans kaynaklar
+scripts/
+resources/
+
+# ── Proje: pushlanmayacak dosyalar ────────────────
+# Test ekran görüntüleri
+*.png
+
+# Root'taki eski/taşınmış dosyalar
+/_resp.html
+/turkmence_sozluk.txt
+/v26_reference.py
+/v26_test_results.json
+/scrape_wiktionary.py
+/test_v26_comparison.py
+/test_web.py
+/implementation_plan.md.resolved
+/task.md.resolved
+
+# ── turkmen-fst: çalışma notları (README hariç) ──
+turkmen-fst/GELECEK_PLANLARI.md
+turkmen-fst/NOTLAR.md
+turkmen-fst/YAPILANLAR.md

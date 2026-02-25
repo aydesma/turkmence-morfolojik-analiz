@@ -8591,8 +8591,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "SÜRÜSI",
-    "secere": "süri + si"
+    "sonuc": "SÜRÜSÜ",
+    "secere": "süri + sü"
   },
   {
     "kelime": "süri",
@@ -8601,7 +8601,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "SÜRÜSÜNYŇ",
-    "secere": "süri + si + nyň"
+    "secere": "süri + sü + nyň"
   },
   {
     "kelime": "süri",
@@ -8610,7 +8610,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "SÜRÜSÜNE",
-    "secere": "süri + si + ne"
+    "secere": "süri + sü + ne"
   },
   {
     "kelime": "süri",
@@ -8619,7 +8619,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "SÜRÜSÜNI",
-    "secere": "süri + si + ni"
+    "secere": "süri + sü + ni"
   },
   {
     "kelime": "süri",
@@ -8628,7 +8628,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "SÜRÜSÜNDA",
-    "secere": "süri + si + nda"
+    "secere": "süri + sü + nda"
   },
   {
     "kelime": "süri",
@@ -8637,7 +8637,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "SÜRÜSÜNDAN",
-    "secere": "süri + si + ndan"
+    "secere": "süri + sü + ndan"
   },
   {
     "kelime": "süri",
@@ -8645,8 +8645,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "SÜRÜSI",
-    "secere": "süri + si"
+    "sonuc": "SÜRÜSÜ",
+    "secere": "süri + sü"
   },
   {
     "kelime": "süri",
@@ -8655,7 +8655,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "SÜRÜSÜNYŇ",
-    "secere": "süri + si + nyň"
+    "secere": "süri + sü + nyň"
   },
   {
     "kelime": "süri",
@@ -8664,7 +8664,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "SÜRÜSÜNE",
-    "secere": "süri + si + ne"
+    "secere": "süri + sü + ne"
   },
   {
     "kelime": "süri",
@@ -8673,7 +8673,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "SÜRÜSÜNI",
-    "secere": "süri + si + ni"
+    "secere": "süri + sü + ni"
   },
   {
     "kelime": "süri",
@@ -8682,7 +8682,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "SÜRÜSÜNDA",
-    "secere": "süri + si + nda"
+    "secere": "süri + sü + nda"
   },
   {
     "kelime": "süri",
@@ -8691,7 +8691,7 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "SÜRÜSÜNDAN",
-    "secere": "süri + si + ndan"
+    "secere": "süri + sü + ndan"
   },
   {
     "kelime": "süri",
@@ -8969,8 +8969,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "SÜRÜLERI",
-    "secere": "süri + ler + i"
+    "sonuc": "SÜRÜLERÜ",
+    "secere": "süri + ler + ü"
   },
   {
     "kelime": "süri",
@@ -8979,7 +8979,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "SÜRÜLERÜNYŇ",
-    "secere": "süri + ler + i + nyň"
+    "secere": "süri + ler + ü + nyň"
   },
   {
     "kelime": "süri",
@@ -8988,7 +8988,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "SÜRÜLERÜNE",
-    "secere": "süri + ler + i + ne"
+    "secere": "süri + ler + ü + ne"
   },
   {
     "kelime": "süri",
@@ -8997,7 +8997,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "SÜRÜLERÜNI",
-    "secere": "süri + ler + i + ni"
+    "secere": "süri + ler + ü + ni"
   },
   {
     "kelime": "süri",
@@ -9006,7 +9006,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "SÜRÜLERÜNDA",
-    "secere": "süri + ler + i + nda"
+    "secere": "süri + ler + ü + nda"
   },
   {
     "kelime": "süri",
@@ -9015,7 +9015,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "SÜRÜLERÜNDAN",
-    "secere": "süri + ler + i + ndan"
+    "secere": "süri + ler + ü + ndan"
   },
   {
     "kelime": "süri",
@@ -9023,8 +9023,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "SÜRÜLERI",
-    "secere": "süri + ler + i"
+    "sonuc": "SÜRÜLERÜ",
+    "secere": "süri + ler + ü"
   },
   {
     "kelime": "süri",
@@ -9033,7 +9033,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "SÜRÜLERÜNYŇ",
-    "secere": "süri + ler + i + nyň"
+    "secere": "süri + ler + ü + nyň"
   },
   {
     "kelime": "süri",
@@ -9042,7 +9042,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "SÜRÜLERÜNE",
-    "secere": "süri + ler + i + ne"
+    "secere": "süri + ler + ü + ne"
   },
   {
     "kelime": "süri",
@@ -9051,7 +9051,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "SÜRÜLERÜNI",
-    "secere": "süri + ler + i + ni"
+    "secere": "süri + ler + ü + ni"
   },
   {
     "kelime": "süri",
@@ -9060,7 +9060,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "SÜRÜLERÜNDA",
-    "secere": "süri + ler + i + nda"
+    "secere": "süri + ler + ü + nda"
   },
   {
     "kelime": "süri",
@@ -9069,7 +9069,7 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "SÜRÜLERÜNDAN",
-    "secere": "süri + ler + i + ndan"
+    "secere": "süri + ler + ü + ndan"
   },
   {
     "kelime": "guzy",
@@ -9347,8 +9347,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "GUZUSY",
-    "secere": "guzy + sy"
+    "sonuc": "GUZUSU",
+    "secere": "guzy + su"
   },
   {
     "kelime": "guzy",
@@ -9357,7 +9357,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "GUZUSUNYŇ",
-    "secere": "guzy + sy + nyň"
+    "secere": "guzy + su + nyň"
   },
   {
     "kelime": "guzy",
@@ -9366,7 +9366,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "GUZUSUNA",
-    "secere": "guzy + sy + na"
+    "secere": "guzy + su + na"
   },
   {
     "kelime": "guzy",
@@ -9375,7 +9375,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "GUZUSUNY",
-    "secere": "guzy + sy + ny"
+    "secere": "guzy + su + ny"
   },
   {
     "kelime": "guzy",
@@ -9384,7 +9384,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "GUZUSUNDA",
-    "secere": "guzy + sy + nda"
+    "secere": "guzy + su + nda"
   },
   {
     "kelime": "guzy",
@@ -9393,7 +9393,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "GUZUSUNDAN",
-    "secere": "guzy + sy + ndan"
+    "secere": "guzy + su + ndan"
   },
   {
     "kelime": "guzy",
@@ -9401,8 +9401,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "GUZUSY",
-    "secere": "guzy + sy"
+    "sonuc": "GUZUSU",
+    "secere": "guzy + su"
   },
   {
     "kelime": "guzy",
@@ -9411,7 +9411,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "GUZUSUNYŇ",
-    "secere": "guzy + sy + nyň"
+    "secere": "guzy + su + nyň"
   },
   {
     "kelime": "guzy",
@@ -9420,7 +9420,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "GUZUSUNA",
-    "secere": "guzy + sy + na"
+    "secere": "guzy + su + na"
   },
   {
     "kelime": "guzy",
@@ -9429,7 +9429,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "GUZUSUNY",
-    "secere": "guzy + sy + ny"
+    "secere": "guzy + su + ny"
   },
   {
     "kelime": "guzy",
@@ -9438,7 +9438,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "GUZUSUNDA",
-    "secere": "guzy + sy + nda"
+    "secere": "guzy + su + nda"
   },
   {
     "kelime": "guzy",
@@ -9447,7 +9447,7 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "GUZUSUNDAN",
-    "secere": "guzy + sy + ndan"
+    "secere": "guzy + su + ndan"
   },
   {
     "kelime": "guzy",
@@ -9725,8 +9725,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "GUZULARY",
-    "secere": "guzy + lar + y"
+    "sonuc": "GUZULARU",
+    "secere": "guzy + lar + u"
   },
   {
     "kelime": "guzy",
@@ -9735,7 +9735,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "GUZULARUNYŇ",
-    "secere": "guzy + lar + y + nyň"
+    "secere": "guzy + lar + u + nyň"
   },
   {
     "kelime": "guzy",
@@ -9744,7 +9744,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "GUZULARUNA",
-    "secere": "guzy + lar + y + na"
+    "secere": "guzy + lar + u + na"
   },
   {
     "kelime": "guzy",
@@ -9753,7 +9753,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "GUZULARUNY",
-    "secere": "guzy + lar + y + ny"
+    "secere": "guzy + lar + u + ny"
   },
   {
     "kelime": "guzy",
@@ -9762,7 +9762,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "GUZULARUNDA",
-    "secere": "guzy + lar + y + nda"
+    "secere": "guzy + lar + u + nda"
   },
   {
     "kelime": "guzy",
@@ -9771,7 +9771,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "GUZULARUNDAN",
-    "secere": "guzy + lar + y + ndan"
+    "secere": "guzy + lar + u + ndan"
   },
   {
     "kelime": "guzy",
@@ -9779,8 +9779,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "GUZULARY",
-    "secere": "guzy + lar + y"
+    "sonuc": "GUZULARU",
+    "secere": "guzy + lar + u"
   },
   {
     "kelime": "guzy",
@@ -9789,7 +9789,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "GUZULARUNYŇ",
-    "secere": "guzy + lar + y + nyň"
+    "secere": "guzy + lar + u + nyň"
   },
   {
     "kelime": "guzy",
@@ -9798,7 +9798,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "GUZULARUNA",
-    "secere": "guzy + lar + y + na"
+    "secere": "guzy + lar + u + na"
   },
   {
     "kelime": "guzy",
@@ -9807,7 +9807,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "GUZULARUNY",
-    "secere": "guzy + lar + y + ny"
+    "secere": "guzy + lar + u + ny"
   },
   {
     "kelime": "guzy",
@@ -9816,7 +9816,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "GUZULARUNDA",
-    "secere": "guzy + lar + y + nda"
+    "secere": "guzy + lar + u + nda"
   },
   {
     "kelime": "guzy",
@@ -9825,7 +9825,7 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "GUZULARUNDAN",
-    "secere": "guzy + lar + y + ndan"
+    "secere": "guzy + lar + u + ndan"
   },
   {
     "kelime": "burun",
@@ -32027,8 +32027,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "OTLUSY",
-    "secere": "otly + sy"
+    "sonuc": "OTLUSU",
+    "secere": "otly + su"
   },
   {
     "kelime": "otly",
@@ -32037,7 +32037,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "OTLUSUNYŇ",
-    "secere": "otly + sy + nyň"
+    "secere": "otly + su + nyň"
   },
   {
     "kelime": "otly",
@@ -32046,7 +32046,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "OTLUSUNA",
-    "secere": "otly + sy + na"
+    "secere": "otly + su + na"
   },
   {
     "kelime": "otly",
@@ -32055,7 +32055,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "OTLUSUNY",
-    "secere": "otly + sy + ny"
+    "secere": "otly + su + ny"
   },
   {
     "kelime": "otly",
@@ -32064,7 +32064,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "OTLUSUNDA",
-    "secere": "otly + sy + nda"
+    "secere": "otly + su + nda"
   },
   {
     "kelime": "otly",
@@ -32073,7 +32073,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "OTLUSUNDAN",
-    "secere": "otly + sy + ndan"
+    "secere": "otly + su + ndan"
   },
   {
     "kelime": "otly",
@@ -32081,8 +32081,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "OTLUSY",
-    "secere": "otly + sy"
+    "sonuc": "OTLUSU",
+    "secere": "otly + su"
   },
   {
     "kelime": "otly",
@@ -32091,7 +32091,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "OTLUSUNYŇ",
-    "secere": "otly + sy + nyň"
+    "secere": "otly + su + nyň"
   },
   {
     "kelime": "otly",
@@ -32100,7 +32100,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "OTLUSUNA",
-    "secere": "otly + sy + na"
+    "secere": "otly + su + na"
   },
   {
     "kelime": "otly",
@@ -32109,7 +32109,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "OTLUSUNY",
-    "secere": "otly + sy + ny"
+    "secere": "otly + su + ny"
   },
   {
     "kelime": "otly",
@@ -32118,7 +32118,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "OTLUSUNDA",
-    "secere": "otly + sy + nda"
+    "secere": "otly + su + nda"
   },
   {
     "kelime": "otly",
@@ -32127,7 +32127,7 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "OTLUSUNDAN",
-    "secere": "otly + sy + ndan"
+    "secere": "otly + su + ndan"
   },
   {
     "kelime": "otly",
@@ -42611,8 +42611,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "GUÝUSY",
-    "secere": "guýy + sy"
+    "sonuc": "GUÝUSU",
+    "secere": "guýy + su"
   },
   {
     "kelime": "guýy",
@@ -42621,7 +42621,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "GUÝUSUNYŇ",
-    "secere": "guýy + sy + nyň"
+    "secere": "guýy + su + nyň"
   },
   {
     "kelime": "guýy",
@@ -42630,7 +42630,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "GUÝUSUNA",
-    "secere": "guýy + sy + na"
+    "secere": "guýy + su + na"
   },
   {
     "kelime": "guýy",
@@ -42639,7 +42639,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "GUÝUSUNY",
-    "secere": "guýy + sy + ny"
+    "secere": "guýy + su + ny"
   },
   {
     "kelime": "guýy",
@@ -42648,7 +42648,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "GUÝUSUNDA",
-    "secere": "guýy + sy + nda"
+    "secere": "guýy + su + nda"
   },
   {
     "kelime": "guýy",
@@ -42657,7 +42657,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "GUÝUSUNDAN",
-    "secere": "guýy + sy + ndan"
+    "secere": "guýy + su + ndan"
   },
   {
     "kelime": "guýy",
@@ -42665,8 +42665,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "GUÝUSY",
-    "secere": "guýy + sy"
+    "sonuc": "GUÝUSU",
+    "secere": "guýy + su"
   },
   {
     "kelime": "guýy",
@@ -42675,7 +42675,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "GUÝUSUNYŇ",
-    "secere": "guýy + sy + nyň"
+    "secere": "guýy + su + nyň"
   },
   {
     "kelime": "guýy",
@@ -42684,7 +42684,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "GUÝUSUNA",
-    "secere": "guýy + sy + na"
+    "secere": "guýy + su + na"
   },
   {
     "kelime": "guýy",
@@ -42693,7 +42693,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "GUÝUSUNY",
-    "secere": "guýy + sy + ny"
+    "secere": "guýy + su + ny"
   },
   {
     "kelime": "guýy",
@@ -42702,7 +42702,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "GUÝUSUNDA",
-    "secere": "guýy + sy + nda"
+    "secere": "guýy + su + nda"
   },
   {
     "kelime": "guýy",
@@ -42711,7 +42711,7 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "GUÝUSUNDAN",
-    "secere": "guýy + sy + ndan"
+    "secere": "guýy + su + ndan"
   },
   {
     "kelime": "guýy",
@@ -42989,8 +42989,8 @@
     "iyelik": "A3",
     "i_tip": "tek",
     "hal": null,
-    "sonuc": "GUÝULARY",
-    "secere": "guýy + lar + y"
+    "sonuc": "GUÝULARU",
+    "secere": "guýy + lar + u"
   },
   {
     "kelime": "guýy",
@@ -42999,7 +42999,7 @@
     "i_tip": "tek",
     "hal": "A2",
     "sonuc": "GUÝULARUNYŇ",
-    "secere": "guýy + lar + y + nyň"
+    "secere": "guýy + lar + u + nyň"
   },
   {
     "kelime": "guýy",
@@ -43008,7 +43008,7 @@
     "i_tip": "tek",
     "hal": "A3",
     "sonuc": "GUÝULARUNA",
-    "secere": "guýy + lar + y + na"
+    "secere": "guýy + lar + u + na"
   },
   {
     "kelime": "guýy",
@@ -43017,7 +43017,7 @@
     "i_tip": "tek",
     "hal": "A4",
     "sonuc": "GUÝULARUNY",
-    "secere": "guýy + lar + y + ny"
+    "secere": "guýy + lar + u + ny"
   },
   {
     "kelime": "guýy",
@@ -43026,7 +43026,7 @@
     "i_tip": "tek",
     "hal": "A5",
     "sonuc": "GUÝULARUNDA",
-    "secere": "guýy + lar + y + nda"
+    "secere": "guýy + lar + u + nda"
   },
   {
     "kelime": "guýy",
@@ -43035,7 +43035,7 @@
     "i_tip": "tek",
     "hal": "A6",
     "sonuc": "GUÝULARUNDAN",
-    "secere": "guýy + lar + y + ndan"
+    "secere": "guýy + lar + u + ndan"
   },
   {
     "kelime": "guýy",
@@ -43043,8 +43043,8 @@
     "iyelik": "A3",
     "i_tip": "cog",
     "hal": null,
-    "sonuc": "GUÝULARY",
-    "secere": "guýy + lar + y"
+    "sonuc": "GUÝULARU",
+    "secere": "guýy + lar + u"
   },
   {
     "kelime": "guýy",
@@ -43053,7 +43053,7 @@
     "i_tip": "cog",
     "hal": "A2",
     "sonuc": "GUÝULARUNYŇ",
-    "secere": "guýy + lar + y + nyň"
+    "secere": "guýy + lar + u + nyň"
   },
   {
     "kelime": "guýy",
@@ -43062,7 +43062,7 @@
     "i_tip": "cog",
     "hal": "A3",
     "sonuc": "GUÝULARUNA",
-    "secere": "guýy + lar + y + na"
+    "secere": "guýy + lar + u + na"
   },
   {
     "kelime": "guýy",
@@ -43071,7 +43071,7 @@
     "i_tip": "cog",
     "hal": "A4",
     "sonuc": "GUÝULARUNY",
-    "secere": "guýy + lar + y + ny"
+    "secere": "guýy + lar + u + ny"
   },
   {
     "kelime": "guýy",
@@ -43080,7 +43080,7 @@
     "i_tip": "cog",
     "hal": "A5",
     "sonuc": "GUÝULARUNDA",
-    "secere": "guýy + lar + y + nda"
+    "secere": "guýy + lar + u + nda"
   },
   {
     "kelime": "guýy",
@@ -43089,6 +43089,6 @@
     "i_tip": "cog",
     "hal": "A6",
     "sonuc": "GUÝULARUNDAN",
-    "secere": "guýy + lar + y + ndan"
+    "secere": "guýy + lar + u + ndan"
   }
 ]
