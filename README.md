@@ -4,7 +4,7 @@ Türkmen Türkçesi için kural tabanlı morfolojik analiz ve sentez sistemi.
 İsim çekimi (hal, iyelik, çoğul), fiil çekimi (7 zaman × 6 şahıs) ve
 cümle düzeyinde morfolojik ayrıştırma yeteneklerini barındırır.
 
-**Canlı demo:** [turkmence-morfolojik-analiz.onrender.com](https://turkmence-morfolojik-analiz.onrender.com/)
+**Canlı demo:** [turkmence-morfolojik-analiz.vercel.app](https://turkmence-morfolojik-analiz.vercel.app/)
 
 ---
 
@@ -76,7 +76,7 @@ Dört sekmeli arayüz:
 
 ### REST API
 
-API base URL: `https://turkmence-morfolojik-analiz.onrender.com/api`
+API base URL: `https://turkmence-morfolojik-analiz.vercel.app/api`
 
 #### Örnekler
 
