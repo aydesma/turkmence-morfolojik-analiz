@@ -346,29 +346,41 @@ def api_generate_verb():
 
 @app.route('/api/analyze', methods=['POST'])
 def api_analyze():
-    """Morfolojik analiz (kelime çözümleme) API endpoint'i."""
-    data = request.get_json(silent=True) or {}
-    word = data.get("word", "").strip()
-    if not word:
-        return jsonify({"error": "word alanı zorunludur"}), 400
+    """Morfolojik analiz (kelime çözümleme) API endpoint'i.
 
-    multi = _analyzer.parse(word)
-    results_list = []
-    for r in multi.results:
-        results_list.append({
-            "stem": r.stem,
-            "word_type": r.word_type,
-            "breakdown": r.breakdown,
-            "suffixes": r.suffixes,
-            "meaning": r.meaning
+    Tek kelime: {"word": "kitabym"}
+    Çoklu metin: {"text": "kitabymyza geldim"}
+    """
+    data = request.get_json(silent=True) or {}
+    text = data.get("text", "").strip() or data.get("word", "").strip()
+    if not text:
+        return jsonify({"error": "word veya text alanı zorunludur"}), 400
+
+    words = _tokenize(text)
+    all_words = []
+    for w in words:
+        multi = _analyzer.parse(w)
+        results_list = []
+        for r in multi.results:
+            results_list.append({
+                "stem": r.stem,
+                "word_type": r.word_type,
+                "breakdown": r.breakdown,
+                "suffixes": r.suffixes,
+                "meaning": r.meaning
+            })
+        all_words.append({
+            "word": multi.original,
+            "success": multi.success,
+            "count": multi.count,
+            "results": results_list
         })
 
-    return jsonify({
-        "word": multi.original,
-        "success": multi.success,
-        "count": multi.count,
-        "results": results_list
-    })
+    # Tek kelime gönderildiyse dizi yerine tek obje döndür
+    if len(all_words) == 1:
+        return jsonify(all_words[0])
+
+    return jsonify({"words": all_words})
 
 
 @app.route('/api/lexicon/<word>', methods=['GET'])
