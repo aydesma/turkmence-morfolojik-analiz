@@ -335,7 +335,7 @@ def api_generate_noun():
 
     plural = data.get("plural", False)
     possessive = data.get("possessive")
-    poss_type = data.get("poss_type")
+    poss_type = data.get("poss_type", "tek")
     case = data.get("case")
 
     result = _generator.generate_noun(stem, plural=plural,
@@ -491,15 +491,19 @@ def api_spellcheck():
 
 @app.route('/api/paradigm', methods=['POST'])
 def api_paradigm():
-    """Paradigma tablosu API endpoint'i."""
+    """Paradigma tablosu API endpoint'i.
+    
+    type: "noun", "verb" veya "auto" (varsayılan: auto)
+    auto: sözlükten kelime türünü otomatik bulur, eş sesliyse ikisini de döndürür.
+    """
     data = request.get_json(silent=True) or {}
     stem = data.get("stem", "").strip()
-    ptype = data.get("type", "noun")
+    ptype = data.get("type", "auto")
     if not stem:
         return jsonify({"error": "stem alanı zorunludur"}), 400
 
     result = _build_paradigma(stem, ptype)
-    if result is None:
+    if not result:
         return jsonify({"error": f"Geçersiz tür: '{ptype}'"}), 400
     return jsonify(result)
 

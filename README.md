@@ -18,7 +18,7 @@ cümle düzeyinde morfolojik ayrıştırma yeteneklerini barındırır.
 ├── requirements.txt       # Python bağımlılıkları
 └── turkmen-fst/           # Çekirdek motor paketi
     ├── turkmen_fst/       # Modüler FST motoru (phonology, lexicon, generator, analyzer…)
-    ├── data/              # 30 000+ kelimelik zenginleştirilmiş sözlük
+    ├── data/              # 32 000+ kelimelik zenginleştirilmiş sözlük
     ├── tests/             # 105 birim testi (%100 başarılı)
     └── web/               # Bağımsız Flask web arayüzü
 ```
@@ -33,12 +33,12 @@ cümle düzeyinde morfolojik ayrıştırma yeteneklerini barındırır.
 |---------|----------|
 | **İsim çekimi** | 6 hal × 3 iyelik × 2 çoğul — tam paradigma üretimi |
 | **Fiil çekimi** | 7 zaman × 6 şahıs × olumlu/olumsuz |
-| **Morfolojik ayrıştırma** | Çekimli kelime → kök + ek zinciri |
-| **Paradigma tablosu** | Bir kelimenin tüm çekim formlarını tek tabloda gösterir |
+| **Morfolojik ayrıştırma (Derňew)** | Çekimli kelime → kök + ek zinciri |
+| **Paradigma tablosu** | Otomatik tür tespiti, eş sesli kelimeler için çift paradigma, tablo kopyalama |
 | **Yazım denetimi** | Sözlük + morfoloji tabanlı doğrulama ve öneri |
-| **REST API** | JSON tabanlı entegrasyon noktaları |
+| **REST API** | 7 JSON endpoint (üretim, analiz, paradigma, sözlük, yazım denetimi) |
 | **Fonoloji** | Ünlü uyumu, ünsüz yumuşaması, ünlü düşmesi, yuvarlaklaşma |
-| **Sözlük** | 30 000+ kelime; ünsüz yumuşaması, ünlü düşmesi gibi morfolojik etiketler |
+| **Sözlük** | 32 015 giriş, 30 154 benzersiz kelime; morfolojik etiketler |
 
 ---
 
@@ -69,10 +69,10 @@ python app.py
 ```
 
 Dört sekmeli arayüz:
-1. **İsim çekimi** — Kök + hal/iyelik/çoğul seçimi → çekimli form
-2. **Fiil çekimi** — Kök + zaman/şahıs/olumsuz → çekimli form
-3. **Derňew (Analiz)** — Cümle veya kelime girişi → morfolojik ayrıştırma
-4. **Paradigma** — Bir kelimenin tüm isim çekim tablosu
+1. **At çekimi (İsim)** — Kök + hal/iyelik/çoğul seçimi → çekimli form
+2. **Işlık çekimi (Fiil)** — Kök + zaman/şahıs/olumsuz → çekimli form
+3. **Derňew (Analiz)** — Kelime girişi → morfolojik ayrıştırma (kök + ekler)
+4. **Paradigma** — Otomatik tür tespiti ile tam çekim tablosu (eş sesli kelimeler için ikisi birden)
 
 ### REST API
 
@@ -85,7 +85,7 @@ API base URL: `https://turkmence-morfolojik-analiz.vercel.app/api`
 curl -X POST /api/generate/noun \
   -H "Content-Type: application/json" \
   -d '{"stem": "kitap", "case": "A3", "plural": true}'
-# → {"result": "kitaplara", "breakdown": "kitap + lar + a", "valid": true, ...}
+# → {"result": "kitaplara", "breakdown": "kitap + lar + a", "valid": true}
 ```
 
 **Fiil çekimi:**
@@ -93,7 +93,7 @@ curl -X POST /api/generate/noun \
 curl -X POST /api/generate/verb \
   -H "Content-Type: application/json" \
   -d '{"stem": "gel", "tense": "1", "person": "A1"}'
-# → {"result": "geldim", "breakdown": "gel + di + m", "valid": true, ...}
+# → {"result": "geldim", "breakdown": "gel + di + m", "valid": true}
 ```
 
 **Morfolojik analiz:**
@@ -104,48 +104,76 @@ curl -X POST /api/analyze \
 # → Her kelime için kök, ekler, POS bilgisi…
 ```
 
-**Paradigma tablosu:**
+**Paradigma tablosu (otomatik tür tespiti):**
 ```bash
 curl -X POST /api/paradigm \
   -H "Content-Type: application/json" \
-  -d '{"stem": "kitap"}'
-# → 6 hal × tekil/çoğul × iyeliksiz çekim tablosu
+  -d '{"stem": "at"}'
+# → [{"type": "noun", ...}, {"type": "verb", ...}]  (eş sesli → ikisi birden)
+```
+
+```bash
+curl -X POST /api/paradigm \
+  -H "Content-Type: application/json" \
+  -d '{"stem": "kitap", "type": "noun"}'
+# → [{"type": "noun", "singular": [...], "plural": [...]}]
 ```
 
 **Yazım denetimi:**
 ```bash
 curl -X POST /api/spellcheck \
   -H "Content-Type: application/json" \
-  -d '{"word": "kitobym"}'
-# → {"found": false, "suggestions": ["kitabym", ...]}
+  -d '{"text": "kitobym"}'
+# → {"results": [{"word": "kitobym", "correct": false, "suggestions": [...]}]}
 ```
 
 **Sözlük sorgusu:**
 ```bash
 curl /api/lexicon/kitap
-# → {"word": "kitap", "pos": "noun", "features": ["softening"], ...}
+# → {"word": "kitap", "found": true, "entries": [...]}
 ```
 
 #### Tüm Endpoint'ler
 
 | Metot | Yol | Açıklama |
 |-------|-----|----------|
-| GET | `/api/health` | Sağlık kontrolü |
+| GET | `/api/health` | Sağlık kontrolü (sözlük giriş sayısı) |
 | POST | `/api/generate/noun` | İsim çekimi üretimi |
 | POST | `/api/generate/verb` | Fiil çekimi üretimi |
-| POST | `/api/analyze` | Morfolojik ayrıştırma |
+| POST | `/api/analyze` | Morfolojik ayrıştırma (tek/çoklu kelime) |
 | GET | `/api/lexicon/<word>` | Sözlük girişi sorgusu |
 | POST | `/api/spellcheck` | Yazım denetimi + öneri |
-| POST | `/api/paradigm` | Tam paradigma tablosu |
+| POST | `/api/paradigm` | Paradigma tablosu (auto/noun/verb) |
+
+---
+
+## Sözlük İstatistikleri
+
+| POS | Sayı | Yüzde |
+|-----|------|-------|
+| İsim (n) | 21 798 | %68,1 |
+| Fiil (v) | 6 471 | %20,2 |
+| Sıfat (adj) | 3 094 | %9,7 |
+| Özel isim (np) | 548 | %1,7 |
+| Diğer | 104 | %0,3 |
+| **Toplam** | **32 015** | **%100** |
+
+> Sözlük oluşturma sürecinin detayları: [turkmen-fst/SOZLUK_OLUSTURMA_SURECI.md](turkmen-fst/SOZLUK_OLUSTURMA_SURECI.md)
 
 ---
 
 ## Test
 
 ```bash
+# Birim testleri
 cd turkmen-fst
 python -m pytest tests/ -v
 # 105 passed ✅
+
+# Kapsamlı round-trip testi (üret → çözümle)
+cd ..
+python test_comprehensive.py
+# 1192 test ✅
 ```
 
 ---
