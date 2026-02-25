@@ -16,11 +16,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
 
-from turkmen_fst.phonology import PhonologyRules, VowelSystem, YUVARLAKLASMA_LISTESI
+from turkmen_fst.phonology import PhonologyRules, VowelSystem, YUVARLAKLASMA_LISTESI, SOFTENING_TABLE
 from turkmen_fst.morphotactics import (
     NounMorphotactics, VerbMorphotactics, MorphCategory
 )
 from turkmen_fst.lexicon import Lexicon, HOMONYMS
+
+# Tek heceli fiillerde özel k/t→g/d yumuşaması yapan fiiller
+TEK_HECELI_YUMUSAMA_FIIL = {"aýt", "gaýt", "et", "git"}
 
 
 # ==============================================================================
@@ -289,6 +292,22 @@ class VerbGenerator:
         }
         return table[person]
 
+    @staticmethod
+    def _tek_heceli_dodak(govde: str) -> bool:
+        """Tek heceli ve dodak (ünlü) yuvarlak fiil mi kontrol eder."""
+        unluler = [c for c in govde.lower() if c in VowelSystem.ALL]
+        return len(unluler) == 1 and unluler[0] in VowelSystem.DODAK
+
+    @staticmethod
+    def _fiil_yumusama(govde: str) -> str:
+        """Çok heceli veya özel tek heceli fiillerde k/t→g/d yumuşaması uygular."""
+        if not govde or govde[-1] not in ('k', 't'):
+            return govde
+        unlu_sayisi = sum(1 for c in govde if c in VowelSystem.ALL)
+        if unlu_sayisi > 1 or govde in TEK_HECELI_YUMUSAMA_FIIL:
+            return govde[:-1] + SOFTENING_TABLE[govde[-1]]
+        return govde
+
     def generate(self, stem: str, tense: str, person: str,
                  negative: bool = False) -> GenerationResult:
         """
@@ -314,9 +333,15 @@ class VerbGenerator:
         # ================================================================
         if tense == "6":
             tense_suffix = "jak" if quality == "yogyn" else "jek"
-            result = govde + tense_suffix + (" däl" if negative else "")
-            breakdown = f"{pronoun} + {stem} + {tense_suffix}" + (" + däl" if negative else "")
+            # B3 çoğul eki (olumlu formda)
+            plural_suffix = ""
+            if person == "B3" and not negative:
+                plural_suffix = "lar" if quality == "yogyn" else "ler"
+            result = govde + tense_suffix + plural_suffix + (" däl" if negative else "")
+            breakdown = f"{pronoun} + {stem} + {tense_suffix}" + (f" + {plural_suffix}" if plural_suffix else "") + (" + däl" if negative else "")
             morphemes.append(("TENSE", tense_suffix))
+            if plural_suffix:
+                morphemes.append(("PLURAL", plural_suffix))
             if negative:
                 morphemes.append(("NEGATION", "däl"))
             return GenerationResult(
@@ -364,7 +389,11 @@ class VerbGenerator:
 
         if tense == "1":
             # Anyk Öten: kök + [ma] + dy/di + şahıs
-            tense_suffix = "dy" if quality == "yogyn" else "di"
+            # Tek heceli dodak fiillerde: -dy/-di → -du/-dü (şahıs eki varken)
+            if not negative and self._tek_heceli_dodak(govde) and person != "A3":
+                tense_suffix = "du" if quality == "yogyn" else "dü"
+            else:
+                tense_suffix = "dy" if quality == "yogyn" else "di"
             person_suffix = self._person_suffix_standard(quality, person)
 
         elif tense == "2":
@@ -382,26 +411,29 @@ class VerbGenerator:
 
         elif tense == "4":
             # Umumy Häzirki: kök + [ma] + ýar/ýär + şahıs
+            # k/t yumuşaması (sadece olumlu formda)
+            if not negative:
+                govde = self._fiil_yumusama(govde)
             tense_suffix = "ýar" if quality == "yogyn" else "ýär"
-            person_table = {
-                "A1": "ym" if quality == "yogyn" else "im",
-                "A2": "syň" if quality == "yogyn" else "siň",
-                "A3": "",
-                "B1": "yk" if quality == "yogyn" else "ik",
-                "B2": "syňyz" if quality == "yogyn" else "siňiz",
-                "B3": "lar" if quality == "yogyn" else "ler"
-            }
-            person_suffix = person_table[person]
+            person_suffix = self._person_suffix_extended(quality, person)
 
         elif tense == "7":
-            # Nämälim Geljek: kök + maz/mez (olumsuz) veya r/ar/er (olumlu) + şahıs
+            # Nämälim Geljek
             if negative:
-                tense_suffix = "maz" if quality == "yogyn" else "mez"
-                neg_suffix = ""  # Olumsuzluk zaman ekine dahil
-                # Daha önceki morpheme'ı güncelle
+                # Olumsuzluk zaman ekine dahil: -mar/-mer (1./2. şahıs), -maz/-mez (3. şahıs)
+                neg_suffix = ""  # Genel olumsuz eki kullanılmaz
                 if morphemes and morphemes[-1][0] == "NEGATION":
                     morphemes.pop()
+                if person in ("A3", "B3"):
+                    tense_suffix = "maz" if quality == "yogyn" else "mez"
+                else:
+                    tense_suffix = "mar" if quality == "yogyn" else "mer"
             else:
+                # k/t yumuşaması
+                govde = self._fiil_yumusama(govde)
+                # e→ä dönüşümü
+                if govde and govde[-1] == 'e':
+                    govde = govde[:-1] + 'ä'
                 tense_suffix = "r" if ends_vowel else ("ar" if quality == "yogyn" else "er")
             person_suffix = self._person_suffix_extended(quality, person)
 

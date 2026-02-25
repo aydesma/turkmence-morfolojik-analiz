@@ -65,6 +65,9 @@ YUVARLAKLASMA_LISTESI = {
     "guýy": "guýu"
 }
 
+# Tek heceli fiillerde özel k/t→g/d yumuşaması yapan fiiller
+TEK_HECELI_YUMUSAMA_FIIL = {"aýt", "gaýt", "et", "git"}
+
 
 # ==============================================================================
 #  YARDIMCI FONKSİYONLAR
@@ -444,6 +447,22 @@ def _sahis_ekleri_genisletilmis(sesli_tipi, sahis):
     return tablo[sahis]
 
 
+def _tek_heceli_dodak(govde):
+    """Tek heceli ve dodak (yuvarlak) ünlülü fiil mi kontrol eder."""
+    unluler = [c for c in govde.lower() if c in TUM_UNLULER]
+    return len(unluler) == 1 and unluler[0] in DODAK_UNLULER
+
+
+def _fiil_yumusama(govde):
+    """Çok heceli veya özel tek heceli fiillerde k/t→g/d yumuşaması uygular."""
+    if not govde or govde[-1] not in ('k', 't'):
+        return govde
+    unlu_sayisi = sum(1 for c in govde if c in TUM_UNLULER)
+    if unlu_sayisi > 1 or govde in TEK_HECELI_YUMUSAMA_FIIL:
+        return govde[:-1] + YUMUSAMA_TABLOSU[govde[-1]]
+    return govde
+
+
 def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
     """
     Türkmen Türkçesi fiil çekimi yapar.
@@ -474,8 +493,12 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
     # --- Mälim Geljek (6) ---
     if zaman == "6":
         zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
-        sonuc = govde + zaman_eki + (" däl" if olumsuz else "")
-        secere = f"{zamir} + {kok} + {zaman_eki}" + (" + däl" if olumsuz else "")
+        # B3 çoğul eki (olumlu formda)
+        cogul_eki = ""
+        if sahis == "B3" and not olumsuz:
+            cogul_eki = "lar" if sesli_tipi == "yogyn" else "ler"
+        sonuc = govde + zaman_eki + cogul_eki + (" däl" if olumsuz else "")
+        secere = f"{zamir} + {kok} + {zaman_eki}" + (f" + {cogul_eki}" if cogul_eki else "") + (" + däl" if olumsuz else "")
         return f"{zamir} {sonuc}", secere
 
     # --- Anyk Häzirki (5) — Özel yardımcı fiiller ---
@@ -496,7 +519,11 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
 
     if zaman == "1":
         # Anyk Öten: kök + [ma] + dy/di + şahıs
-        zaman_eki = "dy" if sesli_tipi == "yogyn" else "di"
+        # Tek heceli dodak fiillerde: -dy/-di → -du/-dü (şahıs eki varken)
+        if not olumsuz and _tek_heceli_dodak(govde) and sahis != "A3":
+            zaman_eki = "du" if sesli_tipi == "yogyn" else "dü"
+        else:
+            zaman_eki = "dy" if sesli_tipi == "yogyn" else "di"
         sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
 
     elif zaman == "2":
@@ -514,24 +541,27 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
 
     elif zaman == "4":
         # Umumy Häzirki: kök + [ma] + ýar/ýär + şahıs
+        # k/t yumuşaması (sadece olumlu formda)
+        if not olumsuz:
+            govde = _fiil_yumusama(govde)
         zaman_eki = "ýar" if sesli_tipi == "yogyn" else "ýär"
         sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
-        # H1 şahıs ekleri farklı format: ym/im, syň/siň...
-        sahis_tablosu = {
-            "A1": "ym" if sesli_tipi == "yogyn" else "im",
-            "A2": "syň" if sesli_tipi == "yogyn" else "siň",
-            "A3": "",
-            "B1": "yk" if sesli_tipi == "yogyn" else "ik",
-            "B2": "syňyz" if sesli_tipi == "yogyn" else "siňiz",
-            "B3": "lar" if sesli_tipi == "yogyn" else "ler"
-        }
-        sahis_eki = sahis_tablosu[sahis]
 
     elif zaman == "7":
-        # Nämälim Geljek: kök + maz/mez (olumsuz) veya r/ar/er (olumlu) + şahıs
+        # Nämälim Geljek
         if olumsuz:
-            zaman_eki = "maz" if sesli_tipi == "yogyn" else "mez"
+            # Olumsuzluk zaman ekine dahil: -mar/-mer (1./2. şahıs), -maz/-mez (3. şahıs)
+            olumsuz_eki = ""
+            if sahis in ("A3", "B3"):
+                zaman_eki = "maz" if sesli_tipi == "yogyn" else "mez"
+            else:
+                zaman_eki = "mar" if sesli_tipi == "yogyn" else "mer"
         else:
+            # k/t yumuşaması
+            govde = _fiil_yumusama(govde)
+            # e→ä dönüşümü
+            if govde and govde[-1] == 'e':
+                govde = govde[:-1] + 'ä'
             zaman_eki = "r" if unluylebiter else ("ar" if sesli_tipi == "yogyn" else "er")
         sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
 
@@ -594,7 +624,11 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
             parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
 
         if zaman_kodu == "Ö1":
-            zaman_eki = "dy" if sesli_tipi == "yogyn" else "di"
+            # Tek heceli dodak fiillerde: -dy/-di → -du/-dü
+            if not olumsuz and _tek_heceli_dodak(root.lower()) and sahis_kodu != "A3":
+                zaman_eki = "du" if sesli_tipi == "yogyn" else "dü"
+            else:
+                zaman_eki = "dy" if sesli_tipi == "yogyn" else "di"
         elif zaman_kodu == "Ö2":
             if unluylebiter:
                 zaman_eki = "pdy" if sesli_tipi == "yogyn" else "pdi"
@@ -610,22 +644,18 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
             parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
 
     elif zaman_kodu == "H1":
-        # Umumy Häzirki
+        # Umumy Häzirki — k/t yumuşaması (olumlu)
+        if not olumsuz:
+            modified = _fiil_yumusama(root.lower())
+            if modified != root.lower():
+                parts[-1] = {"text": modified, "type": "Kök", "code": "Kök"}
         if olumsuz:
             zaman_eki = "maýar" if sesli_tipi == "yogyn" else "meýär"
         else:
             zaman_eki = "ýar" if sesli_tipi == "yogyn" else "ýär"
         parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
 
-        sahis_tablosu = {
-            "A1": "ym" if sesli_tipi == "yogyn" else "im",
-            "A2": "syň" if sesli_tipi == "yogyn" else "siň",
-            "A3": "",
-            "B1": "yk" if sesli_tipi == "yogyn" else "ik",
-            "B2": "syňyz" if sesli_tipi == "yogyn" else "siňiz",
-            "B3": "lar" if sesli_tipi == "yogyn" else "ler"
-        }
-        sahis_eki = sahis_tablosu[sahis_kodu]
+        sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis_kodu)
         if sahis_eki:
             parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
 
@@ -643,6 +673,10 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
         # Mälim Geljek
         zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
         parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+        # B3 çoğul eki (olumlu formda)
+        if sahis_kodu == "B3" and not olumsuz:
+            cogul_eki = "lar" if sesli_tipi == "yogyn" else "ler"
+            parts.append({"text": cogul_eki, "type": "Çoğul", "code": "B3"})
         if olumsuz:
             parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
 
@@ -650,8 +684,21 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
         # Nämälim Geljek
         unluylebiter = root[-1].lower() in TUM_UNLULER
         if olumsuz:
-            zaman_eki = "maz" if sesli_tipi == "yogyn" else "mez"
+            # -mar/-mer (1./2. şahıs), -maz/-mez (3. şahıs)
+            if sahis_kodu in ("A3", "B3"):
+                zaman_eki = "maz" if sesli_tipi == "yogyn" else "mez"
+            else:
+                zaman_eki = "mar" if sesli_tipi == "yogyn" else "mer"
         else:
+            # k/t yumuşaması
+            modified = _fiil_yumusama(root.lower())
+            if modified != root.lower():
+                parts[-1] = {"text": modified, "type": "Kök", "code": "Kök"}
+            # e→ä dönüşümü
+            display_root = modified
+            if display_root and display_root[-1] == 'e':
+                display_root = display_root[:-1] + 'ä'
+                parts[-1] = {"text": display_root, "type": "Kök", "code": "Kök"}
             zaman_eki = "r" if unluylebiter else ("ar" if sesli_tipi == "yogyn" else "er")
         parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
 
