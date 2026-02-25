@@ -26,7 +26,6 @@
 -rak	%<suf%>	softening
 -räk	%<suf%>	softening
 -лер	%<suf%>
-A	%<unk%>
 a/languages M to Z	%<unk%>
 abadançylyk	%<n%>	softening
 Abat	%<np%>	softening
@@ -156,7 +155,6 @@ Aşgabat	%<np%>	softening
 aşhana	%<n%>
 aşpez	%<n%>
 aşyk	%<n%>	softening
-b	%<unk%>
 baba	%<n%>
 badam	%<n%>
 badamjan	%<n%>
@@ -264,7 +262,6 @@ böwürslen	%<n%>
 bürgüt	%<n%>	softening
 bürünç	%<n%>	softening
 bütin	%<det%>
-d	%<unk%>
 dag	%<n%>
 daglyk	%<n%>	softening
 dalak	%<n%>	softening
@@ -345,7 +342,6 @@ düýn	%<n%>
 düýt	%<n%>	softening
 düýş	%<n%>
 düşündirişli	%<adj%>
-e	%<unk%>
 ebedi	%<adj%>
 ebrişem	%<n%>
 edara	%<n%>
@@ -388,7 +384,6 @@ eýranly	%<n%>
 eýýam	%<n%>
 eýýäm	%<adv%>
 eşek	%<n%>	softening
-f	%<unk%>
 fabrik	%<n%>	softening
 familiýa	%<n%>
 Farer adalary	%<np%>
@@ -403,7 +398,6 @@ firuza	%<n%>
 fizika	%<n%>
 Fransiýa	%<np%>
 furgon	%<n%>
-g	%<unk%>
 gaba	%<adj%>
 gadym	%<n%>
 gadymy	%<adj%>
@@ -555,7 +549,6 @@ gürrüldi	%<n%>
 gürrüň	%<n%>
 güýz	%<n%>
 güýçli	%<adj%>
-h	%<unk%>
 habar	%<n%>
 habarsyz	%<adj%>
 hadysa	%<n%>
@@ -661,7 +654,6 @@ hötde	%<n%>
 hözir	%<n%>
 hüjüm	%<n%>
 hüşür	%<n%>
-i	%<unk%>
 iki	%<num%>
 ikinji	%<adj%>
 Ikinji Jahan urşy	%<np%>
@@ -697,7 +689,6 @@ iş	%<n%>
 işan	%<n%>
 Işanguly	%<np%>
 işjeň	%<adj%>
-j	%<unk%>
 jady	%<n%>
 jadygöý	%<n%>
 jahan	%<n%>
@@ -729,7 +720,6 @@ jähennem	%<n%>
 jübüt	%<n%>	softening
 jüp	%<n%>	softening
 jüýje	%<n%>
-k	%<unk%>	softening
 kagyz	%<n%>
 kaka	%<n%>
 Kakageldi	%<np%>
@@ -822,7 +812,6 @@ kümmet	%<n%>	softening
 kümüş	%<n%>
 kürsi	%<n%>
 küşt	%<n%>	softening
-l	%<unk%>
 labyr	%<n%>
 labyz	%<n%>
 lakam	%<n%>
@@ -842,7 +831,6 @@ lukman	%<n%>
 lukmançylyk	%<n%>	softening
 Lüksemburg	%<np%>
 Lýuksemburg	%<np%>
-m	%<unk%>
 madda	%<n%>
 magaryf	%<n%>
 magdan	%<n%>
@@ -969,7 +957,6 @@ mütgel	%<n%>
 müň	%<num%>
 müňýyllyk	%<n%>	softening
 Mýanma	%<np%>
-n	%<unk%>
 nagma	%<n%>
 nahal	%<n%>
 nahar	%<n%>
@@ -1041,7 +1028,6 @@ owkat	%<n%>	softening
 owuç	%<n%>	softening
 oý	%<n%>
 oýun	%<n%>
-p	%<unk%>	softening
 pagta	%<n%>
 pagtaçylyk	%<n%>	softening
 pajygaly	%<adj%>
@@ -1101,7 +1087,6 @@ päki	%<n%>
 Päkistan	%<np%>
 päsgelçilik	%<n%>	softening
 Pürli	%<np%>
-r	%<unk%>
 radio	%<n%>
 rahat	%<n%>	softening
 rahatlyk	%<n%>	softening
@@ -1125,7 +1110,6 @@ Russiýa	%<np%>
 ruçka	%<n%>
 rysgal	%<n%>
 rysk	%<n%>	softening
-s	%<unk%>
 sabyn	%<n%>
 sabyr	%<n%>	vowel_drop
 sadaka	%<n%>
@@ -1213,7 +1197,6 @@ süri	%<n%>	rounding
 süýt	%<n%>	softening
 süňk	%<n%>	softening
 sýuita	%<n%>
-t	%<unk%>	softening
 tabak	%<n%>	softening
 tabyt	%<n%>	softening
 tagam	%<n%>
@@ -1311,7 +1294,6 @@ Türkmenistan	%<np%>
 türme	%<n%>
 tüsse	%<n%>
 tüçjar	%<adj%>
-u	%<unk%>
 Ukraina	%<np%>
 ulag	%<n%>
 umuman	%<adv%>
@@ -1328,7 +1310,6 @@ uýa	%<n%>
 uýgur	%<n%>
 Uýgurystan	%<np%>
 vc	%<num%>	softening
-w	%<unk%>
 wada	%<n%>
 wagt	%<n%>	softening
 wagyz	%<n%>
@@ -1360,7 +1341,6 @@ wiza	%<n%>
 wulkan	%<n%>
 wyždan	%<n%>
 Wýetnam	%<np%>
-y	%<unk%>
 yalňyş	%<adj%>
 ybadat	%<n%>	softening
 ybarat	%<adj%>	softening
@@ -1399,7 +1379,6 @@ yzzat	%<n%>	softening
 yşarat	%<n%>	softening
 yşk	%<n%>	softening
 yşyk	%<n%>	softening
-z	%<unk%>
 zag	%<n%>
 zalym	%<n%>
 zaman	%<n%>
@@ -1434,14 +1413,10 @@ zäher	%<n%>
 zähmet	%<n%>	softening
 zäk	%<n%>	softening
 ¥emen	%<np%>
-ä	%<unk%>
-Ä	%<unk%>
 ähli	%<det%>
 ähmiýet	%<n%>	softening
 äpet	%<adj%>	softening
 äşgär	%<adj%>
-ç	%<unk%>	softening
-Ç	%<unk%>	softening
 Çad	%<np%>
 çadyr	%<n%>
 çag	%<n%>
@@ -1474,7 +1449,6 @@ zäk	%<n%>	softening
 çöl	%<n%>
 çörek	%<n%>	softening
 çüýrük	%<adj%>	softening
-ö	%<unk%>
 ökje	%<n%>
 öküz	%<n%>
 ölüm	%<n%>
@@ -1487,7 +1461,6 @@ zäk	%<n%>	softening
 özgeriş	%<n%>
 öç	%<n%>	softening
 öý	%<n%>
-ü	%<unk%>
 üle	%<v%>
 ümsümlik	%<n%>	softening
 üpjünçilik	%<n%>	softening
@@ -1496,8 +1469,6 @@ zäk	%<n%>	softening
 üç	%<num%>	softening
 üçburçluk	%<n%>	softening
 üçünji	%<adj%>
-Ý	%<n%>
-ý	%<unk%>
 ýa	%<conj%>
 ýagdaý	%<n%>
 ýagly	%<adj%>
@@ -1575,9 +1546,6 @@ zäk	%<n%>	softening
 ýüzük	%<n%>	softening
 ýüň	%<n%>
 ÿüz	%<n%>
-ň	%<unk%>
-Ň	%<unk%>
-ş	%<n%>
 şa	%<n%>
 şagal	%<n%>
 Şaguly	%<np%>
@@ -1619,7 +1587,6 @@ zäk	%<n%>	softening
 şöhle	%<n%>
 şöhrat	%<n%>	softening
 şükür	%<interj%>
-ž	%<unk%>
 žandarm	%<n%>
 žanr	%<n%>
 že	%<n%>
@@ -23286,7 +23253,6 @@ zenitçi	%<n%>
 ýöňkemeli	%<adj%>
 
 # === enedilim.com'dan eklenen girişler (3601 adet) ===
-a	%<n%>
 abadan	%<n%>
 abat	%<n%>	softening
 abraýly	%<n%>
@@ -24719,7 +24685,6 @@ nätüýsli	%<n%>
 näwagt	%<n%>	softening
 näzli	%<n%>
 näçe	%<n%>
-o	%<n%>
 obaly	%<n%>
 obrazly	%<n%>
 ogry-jümri	%<n%>
@@ -25297,7 +25262,6 @@ zäherli	%<n%>
 zähersiz	%<n%>
 zähmetli	%<n%>
 zähmetsiz	%<n%>
-ä	%<n%>
 äbersiz	%<n%>
 ädikçi	%<n%>
 ähem-ähem	%<n%>

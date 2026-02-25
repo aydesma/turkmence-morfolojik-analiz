@@ -79,7 +79,7 @@ def index():
 
         # --- Paradigma tablosu ---
         elif action == 'paradigma' and root:
-            paradigma_type = request.form.get('paradigma_type', 'noun')
+            paradigma_type = request.form.get('paradigma_type', 'auto')
             paradigma_data = _build_paradigma(root, paradigma_type)
 
         # --- Çekimleme işlemi ---
@@ -146,7 +146,15 @@ def index():
 
 
 def _build_paradigma(stem, ptype):
-    """Paradigma tablosu verileri oluşturur."""
+    """
+    Paradigma tablosu verileri oluşturur.
+    
+    ptype: "noun", "verb" veya "auto"
+    auto: sözlükten kelime türünü otomatik bulur, eş sesliyse ikisini de döndürür.
+    
+    Returns:
+        list[dict] — bir veya birden fazla paradigma verisi
+    """
     CASE_NAMES = {
         None: ("—", "Baş düşüm (Yalın)"),
         "A2": ("A₂", "Eýelik düşüm"),
@@ -171,7 +179,7 @@ def _build_paradigma(stem, ptype):
         "B1": "Biz", "B2": "Siz", "B3": "Olar",
     }
 
-    if ptype == "noun":
+    def _build_noun(s):
         cases = [None, "A2", "A3", "A4", "A5", "A6"]
         poss_codes = [None, "A1", "A2", "A3"]
 
@@ -179,27 +187,27 @@ def _build_paradigma(stem, ptype):
             code, name = CASE_NAMES[case]
             row = {"code": code, "name": name, "forms": []}
             for poss in poss_codes:
-                r = _generator.generate_noun(stem, plural=plural,
+                r = _generator.generate_noun(s, plural=plural,
                                               possessive=poss, case=case)
                 row["forms"].append(r.word if r.is_valid else "—")
             return row
 
         return {
             "type": "noun",
-            "stem": stem,
+            "stem": s,
             "poss_headers": ["Ø", "D₁b (meniň)", "D₂b (seniň)", "D₃b (onuň)"],
             "singular": [gen_row(False, c) for c in cases],
             "plural": [gen_row(True, c) for c in cases],
         }
 
-    elif ptype == "verb":
+    def _build_verb(s):
         persons = ["A1", "A2", "A3", "B1", "B2", "B3"]
         tenses = []
         for t_code in ["1", "2", "3", "4", "5", "6", "7"]:
             rows = []
             for p_code in persons:
-                pos_r = _generator.generate_verb(stem, t_code, p_code, negative=False)
-                neg_r = _generator.generate_verb(stem, t_code, p_code, negative=True)
+                pos_r = _generator.generate_verb(s, t_code, p_code, negative=False)
+                neg_r = _generator.generate_verb(s, t_code, p_code, negative=True)
                 rows.append({
                     "person": PERSON_NAMES[p_code],
                     "positive": pos_r.word if pos_r.is_valid else "—",
@@ -212,11 +220,38 @@ def _build_paradigma(stem, ptype):
             })
         return {
             "type": "verb",
-            "stem": stem,
+            "stem": s,
             "tenses": tenses,
         }
 
-    return None
+    # Kullanıcı açık tür seçtiyse → sadece onu üret
+    if ptype == "noun":
+        return [_build_noun(stem)]
+    elif ptype == "verb":
+        return [_build_verb(stem)]
+
+    # Auto: sözlükten kelime türünü bul
+    entries = _lexicon.lookup(stem)
+    types_found = set()
+    for e in entries:
+        if e.pos in ("n", "n?", "np"):
+            types_found.add("noun")
+        elif e.pos == "v":
+            types_found.add("verb")
+        elif e.pos == "adj":
+            types_found.add("noun")  # sıfatlar isim olarak çekimlenir
+        # diğer türler (pro, conj, adv...) için paradigma yok
+
+    # Sözlükte bulunamadıysa isim olarak varsay
+    if not types_found:
+        types_found.add("noun")
+
+    results = []
+    if "noun" in types_found:
+        results.append(_build_noun(stem))
+    if "verb" in types_found:
+        results.append(_build_verb(stem))
+    return results
 
 
 # ==============================================================================
