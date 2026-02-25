@@ -359,7 +359,7 @@ def api_analyze():
     words = _tokenize(text)
     all_words = []
     for w in words:
-        multi = _analyzer.parse(w)
+        multi = _analyzer.parse(w["word"])
         results_list = []
         for r in multi.results:
             results_list.append({
