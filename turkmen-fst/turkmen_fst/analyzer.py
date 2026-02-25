@@ -389,6 +389,12 @@ class MorphologicalAnalyzer:
                             continue
                         seen.add(sig)
 
+                        # Aynı breakdown'u tekrar ekleme (ör. G1'de A1-B2 aynı kelime)
+                        breakdown_key = f"{stem}|{tense}|{neg}|{gen_word_only}"
+                        if breakdown_key in seen:
+                            continue
+                        seen.add(breakdown_key)
+
                         suffixes = []
                         for cat, suf in gen.morphemes:
                             if cat == "NEGATION":
