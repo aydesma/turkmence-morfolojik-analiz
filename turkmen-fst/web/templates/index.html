@@ -206,6 +206,12 @@
                 </div>
             </div>
 
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="olumsuz_isim" name="olumsuz_isim" value="on" {% if selected_isim_olumsuz %}checked{% endif %}
+                    class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-violet-500">
+                <label for="olumsuz_isim" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Olumsuzluk (däl)</label>
+            </div>
+
             <button type="submit"
                 class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-violet-600 dark:hover:bg-violet-500 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 Çekimle
