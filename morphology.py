@@ -484,6 +484,17 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         5: Anyk Häzirki  (şimdiki zaman, kesin)
         6: Mälim Geljek  (gelecek zaman, kesin)
         7: Nämälim Geljek(gelecek zaman, belirsiz)
+        8: Şert          (şart kipi)
+        9: Buýruk        (emir kipi)
+        10: Hökmanlyk    (gereklilik kipi)
+        11: Nätanyş Öten (kanıtsal / evidential)
+        12: Arzuw-Ökünç  (arzuw-ökünç / optative)
+        13: Hal işlik     (converb: -yp/-ip/-up/-üp/-p)
+        14: Öten ortak    (past participle: -an/-en)
+        15: Häzirki ortak (present participle: -ýan/-ýän)
+        16: Geljek ortak  (future participle: -jak/-jek)
+        17: Ettirgen      (causative derivation)
+        18: Edilgen       (passive derivation)
     """
     govde = kok.lower()
     sesli_tipi = unlu_niteligi(govde)
@@ -493,13 +504,19 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
     # --- Mälim Geljek (6) ---
     if zaman == "6":
         zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
-        # B3 çoğul eki (olumlu formda)
-        cogul_eki = ""
-        if sahis == "B3" and not olumsuz:
-            cogul_eki = "lar" if sesli_tipi == "yogyn" else "ler"
-        sonuc = govde + zaman_eki + cogul_eki + (" däl" if olumsuz else "")
-        secere = f"{zamir} + {kok} + {zaman_eki}" + (f" + {cogul_eki}" if cogul_eki else "") + (" + däl" if olumsuz else "")
-        return f"{zamir} {sonuc}", secere
+        if olumsuz:
+            # Olumsuz: kök + jak/jek + däl (değişiklik yok)
+            sonuc = govde + zaman_eki + " däl"
+            secere = f"{zamir} + {kok} + {zaman_eki} + däl"
+            return f"{zamir} {sonuc}", secere
+        else:
+            # enedilim kuralı: kök + jak/jek + dir/dyr + kişi eki
+            kopula_base = "dyr" if sesli_tipi == "yogyn" else "dir"
+            kopula_person = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
+            kopula_eki = kopula_base + kopula_person
+            sonuc = govde + zaman_eki + kopula_eki
+            secere = f"{zamir} + {kok} + {zaman_eki} + {kopula_eki}"
+            return f"{zamir} {sonuc}", secere
 
     # --- Anyk Häzirki (5) — Özel yardımcı fiiller ---
     if zaman == "5":
@@ -527,17 +544,35 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
 
     elif zaman == "2":
-        # Daş Öten: kök + [ma] + ypdy/pdy + şahıs
-        if unluylebiter:
-            zaman_eki = "pdy" if sesli_tipi == "yogyn" else "pdi"
+        # Daş Öten
+        if olumsuz:
+            # enedilim kuralı: kök + män/man + di/dy + kişi
+            olumsuz_eki = ""  # genel olumsuz eki kullanılmaz
+            zaman_eki = "mändi" if sesli_tipi == "ince" else "mandy"
+            sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
         else:
-            zaman_eki = "ypdy" if sesli_tipi == "yogyn" else "ipdi"
-        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
+            # Olumlu: kök + ypdy/pdy + şahıs
+            if unluylebiter:
+                zaman_eki = "pdy" if sesli_tipi == "yogyn" else "pdi"
+            else:
+                zaman_eki = "ypdy" if sesli_tipi == "yogyn" else "ipdi"
+            sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
 
     elif zaman == "3":
-        # Dowamly Öten: kök + [ma] + ýardy/ýärdi + şahıs
-        zaman_eki = "ýardy" if sesli_tipi == "yogyn" else "ýärdi"
-        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
+        # Dowamly Öten
+        if olumsuz:
+            # enedilim kuralı: kök + ýan/ýän + däldi + kişi (analitik yapı)
+            olumsuz_eki = ""  # genel olumsuz eki kullanılmaz
+            sifat_fiil = "ýan" if sesli_tipi == "yogyn" else "ýän"
+            # däldi her zaman ince, kişi ekleri däldi'nin ünlü niteliğine göre
+            sahis_eki_str = _sahis_ekleri_standart("ince", sahis)
+            sonuc = govde + sifat_fiil + " däldi" + sahis_eki_str
+            secere = f"{kok} + {sifat_fiil} + däldi + {sahis_eki_str if sahis_eki_str else '(0)'}"
+            return sonuc, secere
+        else:
+            # Olumlu: kök + ýardy/ýärdi + şahıs
+            zaman_eki = "ýardy" if sesli_tipi == "yogyn" else "ýärdi"
+            sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
 
     elif zaman == "4":
         # Umumy Häzirki: kök + [ma] + ýar/ýär + şahıs
@@ -565,6 +600,213 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
             zaman_eki = "r" if unluylebiter else ("ar" if sesli_tipi == "yogyn" else "er")
         sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
 
+    elif zaman == "8":
+        # Şert formasy (Şart kipi): kök + [ma/me] + sa/se + kişi
+        zaman_eki = "sa" if sesli_tipi == "yogyn" else "se"
+        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
+
+    elif zaman == "9":
+        # Buýruk formasy (Emir kipi) — her şahıs için farklı yapı
+        if olumsuz:
+            olumsuz_eki = "ma" if sesli_tipi == "yogyn" else "me"
+            # -ma/-me ekinden sonra gövde ünlüyle biter → dodak uyumu iptal
+            if sahis == "A1":
+                sahis_eki = "ýyn" if sesli_tipi == "yogyn" else "ýin"
+                sonuc = govde + olumsuz_eki + sahis_eki
+            elif sahis == "A2":
+                sonuc = govde + olumsuz_eki
+                sahis_eki = ""
+            elif sahis == "A3":
+                sahis_eki = "syn" if sesli_tipi == "yogyn" else "sin"
+                sonuc = govde + olumsuz_eki + sahis_eki
+            elif sahis == "B1":
+                sahis_eki = "ly" if sesli_tipi == "yogyn" else "li"
+                sonuc = govde + olumsuz_eki + sahis_eki
+            elif sahis == "B2":
+                sahis_eki = "ň"
+                sonuc = govde + olumsuz_eki + sahis_eki
+            else:  # B3
+                sahis_eki = "synlar" if sesli_tipi == "yogyn" else "sinler"
+                sonuc = govde + olumsuz_eki + sahis_eki
+            secere = f"{kok} + {olumsuz_eki} + {sahis_eki if sahis_eki else '(0)'}"
+            return sonuc, secere
+        else:
+            # Olumlu emir
+            olumsuz_eki = ""
+            if sahis == "A1":
+                # Men: -aýyn/-eýin veya -ýyn/-ýin (ünlüden sonra)
+                if unluylebiter:
+                    sahis_eki = "ýyn" if sesli_tipi == "yogyn" else "ýin"
+                else:
+                    sahis_eki = "aýyn" if sesli_tipi == "yogyn" else "eýin"
+                sonuc = govde + sahis_eki
+            elif sahis == "A2":
+                # Sen: çıplak kök
+                sonuc = govde
+                sahis_eki = ""
+            elif sahis == "A3":
+                # Ol: -syn/-sin/-sun/-sün (4-yönlü)
+                if _tek_heceli_dodak(govde):
+                    sahis_eki = "sun" if sesli_tipi == "yogyn" else "sün"
+                else:
+                    sahis_eki = "syn" if sesli_tipi == "yogyn" else "sin"
+                sonuc = govde + sahis_eki
+            elif sahis == "B1":
+                # Biz: -aly/-eli veya -ly/-li (ünlüden sonra)
+                if unluylebiter:
+                    sahis_eki = "ly" if sesli_tipi == "yogyn" else "li"
+                else:
+                    sahis_eki = "aly" if sesli_tipi == "yogyn" else "eli"
+                sonuc = govde + sahis_eki
+            elif sahis == "B2":
+                # Siz: -yň/-iň/-uň/-üň veya -ň (ünlüden sonra)
+                if unluylebiter:
+                    sahis_eki = "ň"
+                else:
+                    if _tek_heceli_dodak(govde):
+                        sahis_eki = "uň" if sesli_tipi == "yogyn" else "üň"
+                    else:
+                        sahis_eki = "yň" if sesli_tipi == "yogyn" else "iň"
+                sonuc = govde + sahis_eki
+            else:  # B3
+                # Olar: -synlar/-sinler/-sunlar/-sünler
+                if _tek_heceli_dodak(govde):
+                    sahis_eki = "sunlar" if sesli_tipi == "yogyn" else "sünler"
+                else:
+                    sahis_eki = "synlar" if sesli_tipi == "yogyn" else "sinler"
+                sonuc = govde + sahis_eki
+            secere = f"{kok} + {sahis_eki if sahis_eki else '(0)'}"
+            return sonuc, secere
+
+    elif zaman == "10":
+        # Hökmanlyk formasy (Gereklilik): kök + maly/meli [+ däl]
+        zaman_eki = "maly" if sesli_tipi == "yogyn" else "meli"
+        if olumsuz:
+            sonuc = govde + zaman_eki + " däl"
+            secere = f"{kok} + {zaman_eki} + däl"
+        else:
+            sonuc = govde + zaman_eki
+            secere = f"{kok} + {zaman_eki}"
+        return sonuc, secere
+
+    elif zaman == "11":
+        # Nätanyş Öten (Kanıtsal / Evidential): kök + ypdyr/ipdir + kişi
+        # Hal işlik eki + dyr/dir
+        if olumsuz:
+            # Olumsuz: kök + man/män + dyr/dir + kişi
+            olumsuz_eki = ""  # genel olumsuz eki kullanılmaz
+            zaman_eki = "mandyr" if sesli_tipi == "yogyn" else "mändir"
+            sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
+        else:
+            # Olumlu: kök + ypdyr/ipdyr + kişi
+            if unluylebiter:
+                zaman_eki = "pdyr" if sesli_tipi == "yogyn" else "pdir"
+            else:
+                if _tek_heceli_dodak(govde):
+                    zaman_eki = "updyr" if sesli_tipi == "yogyn" else "üpdir"
+                else:
+                    zaman_eki = "ypdyr" if sesli_tipi == "yogyn" else "ipdir"
+            sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
+
+    elif zaman == "12":
+        # Arzuw-Ökünç (Optative): kök + [ma/me] + sa/se + dy/di + kişi
+        sart_eki = "sa" if sesli_tipi == "yogyn" else "se"
+        gecmis_eki = "dy" if sesli_tipi == "yogyn" else "di"
+        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis)
+        sonuc = govde + olumsuz_eki + sart_eki + gecmis_eki + sahis_eki
+        secere = f"{kok} + {olumsuz_eki + ' + ' if olumsuz_eki else ''}{sart_eki} + {gecmis_eki} + {sahis_eki if sahis_eki else '(0)'}"
+        return sonuc, secere
+
+    elif zaman == "13":
+        # Hal işlik (converb): kök + yp/ip/up/üp/p (neg: man/män)
+        if olumsuz:
+            olumsuz_eki = ""
+            zaman_eki = "man" if sesli_tipi == "yogyn" else "män"
+        else:
+            if unluylebiter:
+                zaman_eki = "p"
+            else:
+                if _tek_heceli_dodak(govde):
+                    zaman_eki = "up" if sesli_tipi == "yogyn" else "üp"
+                else:
+                    zaman_eki = "yp" if sesli_tipi == "yogyn" else "ip"
+        sonuc = govde + zaman_eki
+        secere = f"{kok} + {zaman_eki}"
+        return sonuc, secere
+
+    elif zaman == "14":
+        # Öten ortak işlik (past participle): kök + an/en (neg: madyk/medik)
+        if olumsuz:
+            olumsuz_eki = ""
+            zaman_eki = "madyk" if sesli_tipi == "yogyn" else "medik"
+        else:
+            if unluylebiter:
+                zaman_eki = "n"
+            else:
+                zaman_eki = "an" if sesli_tipi == "yogyn" else "en"
+        sonuc = govde + zaman_eki
+        secere = f"{kok} + {zaman_eki}"
+        return sonuc, secere
+
+    elif zaman == "15":
+        # Häzirki ortak işlik (present participle): kök + ýan/ýän (neg: maýan/meýän)
+        if olumsuz:
+            olumsuz_eki = ""
+            zaman_eki = "maýan" if sesli_tipi == "yogyn" else "meýän"
+        else:
+            zaman_eki = "ýan" if sesli_tipi == "yogyn" else "ýän"
+        sonuc = govde + zaman_eki
+        secere = f"{kok} + {zaman_eki}"
+        return sonuc, secere
+
+    elif zaman == "16":
+        # Geljek ortak işlik (future participle): kök + jak/jek (neg: majak/mejek)
+        if olumsuz:
+            olumsuz_eki = ""
+            zaman_eki = "majak" if sesli_tipi == "yogyn" else "mejek"
+        else:
+            zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
+        sonuc = govde + zaman_eki
+        secere = f"{kok} + {zaman_eki}"
+        return sonuc, secere
+
+    elif zaman == "17":
+        # Ettirgen (causative): kök + dyr/dir/dur/dür veya +t
+        if unluylebiter:
+            sonuc = govde + "t"
+            secere = f"{kok} + t"
+        else:
+            if _tek_heceli_dodak(govde):
+                ek = "dur" if sesli_tipi == "yogyn" else "dür"
+            else:
+                ek = "dyr" if sesli_tipi == "yogyn" else "dir"
+            sonuc = govde + ek
+            secere = f"{kok} + {ek}"
+        return sonuc, secere
+
+    elif zaman == "18":
+        # Edilgen (passive): kök + yl/il/ul/ül veya +yn/in/un/ün
+        if unluylebiter:
+            if govde and govde[-2:-1] == 'l':
+                ek = "n"
+            else:
+                ek = "l"
+            sonuc = govde + ek
+        elif govde and govde[-1] == 'l':
+            if _tek_heceli_dodak(govde):
+                ek = "un" if sesli_tipi == "yogyn" else "ün"
+            else:
+                ek = "yn" if sesli_tipi == "yogyn" else "in"
+            sonuc = govde + ek
+        else:
+            if _tek_heceli_dodak(govde):
+                ek = "ul" if sesli_tipi == "yogyn" else "ül"
+            else:
+                ek = "yl" if sesli_tipi == "yogyn" else "il"
+            sonuc = govde + ek
+        secere = f"{kok} + {ek}"
+        return sonuc, secere
+
     else:
         return f"HATA: Geçersiz zaman kodu '{zaman}'", ""
 
@@ -582,7 +824,11 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
 ZAMAN_DONUSUM = {
     "Ö1": "1", "Ö2": "2", "Ö3": "3",
     "H1": "4", "H2": "5",
-    "G1": "6", "G2": "7"
+    "G1": "6", "G2": "7",
+    "Ş1": "8", "B1K": "9", "HK": "10",
+    "NÖ": "11", "AÖ": "12",
+    "FH": "13", "FÖ": "14", "FÄ": "15", "FG": "16",
+    "ETT": "17", "EDL": "18"
 }
 
 
@@ -616,32 +862,48 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
 
     # --- Zaman ve şahıs eklerini belirle ---
     if zaman_kodu in ["Ö1", "Ö2", "Ö3"]:
-        # Geçmiş zamanlar: [olumsuz] + zaman_eki + şahıs_eki
+        # Geçmiş zamanlar
         unluylebiter = root[-1].lower() in TUM_UNLULER
 
-        if olumsuz:
-            olumsuz_ek = "ma" if sesli_tipi == "yogyn" else "me"
-            parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+        if zaman_kodu == "Ö2" and olumsuz:
+            # enedilim: kök + män/man + di/dy + kişi
+            zaman_eki = "mändi" if sesli_tipi == "ince" else "mandy"
+            parts.append({"text": zaman_eki, "type": "Olumsuz+Zaman", "code": zaman_kodu})
+            sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
 
-        if zaman_kodu == "Ö1":
-            # Tek heceli dodak fiillerde: -dy/-di → -du/-dü
-            if not olumsuz and _tek_heceli_dodak(root.lower()) and sahis_kodu != "A3":
-                zaman_eki = "du" if sesli_tipi == "yogyn" else "dü"
-            else:
-                zaman_eki = "dy" if sesli_tipi == "yogyn" else "di"
-        elif zaman_kodu == "Ö2":
-            if unluylebiter:
-                zaman_eki = "pdy" if sesli_tipi == "yogyn" else "pdi"
-            else:
-                zaman_eki = "ypdy" if sesli_tipi == "yogyn" else "ipdi"
-        else:  # Ö3
-            zaman_eki = "ýardy" if sesli_tipi == "yogyn" else "ýärdi"
+        elif zaman_kodu == "Ö3" and olumsuz:
+            # enedilim: kök + ýan/ýän + däldi + kişi (analitik)
+            sifat_fiil = "ýan" if sesli_tipi == "yogyn" else "ýän"
+            parts.append({"text": sifat_fiil, "type": "Sıfat-fiil", "code": "SF"})
+            sahis_eki_str = _sahis_ekleri_standart("ince", sahis_kodu)
+            parts.append({"text": "däldi" + sahis_eki_str, "type": "Olumsuz+Kişi", "code": zaman_kodu})
 
-        parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+        else:
+            # Ö1 (olumlu/olumsuz), Ö2 olumlu, Ö3 olumlu
+            if olumsuz:
+                olumsuz_ek = "ma" if sesli_tipi == "yogyn" else "me"
+                parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
 
-        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
-        if sahis_eki:
-            parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+            if zaman_kodu == "Ö1":
+                if not olumsuz and _tek_heceli_dodak(root.lower()) and sahis_kodu != "A3":
+                    zaman_eki = "du" if sesli_tipi == "yogyn" else "dü"
+                else:
+                    zaman_eki = "dy" if sesli_tipi == "yogyn" else "di"
+            elif zaman_kodu == "Ö2":
+                if unluylebiter:
+                    zaman_eki = "pdy" if sesli_tipi == "yogyn" else "pdi"
+                else:
+                    zaman_eki = "ypdy" if sesli_tipi == "yogyn" else "ipdi"
+            else:  # Ö3 olumlu
+                zaman_eki = "ýardy" if sesli_tipi == "yogyn" else "ýärdi"
+
+            parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+
+            sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
 
     elif zaman_kodu == "H1":
         # Umumy Häzirki — k/t yumuşaması (olumlu)
@@ -673,12 +935,14 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
         # Mälim Geljek
         zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
         parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
-        # B3 çoğul eki (olumlu formda)
-        if sahis_kodu == "B3" and not olumsuz:
-            cogul_eki = "lar" if sesli_tipi == "yogyn" else "ler"
-            parts.append({"text": cogul_eki, "type": "Çoğul", "code": "B3"})
         if olumsuz:
             parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+        else:
+            # enedilim: kopula + kişi eki
+            kopula_base = "dyr" if sesli_tipi == "yogyn" else "dir"
+            kopula_person = _sahis_ekleri_genisletilmis(sesli_tipi, sahis_kodu)
+            kopula_eki = kopula_base + kopula_person
+            parts.append({"text": kopula_eki, "type": "Kopula", "code": sahis_kodu})
 
     elif zaman_kodu == "G2":
         # Nämälim Geljek
@@ -705,6 +969,132 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
         sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis_kodu)
         if sahis_eki:
             parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+
+    elif zaman_kodu == "Ş1":
+        # Şert formasy
+        if olumsuz:
+            olumsuz_ek = "ma" if sesli_tipi == "yogyn" else "me"
+            parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+        zaman_eki = "sa" if sesli_tipi == "yogyn" else "se"
+        parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
+        if sahis_eki:
+            parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+
+    elif zaman_kodu == "B1K":
+        # Buýruk formasy
+        unluylebiter_root = root[-1].lower() in TUM_UNLULER
+        if olumsuz:
+            olumsuz_ek = "ma" if sesli_tipi == "yogyn" else "me"
+            parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+            # -ma/-me ekinden sonra gövde ünlüyle biter → dodak uyumu iptal
+            if sahis_kodu == "A1":
+                sahis_eki = "ýyn" if sesli_tipi == "yogyn" else "ýin"
+            elif sahis_kodu == "A2":
+                sahis_eki = ""
+            elif sahis_kodu == "A3":
+                sahis_eki = "syn" if sesli_tipi == "yogyn" else "sin"
+            elif sahis_kodu == "B1":
+                sahis_eki = "ly" if sesli_tipi == "yogyn" else "li"
+            elif sahis_kodu == "B2":
+                sahis_eki = "ň"
+            else:  # B3
+                sahis_eki = "synlar" if sesli_tipi == "yogyn" else "sinler"
+        else:
+            if sahis_kodu == "A1":
+                if unluylebiter_root:
+                    sahis_eki = "ýyn" if sesli_tipi == "yogyn" else "ýin"
+                else:
+                    sahis_eki = "aýyn" if sesli_tipi == "yogyn" else "eýin"
+            elif sahis_kodu == "A2":
+                sahis_eki = ""
+            elif sahis_kodu == "A3":
+                if _tek_heceli_dodak(root.lower()):
+                    sahis_eki = "sun" if sesli_tipi == "yogyn" else "sün"
+                else:
+                    sahis_eki = "syn" if sesli_tipi == "yogyn" else "sin"
+            elif sahis_kodu == "B1":
+                if unluylebiter_root:
+                    sahis_eki = "ly" if sesli_tipi == "yogyn" else "li"
+                else:
+                    sahis_eki = "aly" if sesli_tipi == "yogyn" else "eli"
+            elif sahis_kodu == "B2":
+                if unluylebiter_root:
+                    sahis_eki = "ň"
+                else:
+                    if _tek_heceli_dodak(root.lower()):
+                        sahis_eki = "uň" if sesli_tipi == "yogyn" else "üň"
+                    else:
+                        sahis_eki = "yň" if sesli_tipi == "yogyn" else "iň"
+            else:  # B3
+                if _tek_heceli_dodak(root.lower()):
+                    sahis_eki = "sunlar" if sesli_tipi == "yogyn" else "sünler"
+                else:
+                    sahis_eki = "synlar" if sesli_tipi == "yogyn" else "sinler"
+        if sahis_eki:
+            parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+
+    elif zaman_kodu == "HK":
+        # Hökmanlyk formasy
+        zaman_eki = "maly" if sesli_tipi == "yogyn" else "meli"
+        parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+        if olumsuz:
+            parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+
+    elif zaman_kodu == "NÖ":
+        # Nätanyş Öten (Kanıtsal / Evidential)
+        if olumsuz:
+            zaman_eki = "mandyr" if sesli_tipi == "yogyn" else "mändir"
+            parts.append({"text": zaman_eki, "type": "Olumsuz+Zaman", "code": zaman_kodu})
+        else:
+            unluylebiter_root = root[-1].lower() in TUM_UNLULER
+            if unluylebiter_root:
+                zaman_eki = "pdyr" if sesli_tipi == "yogyn" else "pdir"
+            else:
+                if _tek_heceli_dodak(root.lower()):
+                    zaman_eki = "updyr" if sesli_tipi == "yogyn" else "üpdir"
+                else:
+                    zaman_eki = "ypdyr" if sesli_tipi == "yogyn" else "ipdir"
+            parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
+        sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis_kodu)
+        if sahis_eki:
+            parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+
+    elif zaman_kodu == "AÖ":
+        # Arzuw-Ökünç (Optative)
+        if olumsuz:
+            olumsuz_ek = "ma" if sesli_tipi == "yogyn" else "me"
+            parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+        sart_eki = "sa" if sesli_tipi == "yogyn" else "se"
+        gecmis_eki = "dy" if sesli_tipi == "yogyn" else "di"
+        parts.append({"text": sart_eki, "type": "Şart", "code": "Ş"})
+        parts.append({"text": gecmis_eki, "type": "Zaman", "code": zaman_kodu})
+        sahis_eki = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
+        if sahis_eki:
+            parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+
+    elif zaman_kodu in ("FH", "FÖ", "FÄ", "FG"):
+        # Fiilimsi formları (şahıs eki yok)
+        # parts'tan zamir kaldır (fiilimsiler zamirle kullanılmaz)
+        parts = [p for p in parts if p.get("type") != "Şahıs"]
+        # Eki doğrudan result'tan hesapla
+        govde = root.lower()
+        ek = result[len(govde):]
+        if ek:
+            fiilimsi_tipi = {
+                "FH": "Hal işlik", "FÖ": "Öten ortak",
+                "FÄ": "Häzirki ortak", "FG": "Geljek ortak"
+            }
+            parts.append({"text": ek, "type": fiilimsi_tipi[zaman_kodu], "code": zaman_kodu})
+
+    elif zaman_kodu in ("ETT", "EDL"):
+        # Ettirgen/Edilgen (şahıs eki yok, derivasyon)
+        parts = [p for p in parts if p.get("type") != "Şahıs"]
+        govde = root.lower()
+        ek = result[len(govde):]
+        if ek:
+            tip = "Ettirgen" if zaman_kodu == "ETT" else "Edilgen"
+            parts.append({"text": ek, "type": tip, "code": zaman_kodu})
 
     return parts, result
 

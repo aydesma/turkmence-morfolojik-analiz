@@ -1,0 +1,306 @@
+======================================================================
+  SÖZLÜK DOĞRULAMA RAPORU (Lexicon Validation Report)
+  Tarih: 2026-02-27 15:11
+======================================================================
+
+──────────────────────────────────────────────────
+§1 GENEL KALİTE
+──────────────────────────────────────────────────
+  Toplam giriş:         30154
+  POS dağılımı:         {'n': 21798, 'v': 6471, 'adj': 3094, 'np': 548, 'adv': 36, 'num': 26, 'pro': 14, 'suf': 5, 'postp': 5, 'interj': 5, 'conj': 5, 'det': 3, 'unk': 2, 'phr': 2, 'prep': 1}
+  tum.txt kapsamı:      75.0% (22609/30154)
+  Fiil kökü kapsamı:    49.8% (3225/6471)
+  tum.txt fiil (bizde yok): 10142
+  Tekrar eden girdiler: 0
+  Geçersiz karakter:    475
+  Geçersiz örnekler:    [{'word': '-лер', 'bad_chars': ['е', 'л', 'р'], 'line': 28}, {'word': 'a/languages M to Z', 'bad_chars': ['/'], 'line': 29}, {'word': 'altьn', 'bad_chars': ['ь'], 'line': 80}, {'word': 'bä¢', 'bad_chars': ['¢'], 'line': 256}, {'word': 'Gurbangulx', 'bad_chars': ['x'], 'line': 487}, {'word': 'Gurbangulь', 'bad_chars': ['ь'], 'line': 489}, {'word': 'Guvançmyrat', 'bad_chars': ['v'], 'line': 499}, {'word': 'polkovnik', 'bad_chars': ['v'], 'line': 1073}, {'word': 'vc', 'bad_chars': ['v', 'c'], 'line': 1312}, {'word': 'yvz', 'bad_chars': ['v'], 'line': 1376}]
+
+──────────────────────────────────────────────────
+§2 HUNSPELL KÖK/TÜRETİLMİŞ KONTROLÜ
+──────────────────────────────────────────────────
+  Kontrol edilen:       26434
+  Doğrulanan kökler:    16874
+  Türetilmiş şüpheli:   2795
+  tum.txt'de bulunamayan: 6765
+
+  --- Türetilmiş form şüphelileri (ilk 40) ---
+    abadançylyk                POS=n     grup=27    satır=30
+    agentlik                   POS=n     grup=38    satır=46
+    agzybirlik                 POS=n     grup=38    satır=52
+    agşamlyk                   POS=n     grup=27    satır=54
+    aralyk                     POS=n     grup=27    satır=96
+    arassaçylyk                POS=n     grup=27    satır=99
+    asudalyk                   POS=n     grup=27    satır=113
+    azatlyk                    POS=n     grup=27    satır=135
+    baglyk                     POS=n     grup=27    satır=165
+    balykçy                    POS=n     grup=20    satır=176
+    barlyk                     POS=n     grup=27    satır=184
+    batyrlyk                   POS=n     grup=27    satır=188
+    baýlyk                     POS=n     grup=27    satır=191
+    baýrak                     POS=n     grup=27    satır=192
+    birlik                     POS=n     grup=38    satır=227
+    boşluk                     POS=n     grup=27    satır=242
+    daglyk                     POS=n     grup=27    satır=266
+    dirilik                    POS=n     grup=38    satır=300
+    döredijilik                POS=n     grup=38    satır=329
+    ertirlik                   POS=n     grup=38    satır=372
+    garaňkylyk                 POS=n     grup=27    satır=425
+    garaşsyzlyk                POS=n     grup=27    satır=427
+    gaýratlylyk                POS=n     grup=27    satır=447
+    goragçy                    POS=n     grup=20    satır=466
+    gymmatlyk                  POS=n     grup=27    satır=509
+    göwreli                    POS=adj   grup=40    satır=523
+    göwrelilik                 POS=n     grup=78    satır=524
+    güýçli                     POS=adj   grup=111   satır=551
+    hanlyk                     POS=n     grup=27    satır=572
+    howpsuzlyk                 POS=n     grup=27    satır=631
+    hyzmatdaşlyk               POS=n     grup=27    satır=640
+    hökümdarlyk                POS=n     grup=27    satır=651
+    içaly                      POS=n     grup=62    satır=678
+    jansyzlyk                  POS=n     grup=27    satır=699
+    jemgyýetçilik              POS=n     grup=38    satır=702
+    kitaphanaçy                POS=n     grup=20    satır=763
+    lukmançylyk                POS=n     grup=27    satır=831
+    mahluk                     POS=n     grup=27    satır=842
+    maldarçylyk                POS=n     grup=27    satır=851
+    milletçi                   POS=n     grup=37    satır=912
+
+  --- tum.txt'de bulunamayanlar (ilk 40 / 6765) ---
+    Afrika                     POS=np    grup=2     satır=41
+    agyz                       POS=n     grup=27    satır=50
+    agşam                      POS=n     grup=17    satır=53
+    ahyr                       POS=n     grup=17    satır=56
+    akmak                      POS=adj   grup=17    satır=66
+    alýuminiý                  POS=n     grup=19    satır=82
+    amal                       POS=n     grup=17    satır=84
+    amanat                     POS=n     grup=17    satır=85
+    ammar                      POS=n     grup=17    satır=87
+    Amyderýa                   POS=np    grup=2     satır=88
+    Annageldi                  POS=np    grup=3     satır=91
+    ant                        POS=n     grup=27    satır=93
+    Awstraliýa                 POS=np    grup=2     satır=126
+    Awstriýa                   POS=np    grup=2     satır=127
+    Aziýa                      POS=np    grup=2     satır=137
+    aýy                        POS=n     grup=20    satır=151
+    Aşgabat                    POS=np    grup=9     satır=154
+    aşyk                       POS=n     grup=27    satır=157
+    Belgiýa                    POS=np    grup=2     satır=205
+    Braziliýa                  POS=np    grup=2     satır=243
+    bäş                        POS=num   grup=4     satır=257
+    Daniýa                     POS=np    grup=2     satır=270
+    dekabr                     POS=n     grup=17    satır=280
+    duz                        POS=n     grup=47    satır=318
+    duşenbe                    POS=n     grup=53    satır=320
+    dyrnak                     POS=n     grup=27    satır=323
+    dört                       POS=num   grup=110   satır=330
+    elti                       POS=n     grup=37    satır=360
+    Ermenistan                 POS=np    grup=5     satır=371
+    et                         POS=v     grup=35    satır=379
+    eýle                       POS=adj   grup=53    satır=381
+    Eýran                      POS=np    grup=5     satır=382
+    Fransiýa                   POS=np    grup=2     satır=399
+    galp                       POS=adj   grup=17    satır=409
+    Garagalpagystan            POS=np    grup=5     satır=423
+    Garagum                    POS=np    grup=5     satır=424
+    Gazagystan                 POS=np    grup=5     satır=438
+    gaýr                       POS=n     grup=12    satır=445
+    gelneje                    POS=n     grup=108   satır=455
+    Germaniýa                  POS=np    grup=2     satır=458
+
+──────────────────────────────────────────────────
+§3 POS ETİKET DOĞRULUĞU
+──────────────────────────────────────────────────
+  İsim→Fiil şüphelisi:  19
+  İsim→Sıfat şüphelisi: 988
+  Fiil↛tum kökü:        3246
+  Hunspell POS uyumsuz:  1727
+
+  --- İsim etiketli ama tum.txt'de fiil kökü (ilk 30 / 19) ---
+    bag                        satır=161
+    garyn                      satır=432
+    ýel                        satır=1514
+    ýylan                      satır=1533
+    azaldyş                    satır=2636
+    eginýüp                    satır=4661
+    ezber                      satır=4928
+    jyzzyn                     satır=7946
+    peseldiş                   satır=10535
+    sowadyş                    satır=11812
+    sül                        satır=12115
+    süý                        satır=12179
+    yk                         satır=13332
+    yryl                       satır=13403
+    öp                         satır=14263
+    göteriliş                  satır=24078
+    gözel                      satır=24088
+    utuş                       satır=25194
+    ýaman                      satır=25473
+
+  --- İsim etiketli ama sıfat eki var (ilk 30 / 988) ---
+    eýranly                    ek=-ly       satır=383
+    içaly                      ek=-ly       satır=678
+    jansyz                     ek=-syz      satır=698
+    büýli                      ek=-li       satır=3832
+    howly                      ek=-ly       satır=7129
+    möngözli                   ek=-li       satır=9541
+    tokly                      ek=-ly       satır=12703
+    ýaşuly                     ek=-ly       satır=14852
+    şully                      ek=-ly       satır=15519
+    abraýly                    ek=-ly       satır=23258
+    abraýsyz                   ek=-syz      satır=23259
+    adagly                     ek=-ly       satır=23261
+    adalatly                   ek=-ly       satır=23262
+    adalatsyz                  ek=-syz      satır=23263
+    adaly                      ek=-ly       satır=23264
+    adamly                     ek=-ly       satır=23268
+    adamsyz                    ek=-syz      satır=23269
+    agramly                    ek=-ly       satır=23276
+    agyryly                    ek=-ly       satır=23281
+    agyrysyz                   ek=-syz      satır=23282
+    agyzly                     ek=-ly       satır=23283
+    agyzsyz                    ek=-syz      satır=23284
+    agyzzyrykly                ek=-ly       satır=23285
+    ahlaksyz                   ek=-syz      satır=23288
+    ahmyrly                    ek=-ly       satır=23289
+    ajally                     ek=-ly       satır=23290
+    ajalsyz                    ek=-syz      satır=23291
+    akgöwünli                  ek=-li       satır=23297
+    akylly                     ek=-ly       satır=23298
+    akylsyz                    ek=-syz      satır=23299
+
+  --- Hunspell POS uyumsuzlukları (ilk 30 / 1727) ---
+    adyl                       bizde=adj   hun=n     grup=17
+    agyr                       bizde=v     hun=adj   grup=50
+    agza                       bizde=n     hun=v     grup=23
+    ajaýyp                     bizde=adj   hun=n     grup=27
+    Akja                       bizde=np    hun=adj   grup=29
+    akmak                      bizde=adj   hun=n     grup=17
+    al                         bizde=adj   hun=v     grup=26
+    altmyş                     bizde=num   hun=n     grup=17
+    alty                       bizde=num   hun=n     grup=20
+    at                         bizde=v     hun=n     grup=27
+    awtonom                    bizde=adj   hun=n     grup=17
+    azat                       bizde=adj   hun=n     grup=27
+    aç                         bizde=v     hun=n     grup=27
+    aý                         bizde=n     hun=v     grup=26
+    aýa                        bizde=n     hun=v     grup=23
+    aýal                       bizde=n     hun=v     grup=26
+    aýan                       bizde=adj   hun=v     grup=26
+    aýdyň                      bizde=adj   hun=n     grup=17
+    baky                       bizde=adj   hun=n     grup=20
+    başga                      bizde=adj   hun=n     grup=20
+    berekella                  bizde=interj  hun=n     grup=20
+    betha                      bizde=adj   hun=n     grup=20
+    beýle                      bizde=adv   hun=adj   grup=58
+    bihabar                    bizde=adj   hun=n     grup=17
+    bildir                     bizde=adv   hun=v     grup=21
+    bit                        bizde=n     hun=v     grup=21
+    bitarap                    bizde=adj   hun=n     grup=17
+    bol                        bizde=v     hun=n     grup=91
+    bütin                      bizde=det   hun=n     grup=19
+    dat                        bizde=v     hun=n     grup=27
+
+  --- Fiil etiketli ama tum.txt'de fiil kökü değil (ilk 30 / 3246) ---
+    bol                        satır=236  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    dat                        satır=273  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    et                         satır=379  → tum.txt'de hiç yok
+    gaz                        satır=441  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    saý                        satır=1139  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    söý                        satır=1194  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    üle                        satır=1464  → tum.txt'de hiç yok
+    ýaz                        satır=1501  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    ýaý                        satır=1503  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    ýüz                        satır=1545  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    ada                        satır=15606  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    arça                       satır=15611  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    arçyn                      satır=15612  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    açyş                       satır=15615  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    aň                         satır=15617  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    bakyş                      satır=15622  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    basyş                      satır=15624  → tum.txt'de hiç yok
+    dalan                      satır=15627  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    dalaş                      satır=15628  → tum.txt'de hiç yok
+    dalda                      satır=15629  → tum.txt'de hiç yok
+    darga                      satır=15630  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    degsin                     satır=15632  → tum.txt'de hiç yok
+    dym                        satır=15633  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    dökün                      satır=15634  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    düşüş                      satır=15635  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    edil                       satır=15636  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    eýer                       satır=15640  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    gabsa                      satır=15642  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    garp                       satır=15646  → tum.txt'de var ama fiil kökü (tire ekli) değil
+    gatla                      satır=15647  → tum.txt'de var ama fiil kökü (tire ekli) değil
+
+──────────────────────────────────────────────────
+§4 FİİL ÇEKİM DOĞRULAMASI
+──────────────────────────────────────────────────
+  Kontrol edilen fiil:  6471
+  Üretilen form:        58239
+  tum.txt'de bulunan:   785
+  tum.txt'de eksik:     57454
+  Eşleşme oranı:        1.3%
+
+  --- Zaman bazlı kapsam ---
+    Anyk Öten (Ö1)                     23/ 6471  = 0.4%
+    Hal işlik (FH)                     24/ 6471  = 0.4%
+    Öten ortak (FÖ)                   658/ 6471  = 10.2%
+    Häzirki ortak (FÄ)                  3/ 6471  = 0.0%
+    Geljek ortak (FG)                  10/ 6471  = 0.2%
+    Daş Öten (Ö2)                       1/ 6471  = 0.0%
+    Dowamly Öten (Ö3)                   0/ 6471  = 0.0%
+    Umumy Häzirki (H1)                  1/ 6471  = 0.0%
+    Nämälim Geljek (G2)                65/ 6471  = 1.0%
+
+  --- Örnek eşleşmeler (ilk 15) ---
+    ✅ al → alar (Nämälim Geljek (G2))
+    ✅ at → atar (Nämälim Geljek (G2))
+    ✅ aç → açar (Nämälim Geljek (G2))
+    ✅ aňka → aňkar (Nämälim Geljek (G2))
+    ✅ gana → ganar (Nämälim Geljek (G2))
+    ✅ gyr → gyrdy (Anyk Öten (Ö1))
+    ✅ sal → salar (Nämälim Geljek (G2))
+    ✅ sep → seper (Nämälim Geljek (G2))
+    ✅ syn → syndy (Anyk Öten (Ö1))
+    ✅ çap → çapar (Nämälim Geljek (G2))
+    ✅ ýan → ýanar (Nämälim Geljek (G2))
+    ✅ ag → agar (Nämälim Geljek (G2))
+    ✅ ak → akar (Nämälim Geljek (G2))
+    ✅ az → azar (Nämälim Geljek (G2))
+    ✅ bagyr → bagyrdy (Anyk Öten (Ö1))
+
+  --- Eşleşmeyen örnekler (ilk 30) ---
+    ❌ agyr → agyrdy (Anyk Öten (Ö1))
+    ❌ agyr → agyrypdy (Daş Öten (Ö2))
+    ❌ agyr → agyrýardy (Dowamly Öten (Ö3))
+    ❌ agyr → agyrýar (Umumy Häzirki (H1))
+    ❌ agyr → agyrar (Nämälim Geljek (G2))
+    ❌ al → aldy (Anyk Öten (Ö1))
+    ❌ al → alypdy (Daş Öten (Ö2))
+    ❌ al → alýardy (Dowamly Öten (Ö3))
+    ❌ al → alýar (Umumy Häzirki (H1))
+    ❌ at → atdy (Anyk Öten (Ö1))
+    ❌ at → atypdy (Daş Öten (Ö2))
+    ❌ at → atýardy (Dowamly Öten (Ö3))
+    ❌ at → atýar (Umumy Häzirki (H1))
+    ❌ aç → açdy (Anyk Öten (Ö1))
+    ❌ aç → açypdy (Daş Öten (Ö2))
+    ❌ aç → açýardy (Dowamly Öten (Ö3))
+    ❌ aç → açýar (Umumy Häzirki (H1))
+    ❌ bil → bildi (Anyk Öten (Ö1))
+    ❌ bil → bilipdi (Daş Öten (Ö2))
+    ❌ bil → bilýärdi (Dowamly Öten (Ö3))
+    ❌ bil → bilýär (Umumy Häzirki (H1))
+    ❌ bil → biler (Nämälim Geljek (G2))
+    ❌ bol → boldy (Anyk Öten (Ö1))
+    ❌ bol → bolypdy (Daş Öten (Ö2))
+    ❌ bol → bolýardy (Dowamly Öten (Ö3))
+    ❌ bol → bolýar (Umumy Häzirki (H1))
+    ❌ bol → bolar (Nämälim Geljek (G2))
+    ❌ dat → datdy (Anyk Öten (Ö1))
+    ❌ dat → datypdy (Daş Öten (Ö2))
+    ❌ dat → datýardy (Dowamly Öten (Ö3))
+
+======================================================================
+  RAPOR SONU
+======================================================================

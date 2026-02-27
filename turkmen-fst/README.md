@@ -12,9 +12,10 @@ Türkmence morfolojik analiz ve sentez (üretim) sistemi.
 | **Morfolojik analiz** | Çekimli kelime → kök + morfem ayrıştırması |
 | **Fonoloji kuralları** | Ünlü uyumu, ünsüz yumuşaması, ünlü düşmesi, yuvarlaklaşma |
 | **State machine** | FST-ilhamlı morfotaktik doğrulama (ek sırası kontrolü) |
-| **Zenginleştirilmiş sözlük** | 30 000+ kelime, morfolojik özellik etiketleri |
-| **REST API** | FastAPI tabanlı JSON API |
-| **Web arayüzü** | Flask tabanlı interaktif çekim arayüzü |
+| **Zenginleştirilmiş sözlük** | 32 000+ kelime (30 154 benzersiz), morfolojik özellik etiketleri |
+| **Paradigma** | Otomatik tür tespiti, eş sesli kelimeler için çift paradigma, tablo kopyalama |
+| **REST API** | Flask tabanlı JSON API (7 endpoint) |
+| **Web arayüzü** | Flask tabanlı interaktif çekim arayüzü (4 sekmeli) |
 | **CLI** | Komut satırı araçları (üretim, analiz, interaktif) |
 
 ---
@@ -130,7 +131,7 @@ turkmen_fst/
 └── __main__.py        # python -m turkmen_fst giriş noktası
 
 data/
-└── turkmence_sozluk.txt  # 30 000+ kelimelik zenginleştirilmiş sözlük
+└── turkmence_sozluk.txt  # 32 015 girişlik zenginleştirilmiş sözlük
 
 web/
 ├── app.py             # Flask web arayüzü
@@ -237,7 +238,7 @@ python -m pytest tests/ -v --tb=long
 |------|----------|-------|
 | **Morfolojik Üretim (Generation)** | Kök + ek parametreleri → Çekimli kelime (`kitap + ym → kitabym`) | ✅ Aktif |
 | **Morfolojik Analiz (Analysis)** | Çekimli kelime → Kök + ek çözümlemesi (`kitabym → kitap + ym`) | ✅ Aktif |
-| **REST API** | Dış uygulamalar için JSON API (FastAPI + Swagger) | ✅ Aktif |
+| **REST API** | Dış uygulamalar için JSON API (Flask, 7 endpoint) | ✅ Aktif |
 | **Web Arayüzü** | Tarayıcı üzerinden interaktif çekim ekranı | ✅ Aktif |
 | **CLI** | Terminal üzerinden toplu/tekli üretim ve analiz | ✅ Aktif |
 

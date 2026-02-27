@@ -318,7 +318,11 @@ class VerbMorphotactics:
     TENSE_CODE_MAP = {
         "Ö1": "1", "Ö2": "2", "Ö3": "3",
         "H1": "4", "H2": "5",
-        "G1": "6", "G2": "7"
+        "G1": "6", "G2": "7",
+        "Ş1": "8", "B1K": "9", "HK": "10",
+        "NÖ": "11", "AÖ": "12",
+        "FH": "13", "FÖ": "14", "FÄ": "15", "FG": "16",
+        "ETT": "17", "EDL": "18"
     }
 
     # Zaman görüntüleme isimleri
@@ -330,6 +334,17 @@ class VerbMorphotactics:
         "5": "Anyk Häzirki",    # Şimdiki zaman (kesin)
         "6": "Mälim Geljek",    # Gelecek zaman (kesin)
         "7": "Nämälim Geljek",  # Gelecek zaman (belirsiz)
+        "8": "Şert formasy",     # Şart kipi
+        "9": "Buýruk formasy",   # Emir kipi
+        "10": "Hökmanlyk formasy", # Gereklilik kipi
+        "11": "Nätanyş Öten",   # Kanıtsal / Evidential
+        "12": "Arzuw-Ökünç",     # Optative / dileksi
+        "13": "Hal işlik",        # Converb (-yp/-ip/-up/-üp/-p)
+        "14": "Öten ortak işlik", # Past participle (-an/-en)
+        "15": "Häzirki ortak",    # Present participle (-ýan/-ýän)
+        "16": "Geljek ortak",     # Future participle (-jak/-jek)
+        "17": "Ettirgen",         # Causative (voice derivation)
+        "18": "Edilgen",          # Passive (voice derivation)
     }
 
     @classmethod

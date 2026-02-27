@@ -1,7 +1,7 @@
 # Türkmence Morfolojik Sözlük: Kaynak, Yöntem ve Nihai Yapı
 
-> **Son güncelleme:** 25 Şubat 2026
-> **Nihai sözlük:** 32.051 giriş · 30.183 benzersiz kelime
+> **Son güncelleme:** 27 Şubat 2026
+> **Nihai sözlük:** 32.015 giriş · 30.154 benzersiz kelime
 > **Dosya:** `turkmen-fst/data/turkmence_sozluk.txt`
 
 ---
@@ -23,7 +23,7 @@ Sözlük beş bağımsız kaynaktan derlenmiştir. Aşağıdaki tablo her kayna�
 | 3 | PDF OCR Sözlük | Basılı Türkmence–İngilizce sözlük | ~0 (dolaylı katkı) | Başka kaynaklardaki kelimelerin doğrulanmasına katkı |
 | 4 | tum.txt Orfoepik Sözlük | Yazılış/okuyuş kılavuzu | 5.362 giriş (%16,7) | İsim zenginleştirme |
 | 5 | enedilim.com | Türkmenistan resmi dil sözlüğü | 8.802 giriş (%27,5) | Fiil köklerinin **tek kaynağı** + doğrulama referansı |
-| | | | **32.051** | |
+| | | | **32.015** | |
 
 ### 2.1 Wiktionary — Çekirdek Sözlük
 
@@ -82,7 +82,8 @@ Aşama 5  tum.txt ithalatı                 →  54.795
      ↓ Temizlik ve doğrulama aşamaları ───────────────────
 Aşama 6  Türetilmiş form analizi          →  (karar: kalsın)
 Aşama 7  n? sınıflandırma + çoğul temizlik→  54.746
-Aşama 8  enedilim.com büyük temizlik      →  32.051  ← NİHAİ
+Aşama 8  enedilim.com büyük temizlik      →  32.051
+Aşama 9  Tek harfli kök temizliği         →  32.015  ← NİHAİ
 ```
 
 ### Aşama 8 — Kritik Temizlik Detayı
@@ -121,16 +122,16 @@ burun	%<n%>	vowel_drop
 
 | Etiket | Tür | Sayı | Yüzde |
 |--------|-----|------|-------|
-| `%<n%>` | İsim | 21.803 | %68,0 |
+| `%<n%>` | İsim | 21.798 | %68,1 |
 | `%<v%>` | Fiil | 6.471 | %20,2 |
 | `%<adj%>` | Sıfat | 3.094 | %9,7 |
 | `%<np%>` | Özel isim | 548 | %1,7 |
 | `%<adv%>` | Zarf | 36 | %0,11 |
-| `%<unk%>` | Bilinmeyen | 33 | %0,10 |
+| `%<unk%>` | Bilinmeyen | 2 | %0,01 |
 | `%<num%>` | Sayı | 26 | %0,08 |
 | `%<pro%>` | Zamir | 14 | %0,04 |
 | Diğer | suf, postp, interj, conj, det, phr, prep | 26 | %0,08 |
-| **Toplam** | | **32.051** | **%100** |
+| **Toplam** | | **32.015** | **%100** |
 
 ### Morfolojik Özellikler
 
@@ -151,7 +152,7 @@ burun	%<n%>	vowel_drop
 | Kontrol | Sonuç |
 |---------|-------|
 | enedilim headword'larının tamamı sözlükte mi? | **Evet** — 20.120/20.120 (%100) |
-| Sözlükte çekimlenmiş form var mı? | **Hayır** — 32.051 girişin tamamı kök veya bağımsız türetilmiş sözcük |
+| Sözlükte çekimlenmiş form var mı? | **Hayır** — 32.015 girişin tamamı kök veya bağımsız türetilmiş sözcük |
 | Sadece bizde olan kelime | 10.356 (Wiktionary + Hunspell + tum.txt kaynaklı) |
 | Ortak kelime (enedilim ∩ biz) | 19.827 |
 
@@ -182,6 +183,16 @@ Sözlükteki 4.109 kelime (%13,6) türetilmiş formdur (kökü de sözlükte mev
 | -daş/-deş | 97 | zamandaş |
 | Diğer | 439 | — |
 | **Toplam** | **4.109** | **%13,6** |
+
+### Aşama 9 — Tek Harfli Kök Temizliği
+
+36 adet tek harfli kök girişi kaldırıldı. Bunların çoğu `unk` etiketli idi ve yalnız başlarına anlamsız köklerdi. Yalnızca `o` (zamir) korunmuştur.
+
+| Operasyon | Sayı |
+|-----------|------|
+| Tek harfli `unk` silme | −31 |
+| Tek harfli `n`/`adj`/`v` silme | −5 |
+| **Nihai sonuç** | **32.015** |
 
 ### 5.5 Test Sonuçları
 

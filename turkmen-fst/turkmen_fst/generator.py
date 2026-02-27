@@ -333,17 +333,21 @@ class VerbGenerator:
         # ================================================================
         if tense == "6":
             tense_suffix = "jak" if quality == "yogyn" else "jek"
-            # B3 çoğul eki (olumlu formda)
-            plural_suffix = ""
-            if person == "B3" and not negative:
-                plural_suffix = "lar" if quality == "yogyn" else "ler"
-            result = govde + tense_suffix + plural_suffix + (" däl" if negative else "")
-            breakdown = f"{pronoun} + {stem} + {tense_suffix}" + (f" + {plural_suffix}" if plural_suffix else "") + (" + däl" if negative else "")
-            morphemes.append(("TENSE", tense_suffix))
-            if plural_suffix:
-                morphemes.append(("PLURAL", plural_suffix))
             if negative:
+                # Olumsuz: kök + jak/jek + däl
+                result = govde + tense_suffix + " däl"
+                breakdown = f"{pronoun} + {stem} + {tense_suffix} + däl"
+                morphemes.append(("TENSE", tense_suffix))
                 morphemes.append(("NEGATION", "däl"))
+            else:
+                # enedilim kuralı: kök + jak/jek + dir/dyr + kişi eki
+                kopula_base = "dyr" if quality == "yogyn" else "dir"
+                kopula_person = self._person_suffix_extended(quality, person)
+                kopula_eki = kopula_base + kopula_person
+                result = govde + tense_suffix + kopula_eki
+                breakdown = f"{pronoun} + {stem} + {tense_suffix} + {kopula_eki}"
+                morphemes.append(("TENSE", tense_suffix))
+                morphemes.append(("COPULA", kopula_eki))
             return GenerationResult(
                 word=f"{pronoun} {result}",
                 breakdown=breakdown,
@@ -397,17 +401,49 @@ class VerbGenerator:
             person_suffix = self._person_suffix_standard(quality, person)
 
         elif tense == "2":
-            # Daş Öten: kök + [ma] + ypdy/pdy + şahıs
-            if ends_vowel:
-                tense_suffix = "pdy" if quality == "yogyn" else "pdi"
+            # Daş Öten
+            if negative:
+                # enedilim kuralı: kök + män/man + di/dy + kişi
+                neg_suffix = ""  # genel olumsuz eki kullanılmaz
+                if morphemes and morphemes[-1][0] == "NEGATION":
+                    morphemes.pop()
+                tense_suffix = "mändi" if quality == "ince" else "mandy"
+                person_suffix = self._person_suffix_standard(quality, person)
             else:
-                tense_suffix = "ypdy" if quality == "yogyn" else "ipdi"
-            person_suffix = self._person_suffix_standard(quality, person)
+                # Olumlu: kök + ypdy/pdy + şahıs
+                if ends_vowel:
+                    tense_suffix = "pdy" if quality == "yogyn" else "pdi"
+                else:
+                    tense_suffix = "ypdy" if quality == "yogyn" else "ipdi"
+                person_suffix = self._person_suffix_standard(quality, person)
 
         elif tense == "3":
-            # Dowamly Öten: kök + [ma] + ýardy/ýärdi + şahıs
-            tense_suffix = "ýardy" if quality == "yogyn" else "ýärdi"
-            person_suffix = self._person_suffix_standard(quality, person)
+            # Dowamly Öten
+            if negative:
+                # enedilim kuralı: kök + ýan/ýän + däldi + kişi (analitik yapı)
+                neg_suffix = ""  # genel olumsuz eki kullanılmaz
+                if morphemes and morphemes[-1][0] == "NEGATION":
+                    morphemes.pop()
+                sifat_fiil = "ýan" if quality == "yogyn" else "ýän"
+                # däldi her zaman ince, kişi ekleri ince
+                person_suffix_str = self._person_suffix_standard("ince", person)
+                result = govde + sifat_fiil + " däldi" + person_suffix_str
+                morphemes.append(("PARTICIPLE", sifat_fiil))
+                morphemes.append(("NEG_COPULA", "däldi"))
+                if person_suffix_str:
+                    morphemes.append(("PERSON", person_suffix_str))
+                breakdown = f"{stem} + {sifat_fiil} + däldi + {person_suffix_str if person_suffix_str else '(0)'}"
+                return GenerationResult(
+                    word=result,
+                    breakdown=breakdown,
+                    stem=stem,
+                    morphemes=morphemes,
+                    is_valid=True
+                )
+            else:
+                # Olumlu: kök + ýardy/ýärdi + şahıs
+                tense_suffix = "ýardy" if quality == "yogyn" else "ýärdi"
+                person_suffix = self._person_suffix_standard(quality, person)
 
         elif tense == "4":
             # Umumy Häzirki: kök + [ma] + ýar/ýär + şahıs
@@ -436,6 +472,273 @@ class VerbGenerator:
                     govde = govde[:-1] + 'ä'
                 tense_suffix = "r" if ends_vowel else ("ar" if quality == "yogyn" else "er")
             person_suffix = self._person_suffix_extended(quality, person)
+
+        elif tense == "8":
+            # Şert formasy (Şart kipi): kök + [ma/me] + sa/se + kişi
+            tense_suffix = "sa" if quality == "yogyn" else "se"
+            person_suffix = self._person_suffix_standard(quality, person)
+
+        elif tense == "9":
+            # Buýruk formasy (Emir kipi) — her şahıs için farklı yapı
+            if negative:
+                neg_suf = "ma" if quality == "yogyn" else "me"
+                if morphemes and morphemes[-1][0] == "NEGATION":
+                    morphemes.pop()
+                morphemes.append(("NEGATION", neg_suf))
+                # -ma/-me sonrası dodak uyumu iptal
+                if person == "A1":
+                    p_suf = "ýyn" if quality == "yogyn" else "ýin"
+                elif person == "A2":
+                    p_suf = ""
+                elif person == "A3":
+                    p_suf = "syn" if quality == "yogyn" else "sin"
+                elif person == "B1":
+                    p_suf = "ly" if quality == "yogyn" else "li"
+                elif person == "B2":
+                    p_suf = "ň"
+                else:  # B3
+                    p_suf = "synlar" if quality == "yogyn" else "sinler"
+                result = govde + neg_suf + p_suf
+                if p_suf:
+                    morphemes.append(("PERSON", p_suf))
+                breakdown = f"{stem} + {neg_suf} + {p_suf if p_suf else '(0)'}"
+            else:
+                # Olumlu emir
+                neg_suffix = ""
+                if morphemes and morphemes[-1][0] == "NEGATION":
+                    morphemes.pop()
+                if person == "A1":
+                    if ends_vowel:
+                        p_suf = "ýyn" if quality == "yogyn" else "ýin"
+                    else:
+                        p_suf = "aýyn" if quality == "yogyn" else "eýin"
+                elif person == "A2":
+                    p_suf = ""
+                elif person == "A3":
+                    if self._tek_heceli_dodak(govde):
+                        p_suf = "sun" if quality == "yogyn" else "sün"
+                    else:
+                        p_suf = "syn" if quality == "yogyn" else "sin"
+                elif person == "B1":
+                    if ends_vowel:
+                        p_suf = "ly" if quality == "yogyn" else "li"
+                    else:
+                        p_suf = "aly" if quality == "yogyn" else "eli"
+                elif person == "B2":
+                    if ends_vowel:
+                        p_suf = "ň"
+                    else:
+                        if self._tek_heceli_dodak(govde):
+                            p_suf = "uň" if quality == "yogyn" else "üň"
+                        else:
+                            p_suf = "yň" if quality == "yogyn" else "iň"
+                else:  # B3
+                    if self._tek_heceli_dodak(govde):
+                        p_suf = "sunlar" if quality == "yogyn" else "sünler"
+                    else:
+                        p_suf = "synlar" if quality == "yogyn" else "sinler"
+                result = govde + p_suf
+                if p_suf:
+                    morphemes.append(("PERSON", p_suf))
+                breakdown = f"{stem} + {p_suf if p_suf else '(0)'}"
+            return GenerationResult(
+                word=result,
+                breakdown=breakdown,
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "10":
+            # Hökmanlyk formasy (Gereklilik): kök + maly/meli [+ däl]
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            tense_suf = "maly" if quality == "yogyn" else "meli"
+            morphemes.append(("TENSE", tense_suf))
+            if negative:
+                result = govde + tense_suf + " däl"
+                morphemes.append(("NEGATION", "däl"))
+                breakdown = f"{stem} + {tense_suf} + däl"
+            else:
+                result = govde + tense_suf
+                breakdown = f"{stem} + {tense_suf}"
+            return GenerationResult(
+                word=result,
+                breakdown=breakdown,
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "11":
+            # Nätanyş Öten (Kanıtsal / Evidential)
+            if negative:
+                # kök + mandyr/mändir + kişi
+                neg_suffix = ""
+                if morphemes and morphemes[-1][0] == "NEGATION":
+                    morphemes.pop()
+                tense_suffix = "mandyr" if quality == "yogyn" else "mändir"
+                person_suffix = self._person_suffix_extended(quality, person)
+            else:
+                # kök + ypdyr/ipdir + kişi
+                if ends_vowel:
+                    tense_suffix = "pdyr" if quality == "yogyn" else "pdir"
+                else:
+                    if self._tek_heceli_dodak(govde):
+                        tense_suffix = "updyr" if quality == "yogyn" else "üpdir"
+                    else:
+                        tense_suffix = "ypdyr" if quality == "yogyn" else "ipdir"
+                person_suffix = self._person_suffix_extended(quality, person)
+
+        elif tense == "12":
+            # Arzuw-Ökünç (Optative): kök + [ma/me] + sa/se + dy/di + kişi
+            sart_eki = "sa" if quality == "yogyn" else "se"
+            gecmis_eki = "dy" if quality == "yogyn" else "di"
+            person_suffix = self._person_suffix_standard(quality, person)
+            result = govde + neg_suffix + sart_eki + gecmis_eki + person_suffix
+            morphemes.append(("CONDITIONAL", sart_eki))
+            morphemes.append(("TENSE", gecmis_eki))
+            if person_suffix:
+                morphemes.append(("PERSON", person_suffix))
+            bp = [stem]
+            if neg_suffix:
+                bp.append(neg_suffix)
+            bp.extend([sart_eki, gecmis_eki, person_suffix if person_suffix else "(0)"])
+            breakdown = " + ".join(bp)
+            return GenerationResult(
+                word=result,
+                breakdown=breakdown,
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "13":
+            # Hal işlik (converb): kök + yp/ip/up/üp/p (neg: man/män)
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if negative:
+                suffix = "man" if quality == "yogyn" else "män"
+            else:
+                if ends_vowel:
+                    suffix = "p"
+                elif self._tek_heceli_dodak(govde):
+                    suffix = "up" if quality == "yogyn" else "üp"
+                else:
+                    suffix = "yp" if quality == "yogyn" else "ip"
+            morphemes.append(("CONVERB", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "14":
+            # Öten ortak işlik (past participle): kök + an/en (neg: madyk/medik)
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if negative:
+                suffix = "madyk" if quality == "yogyn" else "medik"
+            else:
+                if ends_vowel:
+                    suffix = "n"
+                else:
+                    suffix = "an" if quality == "yogyn" else "en"
+            morphemes.append(("PARTICIPLE", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "15":
+            # Häzirki ortak işlik (present participle): kök + ýan/ýän (neg: maýan/meýän)
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if negative:
+                suffix = "maýan" if quality == "yogyn" else "meýän"
+            else:
+                suffix = "ýan" if quality == "yogyn" else "ýän"
+            morphemes.append(("PARTICIPLE", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "16":
+            # Geljek ortak işlik (future participle): kök + jak/jek (neg: majak/mejek)
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if negative:
+                suffix = "majak" if quality == "yogyn" else "mejek"
+            else:
+                suffix = "jak" if quality == "yogyn" else "jek"
+            morphemes.append(("PARTICIPLE", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "17":
+            # Ettirgen (causative): kök + dyr/dir/dur/dür veya +t
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if ends_vowel:
+                suffix = "t"
+            elif self._tek_heceli_dodak(govde):
+                suffix = "dur" if quality == "yogyn" else "dür"
+            else:
+                suffix = "dyr" if quality == "yogyn" else "dir"
+            morphemes.append(("CAUSATIVE", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "18":
+            # Edilgen (passive): kök + yl/il/ul/ül veya +yn/in/un/ün
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if ends_vowel:
+                suffix = "n" if (govde and len(govde) >= 2 and govde[-2] == 'l') else "l"
+            elif govde and govde[-1] == 'l':
+                if self._tek_heceli_dodak(govde):
+                    suffix = "un" if quality == "yogyn" else "ün"
+                else:
+                    suffix = "yn" if quality == "yogyn" else "in"
+            else:
+                if self._tek_heceli_dodak(govde):
+                    suffix = "ul" if quality == "yogyn" else "ül"
+                else:
+                    suffix = "yl" if quality == "yogyn" else "il"
+            morphemes.append(("PASSIVE", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
 
         else:
             return GenerationResult(
@@ -604,24 +907,41 @@ class MorphologicalGenerator:
         ends_vowel = PhonologyRules.ends_with_vowel(root)
 
         if tense_code in ["Ö1", "Ö2", "Ö3"]:
-            if negative:
-                neg_ek = "ma" if quality == "yogyn" else "me"
-                parts.append({"text": neg_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+            if tense_code == "Ö2" and negative:
+                # enedilim: kök + män/man + di/dy + kişi
+                zaman_eki = "mändi" if quality == "ince" else "mandy"
+                parts.append({"text": zaman_eki, "type": "Olumsuz+Zaman", "code": tense_code})
+                sahis_eki = self.verb_gen._person_suffix_standard(quality, person_code)
+                if sahis_eki:
+                    parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
 
-            if tense_code == "Ö1":
-                zaman_eki = "dy" if quality == "yogyn" else "di"
-            elif tense_code == "Ö2":
-                if ends_vowel:
-                    zaman_eki = "pdy" if quality == "yogyn" else "pdi"
-                else:
-                    zaman_eki = "ypdy" if quality == "yogyn" else "ipdi"
+            elif tense_code == "Ö3" and negative:
+                # enedilim: kök + ýan/ýän + däldi + kişi (analitik)
+                sifat_fiil = "ýan" if quality == "yogyn" else "ýän"
+                parts.append({"text": sifat_fiil, "type": "Sıfat-fiil", "code": "SF"})
+                sahis_eki_str = self.verb_gen._person_suffix_standard("ince", person_code)
+                parts.append({"text": "däldi" + sahis_eki_str, "type": "Olumsuz+Kişi", "code": tense_code})
+
             else:
-                zaman_eki = "ýardy" if quality == "yogyn" else "ýärdi"
-            
-            parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
-            sahis_eki = self.verb_gen._person_suffix_standard(quality, person_code)
-            if sahis_eki:
-                parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+                # Ö1 (olumlu/olumsuz), Ö2 olumlu, Ö3 olumlu
+                if negative:
+                    neg_ek = "ma" if quality == "yogyn" else "me"
+                    parts.append({"text": neg_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+
+                if tense_code == "Ö1":
+                    zaman_eki = "dy" if quality == "yogyn" else "di"
+                elif tense_code == "Ö2":
+                    if ends_vowel:
+                        zaman_eki = "pdy" if quality == "yogyn" else "pdi"
+                    else:
+                        zaman_eki = "ypdy" if quality == "yogyn" else "ipdi"
+                else:  # Ö3 olumlu
+                    zaman_eki = "ýardy" if quality == "yogyn" else "ýärdi"
+                
+                parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
+                sahis_eki = self.verb_gen._person_suffix_standard(quality, person_code)
+                if sahis_eki:
+                    parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
 
         elif tense_code == "H1":
             if negative:
@@ -656,6 +976,12 @@ class MorphologicalGenerator:
             parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
             if negative:
                 parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+            else:
+                # enedilim: kopula + kişi eki
+                kopula_base = "dyr" if quality == "yogyn" else "dir"
+                kopula_person = self.verb_gen._person_suffix_extended(quality, person_code)
+                kopula_eki = kopula_base + kopula_person
+                parts.append({"text": kopula_eki, "type": "Kopula", "code": person_code})
 
         elif tense_code == "G2":
             if negative:
@@ -667,5 +993,126 @@ class MorphologicalGenerator:
             sahis_eki = self.verb_gen._person_suffix_extended(quality, person_code)
             if sahis_eki:
                 parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+
+        elif tense_code == "Ş1":
+            # Şert formasy
+            if negative:
+                olumsuz_ek = "ma" if quality == "yogyn" else "me"
+                parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+            zaman_eki = "sa" if quality == "yogyn" else "se"
+            parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
+            sahis_eki = self.verb_gen._person_suffix_standard(quality, person_code)
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+
+        elif tense_code == "B1K":
+            # Buýruk formasy
+            if negative:
+                olumsuz_ek = "ma" if quality == "yogyn" else "me"
+                parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+                if person_code == "A1":
+                    sahis_eki = "ýyn" if quality == "yogyn" else "ýin"
+                elif person_code == "A2":
+                    sahis_eki = ""
+                elif person_code == "A3":
+                    sahis_eki = "syn" if quality == "yogyn" else "sin"
+                elif person_code == "B1":
+                    sahis_eki = "ly" if quality == "yogyn" else "li"
+                elif person_code == "B2":
+                    sahis_eki = "ň"
+                else:  # B3
+                    sahis_eki = "synlar" if quality == "yogyn" else "sinler"
+            else:
+                if person_code == "A1":
+                    if ends_vowel:
+                        sahis_eki = "ýyn" if quality == "yogyn" else "ýin"
+                    else:
+                        sahis_eki = "aýyn" if quality == "yogyn" else "eýin"
+                elif person_code == "A2":
+                    sahis_eki = ""
+                elif person_code == "A3":
+                    if self.verb_gen._tek_heceli_dodak(root.lower()):
+                        sahis_eki = "sun" if quality == "yogyn" else "sün"
+                    else:
+                        sahis_eki = "syn" if quality == "yogyn" else "sin"
+                elif person_code == "B1":
+                    if ends_vowel:
+                        sahis_eki = "ly" if quality == "yogyn" else "li"
+                    else:
+                        sahis_eki = "aly" if quality == "yogyn" else "eli"
+                elif person_code == "B2":
+                    if ends_vowel:
+                        sahis_eki = "ň"
+                    else:
+                        if self.verb_gen._tek_heceli_dodak(root.lower()):
+                            sahis_eki = "uň" if quality == "yogyn" else "üň"
+                        else:
+                            sahis_eki = "yň" if quality == "yogyn" else "iň"
+                else:  # B3
+                    if self.verb_gen._tek_heceli_dodak(root.lower()):
+                        sahis_eki = "sunlar" if quality == "yogyn" else "sünler"
+                    else:
+                        sahis_eki = "synlar" if quality == "yogyn" else "sinler"
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+
+        elif tense_code == "HK":
+            # Hökmanlyk formasy
+            zaman_eki = "maly" if quality == "yogyn" else "meli"
+            parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
+            if negative:
+                parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+
+        elif tense_code == "NÖ":
+            # Nätanyş Öten (Kanıtsal / Evidential)
+            if negative:
+                zaman_eki = "mandyr" if quality == "yogyn" else "mändir"
+                parts.append({"text": zaman_eki, "type": "Olumsuz+Zaman", "code": tense_code})
+            else:
+                if ends_vowel:
+                    zaman_eki = "pdyr" if quality == "yogyn" else "pdir"
+                else:
+                    if self.verb_gen._tek_heceli_dodak(root.lower()):
+                        zaman_eki = "updyr" if quality == "yogyn" else "üpdir"
+                    else:
+                        zaman_eki = "ypdyr" if quality == "yogyn" else "ipdir"
+                parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
+            sahis_eki = self.verb_gen._person_suffix_extended(quality, person_code)
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+
+        elif tense_code == "AÖ":
+            # Arzuw-Ökünç (Optative)
+            if negative:
+                olumsuz_ek = "ma" if quality == "yogyn" else "me"
+                parts.append({"text": olumsuz_ek, "type": "Olumsuzluk Eki", "code": "Olumsuz"})
+            sart_eki = "sa" if quality == "yogyn" else "se"
+            gecmis_eki = "dy" if quality == "yogyn" else "di"
+            parts.append({"text": sart_eki, "type": "Şart", "code": "Ş"})
+            parts.append({"text": gecmis_eki, "type": "Zaman", "code": tense_code})
+            sahis_eki = self.verb_gen._person_suffix_standard(quality, person_code)
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+
+        elif tense_code in ("FH", "FÖ", "FÄ", "FG"):
+            # Fiilimsi formları (şahıs eki yok)
+            parts = [p for p in parts if p.get("type") != "Şahıs"]
+            govde = root.lower()
+            ek = gen_result.word[len(govde):]
+            if ek:
+                fiilimsi_tipi = {
+                    "FH": "Hal işlik", "FÖ": "Öten ortak",
+                    "FÄ": "Häzirki ortak", "FG": "Geljek ortak"
+                }
+                parts.append({"text": ek, "type": fiilimsi_tipi[tense_code], "code": tense_code})
+
+        elif tense_code in ("ETT", "EDL"):
+            # Ettirgen/Edilgen (şahıs eki yok, derivasyon)
+            parts = [p for p in parts if p.get("type") != "Şahıs"]
+            govde = root.lower()
+            ek = gen_result.word[len(govde):]
+            if ek:
+                tip = "Ettirgen" if tense_code == "ETT" else "Edilgen"
+                parts.append({"text": ek, "type": tip, "code": tense_code})
 
         return parts, gen_result.word
