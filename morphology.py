@@ -136,7 +136,7 @@ def dusme_uygula(kok, ek):
 #  İSİM ÇEKİMİ
 # ==============================================================================
 
-def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True, negative=False):
+def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True):
     """
     Türkmen Türkçesi isim çekimi yapar (v27.0).
     
@@ -147,7 +147,6 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
         i_tip  : İyelik tipi: "tek" (tekil) veya "cog" (çoğul)
         hal    : Hal kodu: "A2"-"A6" veya None
         yumusama_izni : Ünsüz yumuşaması uygulanacak mı (eş sesliler için)
-        negative : Olumsuzluk (däl) eklensin mi? (bool)
     
     Döndürür:
         (çekimlenmiş_kelime, şecere_str)
@@ -295,11 +294,6 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
         govde += ek
         yol.append(yol_eki if yol_eki is not None else ek)
 
-    # 4) OLUMSUZLUK (däl)
-    if negative:
-        govde += " däl"
-        yol.append("däl")
-
     return govde, " + ".join(yol)
 
 
@@ -372,7 +366,7 @@ def _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik):
     return parts
 
 
-def analyze(root, s_code, i_code, h_code, negative=False):
+def analyze(root, s_code, i_code, h_code):
     """
     Flask uyumlu isim çekimi API'si.
     
@@ -383,7 +377,6 @@ def analyze(root, s_code, i_code, h_code, negative=False):
         s_code : Çokluk kodu ("S2" veya boş)
         i_code : İyelik kodu ("A1"-"A3", "B1"-"B3" veya boş)
         h_code : Hal kodu ("H1"-"H6")
-        negative : Olumsuzluk (däl) eklensin mi? (bool)
     
     Döndürür:
         (results_list, is_dual)
@@ -408,7 +401,7 @@ def analyze(root, s_code, i_code, h_code, negative=False):
         results = []
         for key, (anlam, yumusama) in ES_SESLILER[root_lower].items():
             result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal,
-                                       yumusama_izni=yumusama, negative=negative)
+                                       yumusama_izni=yumusama)
             parts = _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik)
             results.append({
                 "parts": parts,
@@ -418,7 +411,7 @@ def analyze(root, s_code, i_code, h_code, negative=False):
         return results, True
 
     # --- Normal kelime ---
-    result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal, negative=negative)
+    result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal)
     parts = _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik)
     return [{"parts": parts, "final_word": result, "anlam": None}], False
 

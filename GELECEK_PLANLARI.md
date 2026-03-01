@@ -95,8 +95,8 @@
 
 | Metrik | Değer |
 |--------|-------|
-| Sözlük girişi | 32.015 |
-| Benzersiz kelime | 30.154 |
+| Sözlük girişi | 32.030 |
+| Benzersiz kelime | 30.180 |
 | İsim | 21.798 |
 | Fiil | 6.471 |
 | Sıfat | 3.094 |

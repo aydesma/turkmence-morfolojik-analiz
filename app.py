@@ -58,7 +58,6 @@ def index():
     selected_zaman = ""
     selected_sahis = ""
     selected_olumsuz = False
-    selected_isim_olumsuz = False
 
     if request.method == 'POST':
         root = request.form.get('root', '').strip()
@@ -96,11 +95,8 @@ def index():
                 selected_iyelik = i_code or ""
                 selected_hal = h_code or "H1"
 
-                olumsuz_isim = request.form.get('olumsuz_isim') == 'on'
-                selected_isim_olumsuz = olumsuz_isim
-
                 if root:
-                    results_list, is_dual = analyze(root, s_code, i_code, h_code, negative=olumsuz_isim)
+                    results_list, is_dual = analyze(root, s_code, i_code, h_code)
                     if is_dual:
                         dual_results = results_list
                     # İlk sonucu her durumda result/final_word'e ata
@@ -146,8 +142,7 @@ def index():
                            selected_hal=selected_hal,
                            selected_zaman=selected_zaman,
                            selected_sahis=selected_sahis,
-                           selected_olumsuz=selected_olumsuz,
-                           selected_isim_olumsuz=selected_isim_olumsuz)
+                           selected_olumsuz=selected_olumsuz)
 
 
 def _build_paradigma(stem, ptype):

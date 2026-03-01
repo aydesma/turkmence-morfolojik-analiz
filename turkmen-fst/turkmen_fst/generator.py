@@ -82,8 +82,7 @@ class NounGenerator:
     def generate(self, stem: str, plural: bool = False,
                  possessive: Optional[str] = None, poss_type: str = "tek",
                  case: Optional[str] = None,
-                 yumusama_izni: bool = True,
-                 negative: bool = False) -> GenerationResult:
+                 yumusama_izni: bool = True) -> GenerationResult:
         """
         İsim çekimi yapar.
         
@@ -242,14 +241,6 @@ class NounGenerator:
             govde += ek
             yol.append(yol_eki if yol_eki is not None else ek)
             morphemes.append(("CASE", yol_eki if yol_eki is not None else ek))
-
-        # ================================================================
-        # 4) OLUMSUZLUK (däl)
-        # ================================================================
-        if negative:
-            govde = govde + " däl"
-            yol.append("däl")
-            morphemes.append(("NEGATION", "däl"))
 
         return GenerationResult(
             word=govde,
@@ -802,21 +793,20 @@ class MorphologicalGenerator:
     def generate_noun(self, stem: str, plural: bool = False,
                       possessive: Optional[str] = None, poss_type: str = "tek",
                       case: Optional[str] = None,
-                      yumusama_izni: bool = True,
-                      negative: bool = False) -> GenerationResult:
-        "İsim çekimi yapar."""
+                      yumusama_izni: bool = True) -> GenerationResult:
+        """İsim çekimi yapar."""
         # B1/B2 kodlarını A1/A2 + çoğul tipine dönüştür
         if possessive in ("B1", "B2"):
             poss_type = "cog"
             possessive = "A1" if possessive == "B1" else "A2"
-        return self.noun_gen.generate(stem, plural, possessive, poss_type, case, yumusama_izni, negative)
+        return self.noun_gen.generate(stem, plural, possessive, poss_type, case, yumusama_izni)
 
     def generate_verb(self, stem: str, tense: str, person: str,
                       negative: bool = False) -> GenerationResult:
         """Fiil çekimi yapar."""
         return self.verb_gen.generate(stem, tense, person, negative)
 
-    def analyze_noun(self, root: str, s_code: str, i_code: str, h_code: str, negative: bool = False):
+    def analyze_noun(self, root: str, s_code: str, i_code: str, h_code: str):
         """
         Flask uyumlu isim çekimi API'si (mevcut analyze fonksiyonuyla uyumlu).
         
@@ -873,7 +863,7 @@ class MorphologicalGenerator:
             results = []
             for key, (anlam, yumusama) in HOMONYMS[root_lower].items():
                 gen_result = self.generate_noun(root, cokluk, iyelik, i_tip, hal,
-                                                yumusama_izni=yumusama, negative=negative)
+                                                yumusama_izni=yumusama)
                 parts = _build_parts(root, gen_result.word, gen_result.breakdown,
                                      s_code, i_code, h_code, cokluk, iyelik)
                 results.append({
@@ -884,7 +874,7 @@ class MorphologicalGenerator:
             return results, True
 
         # Normal kelime
-        gen_result = self.generate_noun(root, cokluk, iyelik, i_tip, hal, negative=negative)
+        gen_result = self.generate_noun(root, cokluk, iyelik, i_tip, hal)
         parts = _build_parts(root, gen_result.word, gen_result.breakdown,
                              s_code, i_code, h_code, cokluk, iyelik)
         return [{"parts": parts, "final_word": gen_result.word, "anlam": None}], False

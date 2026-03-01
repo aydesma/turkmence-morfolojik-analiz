@@ -17,9 +17,9 @@
 # Türkmen Sözlüğü - Wiktionary & enedilim.com Kaynaklı
 # Format: kelime<TAB>tür_kısaltması[<TAB>özellikler]
 # Özellikler: vowel_drop, exception_drop:<form>, softening, homonym:<details>
-# Toplam giriş: 32051 (30183 benzersiz kelime)
-# POS: n=21803 v=6471 adj=3094 np=548 adv=36 unk=33 num=26 pro=14 diğer=39
-# Ses olayları: softening=7001 vowel_drop=20 homonym=6 exception_drop=5
+# Toplam giriş: 32030 (30180 benzersiz kelime)
+# POS: n=21798 v=6471 adj=3094 np=548 adv=36 unk=2 num=26 pro=14 diğer=41
+# Ses olayları: softening=6997 vowel_drop=20 homonym=6 exception_drop=5
 #==================================================
 -dar	%<suf%>
 -istan	%<suf%>
