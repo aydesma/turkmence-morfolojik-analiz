@@ -16,10 +16,10 @@
 
 # Türkmen Sözlüğü - Wiktionary & enedilim.com Kaynaklı
 # Format: kelime<TAB>tür_kısaltması[<TAB>özellikler]
-# Özellikler: vowel_drop, exception_drop:<form>, softening, homonym:<details>
-# Toplam giriş: 32030 (30180 benzersiz kelime)
+# Özellikler: vowel_drop, exception_drop:<form>, softening, no_softening, homonym:<details>
+# Toplam giriş: 32015 (30165 benzersiz kelime)
 # POS: n=21798 v=6471 adj=3094 np=548 adv=36 unk=2 num=26 pro=14 diğer=41
-# Ses olayları: softening=6997 vowel_drop=20 homonym=6 exception_drop=5
+# Ses olayları: softening=6939 no_softening=58 vowel_drop=20 homonym=6 exception_drop=5
 #==================================================
 -dar	%<suf%>
 -istan	%<suf%>
@@ -121,7 +121,7 @@ atuw	%<n%>
 atyr	%<n%>
 aw	%<n%>
 Awdy	%<np%>
-awgust	%<n%>	softening
+awgust	%<n%>	no_softening
 awiasiýa	%<n%>
 Awstraliýa	%<np%>
 Awstriýa	%<np%>
@@ -177,7 +177,7 @@ balykçy	%<n%>
 Balyş	%<np%>
 banan	%<n%>
 Bangladeş	%<np%>
-bank	%<n%>	softening
+bank	%<n%>	no_softening
 bap	%<n%>	softening
 bar	%<n%>
 barelýef	%<n%>
@@ -328,7 +328,7 @@ däli	%<n%>
 dördünji	%<adj%>
 döredijilik	%<n%>	softening
 dört	%<num%>	softening
-döwlet	%<n%>	softening
+döwlet	%<n%>	no_softening
 döwür	%<n%>
 dükan	%<n%>
 dükandar	%<n%>
@@ -411,7 +411,7 @@ galyp	%<n%>	softening
 galyň	%<adj%>
 gamburger	%<n%>
 gan	%<n%>
-ganat	%<n%>	softening
+ganat	%<n%>	no_softening
 ganaw	%<n%>
 gaplaň	%<n%>
 gapy	%<n%>
@@ -473,7 +473,7 @@ Grenlandiýa	%<np%>
 Gresiýa	%<np%>
 Gruziýa	%<np%>
 gubur	%<n%>
-gudrat	%<n%>	softening
+gudrat	%<n%>	no_softening
 gudratly	%<adj%>
 guduz	%<n%>
 gul	%<n%>
@@ -555,14 +555,14 @@ hadysa	%<n%>
 hajat	%<n%>	softening
 hajathana	%<n%>
 hak	%<n%>	softening
-hakykat	%<n%>	softening
+hakykat	%<n%>	no_softening
 hakyky	%<adj%>
 hakynda	%<postp%>
 hal	%<n%>
 Halap	%<np%>	softening
 halat	%<n%>	softening
 halifat	%<n%>	softening
-halk	%<n%>	softening
+halk	%<n%>	no_softening
 halkara	%<adj%>
 Halkara Fonetik Elipbiýi	%<n%>
 Halykberdy	%<np%>
@@ -580,7 +580,7 @@ hasa	%<n%>
 hasap	%<n%>	softening
 hasrat	%<n%>	softening
 hassa	%<n%>
-hat	%<n%>	softening
+hat	%<n%>	no_softening
 hatar	%<n%>
 hatyra	%<n%>
 hazar	%<n%>
@@ -623,7 +623,7 @@ Hojamyrat	%<np%>	softening
 hojaýyn	%<n%>
 hor	%<n%>
 Horezm	%<np%>
-hormat	%<n%>	softening
+hormat	%<n%>	no_softening
 Horwatiýa	%<np%>
 howatyr	%<n%>
 howlukmak	%<n%>	softening
@@ -636,7 +636,7 @@ hususan	%<adv%>
 hususy	%<adj%>
 Hydyr	%<np%>
 Hytaý	%<np%>
-hyzmat	%<n%>	softening
+hyzmat	%<n%>	no_softening
 hyzmatdaşlyk	%<n%>	softening
 hyýal	%<n%>
 hyýanat	%<n%>	softening
@@ -649,7 +649,7 @@ häsiýet	%<n%>	softening
 höküm	%<n%>
 hökümdar	%<n%>
 hökümdarlyk	%<n%>	softening
-hökümet	%<n%>	softening
+hökümet	%<n%>	no_softening
 hötde	%<n%>
 hözir	%<n%>
 hüjüm	%<n%>
@@ -698,7 +698,7 @@ janly	%<adj%>
 jansyz	%<n%>
 jansyzlyk	%<n%>	softening
 je	%<n%>
-jemgyýet	%<n%>	softening
+jemgyýet	%<n%>	no_softening
 jemgyýetçilik	%<n%>	softening
 jenaýat	%<n%>	softening
 jeset	%<n%>	softening
@@ -735,7 +735,7 @@ kasam	%<n%>
 Kasymguly	%<np%>
 Katar	%<np%>
 kazak	%<n%>	softening
-kazyýet	%<n%>	softening
+kazyýet	%<n%>	no_softening
 kebap	%<n%>	softening
 kebelek	%<n%>	softening
 kelle	%<n%>
@@ -776,7 +776,7 @@ kostýum	%<n%>
 Kot-d'Iwuar	%<np%>
 Kuba	%<np%>
 Kuweýt	%<np%>	softening
-kuwwat	%<n%>	softening
+kuwwat	%<n%>	no_softening
 kuwwatly	%<adj%>
 kuwwatsyz	%<adj%>
 kybla	%<n%>
@@ -856,10 +856,10 @@ mama	%<n%>
 manat	%<n%>	softening
 many	%<n%>
 Marokko	%<np%>
-mart	%<n%>	softening
+mart	%<n%>	no_softening
 Mary	%<np%>
 Marşal Adalary	%<np%>
-maslahat	%<n%>	softening
+maslahat	%<n%>	no_softening
 mata	%<n%>
 matal	%<n%>
 mawut	%<n%>	softening
@@ -870,7 +870,7 @@ maşgala	%<n%>
 maşyn	%<n%>
 mebel	%<n%>
 medeni	%<adj%>
-medeniýet	%<n%>	softening
+medeniýet	%<n%>	no_softening
 Medine	%<np%>
 medrese	%<n%>
 mejbur	%<adj%>
@@ -1074,7 +1074,7 @@ polkovnik	%<n%>	softening
 Polşa	%<np%>
 porhan	%<n%>
 Portugaliýa	%<np%>
-prezident	%<n%>	softening
+prezident	%<n%>	no_softening
 programma üpjünçiligi	%<n%>
 propaganda	%<n%>
 pursat	%<n%>	softening
@@ -1092,7 +1092,7 @@ rahat	%<n%>	softening
 rahatlyk	%<n%>	softening
 razy	%<adj%>
 razylyk	%<n%>	softening
-raýat	%<n%>	softening
+raýat	%<n%>	no_softening
 Raşit	%<np%>	softening
 redif	%<n%>
 Rejep	%<np%>	softening
@@ -1143,7 +1143,7 @@ segsen	%<num%>
 sekiz	%<num%>
 selin	%<n%>
 sen	%<pro%>
-senagat	%<n%>	softening
+senagat	%<n%>	no_softening
 sentýabr	%<n%>
 Serbiýa	%<np%>
 Serdar	%<np%>
@@ -1166,7 +1166,7 @@ Soltanguly	%<np%>
 subutnama	%<n%>
 sugun	%<n%>
 Sukhan	%<np%>
-sungat	%<n%>	softening
+sungat	%<n%>	no_softening
 surat	%<n%>	softening
 Surinam	%<np%>
 suw	%<n%>
@@ -1180,7 +1180,7 @@ syçan	%<n%>
 syýahat	%<n%>	softening
 syýahatçy	%<n%>
 syýahatçylyk	%<n%>	softening
-syýasat	%<n%>	softening
+syýasat	%<n%>	no_softening
 syýasy	%<adj%>
 sähra	%<n%>
 söhbet	%<n%>	softening
@@ -1213,7 +1213,7 @@ talyp	%<n%>	softening
 tanap	%<n%>	softening
 tapawutly	%<adj%>
 tap	%<v%>
-tarap	%<n%>	softening
+tarap	%<n%>	no_softening
 tarapdar	%<n%>
 tarapyndan	%<postp%>
 tarelka	%<n%>
@@ -1311,7 +1311,7 @@ uýgur	%<n%>
 Uýgurystan	%<np%>
 vc	%<num%>	softening
 wada	%<n%>
-wagt	%<n%>	softening
+wagt	%<n%>	no_softening
 wagyz	%<n%>
 Wanuatu	%<np%>
 watan	%<n%>
@@ -1321,7 +1321,7 @@ Watikan	%<np%>
 we	%<n%>
 wekil	%<n%>
 wekilhana	%<n%>
-welaýat	%<n%>	softening
+welaýat	%<n%>	no_softening
 weli	%<n%>
 welin	%<conj%>
 welosiped	%<n%>
@@ -1354,7 +1354,7 @@ yhsan	%<n%>
 ykbal	%<n%>
 ykdysad	%<n%>
 ykdysady	%<adj%>
-ykdysadyýet	%<n%>	softening
+ykdysadyýet	%<n%>	no_softening
 ykdysadyýetçi	%<n%>
 ykdysat	%<n%>	softening
 ykdysatçy	%<n%>
@@ -1410,11 +1410,11 @@ zyýanly	%<adj%>
 zyýansyz	%<adj%>
 zyýarat	%<n%>	softening
 zäher	%<n%>
-zähmet	%<n%>	softening
+zähmet	%<n%>	no_softening
 zäk	%<n%>	softening
 ¥emen	%<np%>
 ähli	%<det%>
-ähmiýet	%<n%>	softening
+ähmiýet	%<n%>	no_softening
 äpet	%<adj%>	softening
 äşgär	%<adj%>
 Çad	%<np%>
@@ -1567,7 +1567,7 @@ zäk	%<n%>	softening
 şenbe	%<n%>
 şerap	%<n%>	softening
 şerigat	%<n%>	softening
-şert	%<n%>	softening
+şert	%<n%>	no_softening
 şeýtan	%<n%>
 şikaýat	%<n%>	softening
 şin	%<n%>
@@ -1593,7 +1593,7 @@ zäk	%<n%>	softening
 žiraf	%<n%>
 žonglýor	%<n%>
 žurnal	%<n%>
-žurnalist	%<n%>	softening
+žurnalist	%<n%>	no_softening
 žurnalistika	%<n%>
 ſonglÿor	%<n%>
 Ашгабат	%<np%>
@@ -2108,7 +2108,7 @@ altynlaç	%<n%>	softening
 altynsow	%<n%>
 altyýaşar	%<n%>
 alwan	%<n%>
-alyhezret	%<n%>	softening
+alyhezret	%<n%>	no_softening
 alyjenap	%<n%>	softening
 alyjy	%<n%>
 alyk	%<n%>	softening
@@ -3830,7 +3830,7 @@ büs-bütin	%<n%>
 bütinleý	%<n%>
 büz	%<n%>
 büýli	%<n%>
-býujet	%<n%>	softening
+býujet	%<n%>	no_softening
 daban	%<n%>
 dabanlak	%<n%>	softening
 dabara	%<n%>
@@ -4178,7 +4178,7 @@ dindar	%<n%>
 dindarlyk	%<n%>	softening
 dinsizlik	%<n%>	softening
 diplom	%<n%>
-diplomat	%<n%>	softening
+diplomat	%<n%>	no_softening
 diplomatiýa	%<n%>
 diplomatlyk	%<n%>	softening
 direg	%<n%>
@@ -4864,7 +4864,7 @@ erinlek	%<n%>	softening
 eriş	%<n%>
 erjel	%<n%>
 erjellik	%<n%>	softening
-erk	%<n%>	softening
+erk	%<n%>	no_softening
 erkana	%<n%>
 erkejik	%<n%>	softening
 erkeklerç	%<n%>	softening
@@ -5234,7 +5234,7 @@ galife	%<n%>
 galjaňlyk	%<n%>	softening
 galkan	%<n%>
 galkyndyryjy	%<n%>
-gallaç	%<n%>	softening
+gallaç	%<n%>	no_softening
 gallaçy	%<n%>
 gallaçylyk	%<n%>	softening
 gallýusinasiýa	%<n%>
@@ -6751,7 +6751,7 @@ haksyzlyk	%<n%>	softening
 haku-nähak	%<n%>	softening
 hakujy	%<n%>
 hakyda	%<n%>
-hakyk	%<n%>	softening
+hakyk	%<n%>	no_softening
 hakykatdan	%<n%>
 hakykatlyk	%<n%>	softening
 hakykatçy	%<n%>
@@ -6887,7 +6887,7 @@ harç-harajat	%<n%>	softening
 harçaňlaşyk	%<n%>	softening
 harçlaýyş	%<n%>
 has	%<n%>
-hasabat	%<n%>	softening
+hasabat	%<n%>	no_softening
 hasap-hesip	%<n%>	softening
 hasaplaýjy	%<n%>
 hasaplaýyş	%<n%>
@@ -7417,7 +7417,7 @@ iksalyk	%<n%>	softening
 ikuçlulyk	%<n%>	softening
 il-gün	%<n%>
 il-ulus	%<n%>
-ilat	%<n%>	softening
+ilat	%<n%>	no_softening
 ildeş	%<n%>
 ildirgiç	%<n%>	softening
 ilen-çalan	%<n%>
@@ -7458,7 +7458,7 @@ imperialist	%<n%>	softening
 imperialistik	%<n%>	softening
 imperializm	%<n%>
 imperiýa	%<n%>
-import	%<n%>	softening
+import	%<n%>	no_softening
 importýor	%<n%>
 impressionizm	%<n%>
 impuls	%<n%>
@@ -7525,7 +7525,7 @@ inssenirowka	%<n%>
 instansiýa	%<n%>
 instinkt	%<n%>	softening
 instinktiw	%<n%>
-institut	%<n%>	softening
+institut	%<n%>	no_softening
 instruksiýa	%<n%>
 instruktaž	%<n%>
 instruktiw	%<n%>
@@ -7549,7 +7549,7 @@ internasionalist	%<n%>	softening
 internasionalistik	%<n%>	softening
 internasionalizasiýa	%<n%>
 internat	%<n%>	softening
-internet	%<n%>	softening
+internet	%<n%>	no_softening
 interpretasiýa	%<n%>
 interwal	%<n%>
 interwensiýa	%<n%>
@@ -8420,7 +8420,7 @@ komik	%<n%>	softening
 komissar	%<n%>
 komissariat	%<n%>	softening
 komissiýa	%<n%>
-komitet	%<n%>	softening
+komitet	%<n%>	no_softening
 kommersant	%<n%>	softening
 kommersiýa	%<n%>
 kommunikasiýa	%<n%>
@@ -8463,7 +8463,7 @@ konsentrasiýa	%<n%>
 konsentrat	%<n%>	softening
 konsepsiýa	%<n%>
 konsern	%<n%>
-konsert	%<n%>	softening
+konsert	%<n%>	no_softening
 konserw	%<n%>
 konserwatiw	%<n%>
 konserwatizm	%<n%>
@@ -10360,7 +10360,7 @@ park-park	%<n%>	softening
 parket	%<n%>	softening
 parkyldy	%<n%>
 parlak	%<n%>	softening
-parlament	%<n%>	softening
+parlament	%<n%>	no_softening
 parlamentarizm	%<n%>
 parlykdy	%<n%>
 parnik	%<n%>	softening
@@ -11461,7 +11461,7 @@ saňňyldy	%<n%>
 sažen	%<n%>
 sebet	%<n%>	softening
 sebetjik	%<n%>	softening
-sebit	%<n%>	softening
+sebit	%<n%>	no_softening
 sebäpkär	%<n%>
 sebäpkärlik	%<n%>	softening
 sebäpkärçilik	%<n%>	softening
@@ -11477,7 +11477,7 @@ sekizkeşd	%<n%>
 sekizkeşde	%<n%>
 sekizlik	%<n%>	softening
 sekretar	%<n%>
-sekretariat	%<n%>	softening
+sekretariat	%<n%>	no_softening
 sekretarlyk	%<n%>	softening
 seksiýa	%<n%>
 sektant	%<n%>	softening
@@ -11867,7 +11867,7 @@ spesialist	%<n%>	softening
 spesifikasiýa	%<n%>
 spirt	%<n%>	softening
 spisok	%<n%>	softening
-sport	%<n%>	softening
+sport	%<n%>	no_softening
 sportsmen	%<n%>
 sprawka	%<n%>
 stabillik	%<n%>	softening
@@ -12643,7 +12643,7 @@ tilisge	%<n%>
 tilkiguýruk	%<n%>	softening
 tilkijik	%<n%>	softening
 tilsim	%<n%>
-tilsimat	%<n%>	softening
+tilsimat	%<n%>	no_softening
 timarlanyş	%<n%>
 timarlaýjy	%<n%>
 timarlaýyş	%<n%>
@@ -13011,7 +13011,7 @@ tüpeňleýiş	%<n%>
 türgen	%<n%>
 türgenleşik	%<n%>	softening
 türgenlik	%<n%>	softening
-türk	%<n%>	softening
+türk	%<n%>	no_softening
 türkana	%<n%>
 türklük	%<n%>	softening
 türkmençilik	%<n%>	softening
@@ -13363,7 +13363,7 @@ ylymsyzlyk	%<n%>	softening
 ymamlyk	%<n%>	softening
 ymaratçylyk	%<n%>	softening
 ymgyr	%<n%>
-ymmat	%<n%>	softening
+ymmat	%<n%>	no_softening
 ynam	%<n%>
 ynamdar	%<n%>
 ynamdarlyk	%<n%>	softening
@@ -13605,7 +13605,7 @@ zym-zyýa	%<n%>
 zynagär	%<n%>
 zynahor	%<n%>
 zynahorluk	%<n%>	softening
-zynat	%<n%>	softening
+zynat	%<n%>	no_softening
 zyndan	%<n%>
 zynhar	%<n%>
 zypdyrun	%<n%>
@@ -14401,7 +14401,7 @@ züwwetdin	%<n%>
 öňdengörüjilik	%<n%>	softening
 öňegidişlik	%<n%>	softening
 öňi-ardy	%<n%>
-öňk	%<n%>	softening
+öňk	%<n%>	no_softening
 öňki	%<n%>
 öňki-soňky	%<n%>
 öňki-öňkülik	%<n%>	softening
@@ -14468,7 +14468,7 @@ züwwetdin	%<n%>
 üsgülewük	%<n%>	softening
 üss	%<n%>
 üsse	%<n%>
-üst	%<n%>	softening
+üst	%<n%>	no_softening
 üst-baş	%<n%>
 üst-üstün	%<n%>
 üst-üstüne	%<n%>
@@ -15508,7 +15508,7 @@ züwwetdin	%<n%>
 ştamp	%<n%>	softening
 ştanga	%<n%>
 ştangaçy	%<n%>
-ştat	%<n%>	softening
+ştat	%<n%>	no_softening
 ştrih	%<n%>
 şubela	%<n%>
 şugla	%<n%>
@@ -23275,7 +23275,7 @@ agaççy	%<n%>
 agdyk	%<n%>	softening
 agramly	%<n%>
 agro...	%<n%>
-agrotehnik	%<n%>	softening
+agrotehnik	%<n%>	no_softening
 agrotehniki	%<n%>
 agtaryş	%<n%>
 agyryly	%<n%>
@@ -23810,7 +23810,7 @@ esli	%<n%>
 est	%<n%>	softening
 et	%<n%>	softening
 etagat	%<n%>	softening
-etik	%<n%>	softening
+etik	%<n%>	no_softening
 etli	%<n%>
 etli-ganly	%<n%>
 etmişli	%<n%>
@@ -24266,7 +24266,7 @@ idinsiz	%<n%>
 idisiz	%<n%>
 igençli	%<n%>
 igli	%<n%>
-ik	%<n%>	softening
+ik	%<n%>	no_softening
 iki	%<n%>
 ikidilli	%<n%>
 ikigepli	%<n%>
@@ -25087,7 +25087,7 @@ taýýarlykly	%<n%>
 te	%<v%>
 tebigy	%<n%>
 tefteli	%<n%>
-tehnik	%<n%>	softening
+tehnik	%<n%>	no_softening
 tejribeli	%<n%>
 tejribesiz	%<n%>
 tejribeçi	%<n%>

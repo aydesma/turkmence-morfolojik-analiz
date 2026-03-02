@@ -11,7 +11,7 @@ API:  POST /api/generate/noun, /api/generate/verb, /api/analyze,
 import os, sys, re
 from flask import Flask, render_template, request, jsonify
 from morphology import analyze, analyze_verb
-from parser import parse_kelime, parse_kelime_multi
+from parser import parse_kelime, parse_kelime_multi, parse_cumle
 
 # turkmen-fst modülünü import et (paradigma tablosu için)
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -57,6 +57,7 @@ def index():
     selected_hal = "H1"
     selected_zaman = ""
     selected_sahis = ""
+    selected_dereje = ""
     selected_olumsuz = False
 
     if request.method == 'POST':
@@ -65,17 +66,28 @@ def index():
 
         # --- Parse işlemi ---
         if action == 'parse' and root:
-            # Çoklu sonuç al
-            multi = parse_kelime_multi(root)
-            if multi.get("basarili") and multi.get("sonuclar"):
-                # İlk sonucu ana parse_result olarak göster
-                parse_result = multi["sonuclar"][0]
-                # Birden fazla sonuç varsa hepsini gönder
-                if len(multi["sonuclar"]) > 1:
-                    parse_results_all = multi["sonuclar"]
+            # Çoklu kelime kontrolü
+            if ' ' in root:
+                cumle_sonuc = parse_cumle(root)
+                if cumle_sonuc.get("basarili") and cumle_sonuc.get("tokenlar"):
+                    # İlk başarılı token'ı ana sonuç olarak göster
+                    for tk in cumle_sonuc["tokenlar"]:
+                        if tk["sonuc"].get("basarili"):
+                            parse_result = tk["sonuc"]
+                            break
+                    # Tüm tokenları parse_results_all olarak gönder
+                    parse_results_all = [tk["sonuc"] for tk in cumle_sonuc["tokenlar"]]
+                else:
+                    parse_result = parse_kelime(root.replace(' ', ''))
             else:
-                # Tek sonuç moduna düş
-                parse_result = parse_kelime(root)
+                # Tek kelime - mevcut davranış
+                multi = parse_kelime_multi(root)
+                if multi.get("basarili") and multi.get("sonuclar"):
+                    parse_result = multi["sonuclar"][0]
+                    if len(multi["sonuclar"]) > 1:
+                        parse_results_all = multi["sonuclar"]
+                else:
+                    parse_result = parse_kelime(root)
 
         # --- Paradigma tablosu ---
         elif action == 'paradigma' and root:
@@ -107,15 +119,22 @@ def index():
                 # Fiil çekimi parametreleri
                 zaman_kodu = request.form.get('zaman', '').strip().upper()
                 sahis_kodu = request.form.get('sahis', '').strip().upper()
+                dereje_kodu = request.form.get('dereje', '').strip().upper()
                 olumsuz = request.form.get('olumsuz') == 'on'
+
+                # Fiilimsi kategorisinde şahıs gerekmez
+                fiilimsi_codes = {"FH", "FÖ", "FÄ", "FG"}
+                if zaman_kodu in fiilimsi_codes and not sahis_kodu:
+                    sahis_kodu = "A3"  # varsayılan
 
                 # Seçimleri koru
                 selected_zaman = zaman_kodu
                 selected_sahis = sahis_kodu
+                selected_dereje = dereje_kodu
                 selected_olumsuz = olumsuz
 
                 if root and zaman_kodu and sahis_kodu:
-                    parts, final_word = analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz)
+                    parts, final_word = analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz, dereje_kodu or None)
                     if parts and parts[0].get("type") == "Hata":
                         result = parts
                         final_word = ""
@@ -142,6 +161,7 @@ def index():
                            selected_hal=selected_hal,
                            selected_zaman=selected_zaman,
                            selected_sahis=selected_sahis,
+                           selected_dereje=selected_dereje,
                            selected_olumsuz=selected_olumsuz)
 
 
@@ -158,9 +178,9 @@ def _build_paradigma(stem, ptype):
     CASE_NAMES = {
         None: ("—", "Baş düşüm (Yalın)"),
         "A2": ("A₂", "Eýelik düşüm"),
-        "A3": ("A₃", "Barlag düşüm"),
-        "A4": ("A₄", "Tabyn düşüm"),
-        "A5": ("A₅", "Ýerlik düşüm"),
+        "A3": ("A₃", "Ýöneliş düşüm"),
+        "A4": ("A₄", "Ýeniş düşüm"),
+        "A5": ("A₅", "Wagt-orun düşüm"),
         "A6": ("A₆", "Çykyş düşüm"),
     }
 
@@ -181,9 +201,10 @@ def _build_paradigma(stem, ptype):
 
     def _build_noun(s):
         cases = [None, "A2", "A3", "A4", "A5", "A6"]
-        poss_codes = [None, "A1", "A2", "A3"]
+        poss_codes_sg = [None, "A1", "A2", "A3"]
+        poss_codes_pl = [None, "B1", "B2", "A3"]
 
-        def gen_row(plural, case):
+        def gen_row(plural, case, poss_codes):
             code, name = CASE_NAMES[case]
             row = {"code": code, "name": name, "forms": []}
             for poss in poss_codes:
@@ -195,9 +216,10 @@ def _build_paradigma(stem, ptype):
         return {
             "type": "noun",
             "stem": s,
-            "poss_headers": ["Ø", "D₁b (meniň)", "D₂b (seniň)", "D₃b (onuň)"],
-            "singular": [gen_row(False, c) for c in cases],
-            "plural": [gen_row(True, c) for c in cases],
+            "poss_headers_sg": ["Ø", "D₁b (meniň)", "D₂b (seniň)", "D₃b (onuň)"],
+            "poss_headers_pl": ["Ø", "D₁k (biziň)", "D₂k (siziň)", "D₃k (olaryň)"],
+            "singular": [gen_row(False, c, poss_codes_sg) for c in cases],
+            "plural": [gen_row(True, c, poss_codes_pl) for c in cases],
         }
 
     def _build_verb(s):

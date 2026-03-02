@@ -45,6 +45,64 @@ SOFTENING_TABLE = {'p': 'b', 'ç': 'j', 't': 'd', 'k': 'g'}
 # Yumuşak → sert (ters yön, analiz için)
 HARDENING_TABLE = {v: k for k, v in SOFTENING_TABLE.items()}
 
+# Ünsüz yumuşaması İSTİSNALARI — bu kelimeler K/P/T/Ç ile bitmesine
+# rağmen yumuşamaz. Çoğunlukla Arapça, Farsça veya Avrupa dillerinden
+# alıntı kelimelerdir. Corpus analizi (metbugat.gov.tm, 50 makale,
+# 33153 token) ile keşfedilmiştir.
+#
+# Sözlük dosyasında "no_softening" özelliğiyle işaretlenirler.
+# Yeni istisnalar discover_softening_exceptions.py ile bulunabilir.
+SOFTENING_EXCEPTIONS = frozenset({
+    # Arapça alıntılar
+    "alyhezret", "gudrat", "hakykat", "hasabat", "hormat",
+    "hyzmat", "ilat", "jemgyýet", "kazyýet", "kuwwat",
+    "maslahat", "medeniýet", "raýat", "sebit", "senagat",
+    "sungat", "syýasat", "tilsimat", "welaýat", "ymmat",
+    "zynat", "zähmet", "ähmiýet", "ganat",
+    # Farsça alıntılar
+    "döwlet", "hökümet", "şert", "hat", "halk", "wagt",
+    "sekretariat",
+    # Avrupa dili alıntıları
+    "prezident", "parlament", "diplomat", "institut", "internet",
+    "konsert", "komitet", "sport", "bank", "import", "býujet",
+    "žurnalist", "mart", "awgust", "ştat",
+    # Diğer istisnalar
+    "tehnik", "agrotehnik", "etik", "hakyk",
+    "türk", "erk", "ik", "üst", "öňk", "gallaç",
+    "ykdysadyýet",
+})
+
+# ==============================================================================
+#  YUMUŞAMA İSTİSNALARI
+# ==============================================================================
+#
+# K/P/T/Ç ile biten ama ünsüz yumuşaması YAPILMAYAN isimler.
+# Çoğunluğu Arapça, Farsça veya Avrupa dillerinden alıntıdır.
+# Ünlü düşme yapısıyla (VOWEL_DROP_EXCEPTIONS / VOWEL_DROP_CANDIDATES)
+# paralel bir mimariye sahiptir.
+#
+# Bu liste metbugat.gov.tm corpus analizi ile keşfedilmiştir.
+# `discover_softening_exceptions.py` aracıyla genişletilebilir.
+#
+SOFTENING_EXCEPTIONS = frozenset({
+    # --- Arapça / Farsça alıntılar ---
+    "alyhezret", "gudrat", "hasabat", "hakykat", "hormat",
+    "hyzmat", "ilat", "jemgyýet", "kazyýet", "kuwwat",
+    "maslahat", "medeniýet", "raýat", "sebit", "sekretariat",
+    "senagat", "sungat", "syýasat", "tilsimat", "welaýat",
+    "ymmat", "zynat", "zähmet", "ähmiýet", "döwlet",
+    "hökümet", "şert", "hat", "halk", "wagt",
+    "erk", "ganat", "tarap", "ykdysadyýet", "hakyk",
+    # --- Avrupa dillerinden alıntılar ---
+    "prezident", "parlament", "diplomat", "institut", "internet",
+    "konsert", "komitet", "sport", "bank", "import",
+    "býujet", "žurnalist", "tehnik", "agrotehnik", "etik",
+    # --- Takvim / özel isimler ---
+    "mart", "awgust", "türk",
+    # --- Diğer ---
+    "ştat", "üst", "öňk", "gallaç", "ik",
+})
+
 
 # ==============================================================================
 #  ÜNLÜ DÜŞME VERİLERİ

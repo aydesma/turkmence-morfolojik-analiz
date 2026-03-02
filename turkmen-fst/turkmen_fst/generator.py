@@ -340,14 +340,10 @@ class VerbGenerator:
                 morphemes.append(("TENSE", tense_suffix))
                 morphemes.append(("NEGATION", "däl"))
             else:
-                # enedilim kuralı: kök + jak/jek + dir/dyr + kişi eki
-                kopula_base = "dyr" if quality == "yogyn" else "dir"
-                kopula_person = self._person_suffix_extended(quality, person)
-                kopula_eki = kopula_base + kopula_person
-                result = govde + tense_suffix + kopula_eki
-                breakdown = f"{pronoun} + {stem} + {tense_suffix} + {kopula_eki}"
+                # Olumlu: kök + jak/jek (kopulasız)
+                result = govde + tense_suffix
+                breakdown = f"{pronoun} + {stem} + {tense_suffix}"
                 morphemes.append(("TENSE", tense_suffix))
-                morphemes.append(("COPULA", kopula_eki))
             return GenerationResult(
                 word=f"{pronoun} {result}",
                 breakdown=breakdown,
@@ -740,6 +736,58 @@ class VerbGenerator:
                 is_valid=True
             )
 
+        elif tense == "19":
+            # Düýp Dereje (Temel/kök derece): fiil kökü
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            return GenerationResult(
+                word=govde,
+                breakdown=f"{stem}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "20":
+            # Şäriklik Dereje (İşteşlik / Reciprocal): -ş, -yş, -iş, -uş, -üş
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if ends_vowel:
+                suffix = "ş"
+            elif self._tek_heceli_dodak(govde):
+                suffix = "uş" if quality == "yogyn" else "üş"
+            else:
+                suffix = "yş" if quality == "yogyn" else "iş"
+            morphemes.append(("RECIPROCAL", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
+        elif tense == "21":
+            # Özlük Dereje (Dönüşlü / Reflexive): -n, -yn, -in, -un, -ün
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            if ends_vowel:
+                suffix = "n"
+            elif self._tek_heceli_dodak(govde):
+                suffix = "un" if quality == "yogyn" else "ün"
+            else:
+                suffix = "yn" if quality == "yogyn" else "in"
+            morphemes.append(("REFLEXIVE", suffix))
+            return GenerationResult(
+                word=govde + suffix,
+                breakdown=f"{stem} + {suffix}",
+                stem=stem,
+                morphemes=morphemes,
+                is_valid=True
+            )
+
         else:
             return GenerationResult(
                 word=f"HATA: Geçersiz zaman kodu '{tense}'",
@@ -793,12 +841,29 @@ class MorphologicalGenerator:
     def generate_noun(self, stem: str, plural: bool = False,
                       possessive: Optional[str] = None, poss_type: str = "tek",
                       case: Optional[str] = None,
-                      yumusama_izni: bool = True) -> GenerationResult:
-        """İsim çekimi yapar."""
+                      yumusama_izni: Optional[bool] = None) -> GenerationResult:
+        """İsim çekimi yapar.
+        
+        yumusama_izni=None ise sözlükteki softening bayrağına bakılır.
+        Açık True/False verilirse o değer kullanılır.
+        """
         # B1/B2 kodlarını A1/A2 + çoğul tipine dönüştür
         if possessive in ("B1", "B2"):
             poss_type = "cog"
             possessive = "A1" if possessive == "B1" else "A2"
+        
+        # yumusama_izni belirtilmemişse sözlükten oku
+        if yumusama_izni is None:
+            if self.lexicon:
+                entries = self.lexicon.lookup(stem)
+                noun_entries = [e for e in entries if e.pos in ("n", "np", "n?")]
+                if noun_entries:
+                    yumusama_izni = noun_entries[0].allows_softening
+                else:
+                    yumusama_izni = True  # Sözlükte bulunamayan kelime — varsayılan
+            else:
+                yumusama_izni = True  # Sözlük yok — varsayılan
+        
         return self.noun_gen.generate(stem, plural, possessive, poss_type, case, yumusama_izni)
 
     def generate_verb(self, stem: str, tense: str, person: str,
@@ -841,7 +906,7 @@ class MorphologicalGenerator:
             
             idx = 1
             if cokluk and idx < len(yol_parts):
-                parts.append({"text": yol_parts[idx], "type": "Sayı", "code": s_code})
+                parts.append({"text": yol_parts[idx], "type": "Sayı", "code": "S+"})
                 idx += 1
             if iyelik and idx < len(yol_parts):
                 iyelik_eki = yol_parts[idx]
@@ -873,7 +938,7 @@ class MorphologicalGenerator:
                 })
             return results, True
 
-        # Normal kelime
+        # Normal kelime — generate_noun sözlükten otomatik kontrol eder
         gen_result = self.generate_noun(root, cokluk, iyelik, i_tip, hal)
         parts = _build_parts(root, gen_result.word, gen_result.breakdown,
                              s_code, i_code, h_code, cokluk, iyelik)
@@ -976,12 +1041,6 @@ class MorphologicalGenerator:
             parts.append({"text": zaman_eki, "type": "Zaman", "code": tense_code})
             if negative:
                 parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
-            else:
-                # enedilim: kopula + kişi eki
-                kopula_base = "dyr" if quality == "yogyn" else "dir"
-                kopula_person = self.verb_gen._person_suffix_extended(quality, person_code)
-                kopula_eki = kopula_base + kopula_person
-                parts.append({"text": kopula_eki, "type": "Kopula", "code": person_code})
 
         elif tense_code == "G2":
             if negative:
@@ -1106,13 +1165,20 @@ class MorphologicalGenerator:
                 }
                 parts.append({"text": ek, "type": fiilimsi_tipi[tense_code], "code": tense_code})
 
-        elif tense_code in ("ETT", "EDL"):
-            # Ettirgen/Edilgen (şahıs eki yok, derivasyon)
+        elif tense_code in ("ETT", "EDL", "ÝÜK", "GAÝ", "DÜP", "ŞÄR", "ÖZL"):
+            # Dereje (şahıs eki yok, derivasyon)
             parts = [p for p in parts if p.get("type") != "Şahıs"]
             govde = root.lower()
             ek = gen_result.word[len(govde):]
             if ek:
-                tip = "Ettirgen" if tense_code == "ETT" else "Edilgen"
+                derece_isimleri = {
+                    "ETT": "Ettirgen", "ÝÜK": "Ettirgen",
+                    "EDL": "Edilgen", "GAÝ": "Edilgen",
+                    "DÜP": "Düýp dereje",
+                    "ŞÄR": "Şäriklik dereje",
+                    "ÖZL": "Özlük dereje",
+                }
+                tip = derece_isimleri.get(tense_code, tense_code)
                 parts.append({"text": ek, "type": tip, "code": tense_code})
 
         return parts, gen_result.word

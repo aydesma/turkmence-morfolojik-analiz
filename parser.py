@@ -80,6 +80,71 @@ def _convert_result(analysis_result):
 
 # ===== ANA PARSE FONKSİYONLARI =====
 
+# Bilinen çok kelimeli olumsuzluk desenleri
+_OLUMSUZ_PARCACIKLARI = {"däl", "däldir", "dälmi"}
+
+def parse_cumle(metin):
+    """
+    Birden fazla kelime içeren metni token'lara ayırarak her birini ayrı çözümler.
+    Boşluk içermeyen tekli kelimeler doğrudan parse_kelime_multi'ye yönlendirilir.
+    
+    Döndürür:
+    {
+        "basarili": True/False,
+        "orijinal": "tam metin",
+        "coklu_kelime": True/False,
+        "tokenlar": [
+            {"kelime": "Men", "sonuc": {...parse_result...}},
+            {"kelime": "geljek", "sonuc": {...parse_result...}},
+            {"kelime": "däl", "sonuc": {...parse_result...}}
+        ]
+    }
+    """
+    metin = metin.strip()
+    if not metin:
+        return {"basarili": False, "orijinal": metin, "coklu_kelime": False, "tokenlar": []}
+    
+    tokens = metin.split()
+    
+    if len(tokens) == 1:
+        # Tek kelime - normal parse
+        sonuc = parse_kelime(tokens[0])
+        return {
+            "basarili": sonuc.get("basarili", False),
+            "orijinal": metin,
+            "coklu_kelime": False,
+            "tokenlar": [{"kelime": tokens[0], "sonuc": sonuc}]
+        }
+    
+    # Çoklu kelime
+    tokenlar = []
+    any_success = False
+    for token in tokens:
+        t_lower = token.lower()
+        if t_lower in _OLUMSUZ_PARCACIKLARI:
+            # Olumsuzluk parçacığı - doğrudan etiketle
+            sonuc = {
+                "basarili": True,
+                "orijinal": token,
+                "kok": token.lower(),
+                "ekler": [],
+                "analiz": f"{token} (Olumsuzluk parçacygy)",
+                "tur": "parçacyk"
+            }
+        else:
+            sonuc = parse_kelime(token)
+        
+        if sonuc.get("basarili"):
+            any_success = True
+        tokenlar.append({"kelime": token, "sonuc": sonuc})
+    
+    return {
+        "basarili": any_success,
+        "orijinal": metin,
+        "coklu_kelime": True,
+        "tokenlar": tokenlar
+    }
+
 def parse_kelime(kelime):
     """
     Verilen kelimeyi morfolojik olarak çözümler.

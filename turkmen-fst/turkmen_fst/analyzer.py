@@ -255,7 +255,15 @@ class MorphologicalAnalyzer:
                 for key, (anlam, yumusama) in homonym_data.items():
                     yumusama_variants.append((yumusama, anlam))
             else:
-                yumusama_variants.append((True, ""))
+                # Sözlükteki softening bayrağına bak
+                entries = self.lexicon.lookup(stem)
+                noun_entries = [e for e in entries if e.pos in ("n", "np", "n?")]
+                if noun_entries:
+                    yumusama = noun_entries[0].allows_softening
+                    yumusama_variants.append((yumusama, ""))
+                else:
+                    # İsim olarak bulunamadıysa yumuşamasız dene
+                    yumusama_variants.append((False, ""))
 
             for yumusama_izni, anlam in yumusama_variants:
                 for plural in plural_opts:
@@ -360,7 +368,8 @@ class MorphologicalAnalyzer:
 
         candidates = self._generate_stem_candidates(w)
 
-        tense_opts = ["1", "2", "3", "4", "5", "6", "7"]
+        # 1-7: temel zamanlar, 8-18: şert/buýruk/ortaç/ulaç/ettirgen vb.
+        tense_opts = [str(i) for i in range(1, 19)]
         person_opts = ["A1", "A2", "A3", "B1", "B2", "B3"]
 
         for stem in candidates:

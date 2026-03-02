@@ -322,7 +322,9 @@ class VerbMorphotactics:
         "Ş1": "8", "B1K": "9", "HK": "10",
         "NÖ": "11", "AÖ": "12",
         "FH": "13", "FÖ": "14", "FÄ": "15", "FG": "16",
-        "ETT": "17", "EDL": "18"
+        "ETT": "17", "EDL": "18",
+        "ÝÜK": "17", "GAÝ": "18",
+        "DÜP": "19", "ŞÄR": "20", "ÖZL": "21"
     }
 
     # Zaman görüntüleme isimleri
@@ -345,6 +347,9 @@ class VerbMorphotactics:
         "16": "Geljek ortak",     # Future participle (-jak/-jek)
         "17": "Ettirgen",         # Causative (voice derivation)
         "18": "Edilgen",          # Passive (voice derivation)
+        "19": "Düýp dereje",      # Base degree (root form)
+        "20": "Şäriklik dereje",  # Reciprocal (-ş/-yş/-iş/-uş/-üş)
+        "21": "Özlük dereje",     # Reflexive (-n/-yn/-in/-un/-ün)
     }
 
     @classmethod

@@ -167,8 +167,8 @@
                         kategoriýasy</label>
                     <select name="sayi"
                         class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
-                        <option value="">S- Birlik</option>
-                        <option value="S2">S+ Köplük</option>
+                        <option value="">S− Birlik (Tekil)</option>
+                        <option value="S2">S+ Köplük (Çoğul)</option>
                     </select>
                 </div>
 
@@ -245,83 +245,74 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <!-- Dereje (isteğe bağlı) -->
+            <div class="mt-4">
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Dereje
+                    <span class="text-xs font-normal text-gray-400 dark:text-gray-500">(isteğe bağly)</span>
+                </label>
+                <select name="dereje" id="dereje-select"
+                    class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                    <option value="" {% if not selected_dereje %}selected{% endif %}>Saýlanmadyk (düýp görnüş)</option>
+                    <option value="ÝÜK" {% if selected_dereje=='ÝÜK' %}selected{% endif %}>ÝÜK - Ýükletme (ettirgen)</option>
+                    <option value="GAÝ" {% if selected_dereje=='GAÝ' %}selected{% endif %}>GAÝ - Gaýdym (edilgen)</option>
+                    <option value="ŞÄR" {% if selected_dereje=='ŞÄR' %}selected{% endif %}>ŞÄR - Şäriklik (işteşlik)</option>
+                    <option value="ÖZL" {% if selected_dereje=='ÖZL' %}selected{% endif %}>ÖZL - Özlük (dönüşlü)</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 mt-4">
+                <!-- Kategoriýa Seçimi (Radio-style buttons) -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Zaman</label>
-                    <select name="zaman" required
-                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
-                        <optgroup label="Öten Zaman">
-                            <option value="Ö1" {% if selected_zaman=='Ö1' %}selected{% endif %}>Ö1 - Anyk Öten Zaman
-                            </option>
-                            <option value="Ö2" {% if selected_zaman=='Ö2' %}selected{% endif %}>Ö2 - Daş Öten Zaman
-                            </option>
-                            <option value="Ö3" {% if selected_zaman=='Ö3' %}selected{% endif %}>Ö3 - Dowamly Öten Zaman
-                            </option>
-                        </optgroup>
-                        <optgroup label="Häzirki Zaman">
-                            <option value="H1" {% if selected_zaman=='H1' %}selected{% endif %}>H1 - Umumy Häzirki Zaman
-                            </option>
-                            <option value="H2" {% if selected_zaman=='H2' %}selected{% endif %}>H2 - Anyk Häzirki Zaman
-                            </option>
-                        </optgroup>
-                        <optgroup label="Geljek Zaman">
-                            <option value="G1" {% if selected_zaman=='G1' %}selected{% endif %}>G1 - Mälim Geljek Zaman
-                            </option>
-                            <option value="G2" {% if selected_zaman=='G2' %}selected{% endif %}>G2 - Nämälim Geljek
-                                Zaman</option>
-                        </optgroup>
-                        <optgroup label="İşlik Formalary">
-                            <option value="Ş1" {% if selected_zaman=='Ş1' %}selected{% endif %}>Ş1 - Şert Formasy
-                            </option>
-                            <option value="B1K" {% if selected_zaman=='B1K' %}selected{% endif %}>B1K - Buýruk Formasy
-                            </option>
-                            <option value="HK" {% if selected_zaman=='HK' %}selected{% endif %}>HK - Hökmanlyk Formasy
-                            </option>
-                            <option value="NÖ" {% if selected_zaman=='NÖ' %}selected{% endif %}>NÖ - Nätanyş Öten
-                            </option>
-                            <option value="AÖ" {% if selected_zaman=='AÖ' %}selected{% endif %}>AÖ - Arzuw-Ökünç
-                            </option>
-                        </optgroup>
-                        <optgroup label="Fiilimsi (Ortaklyğ)">
-                            <option value="FH" {% if selected_zaman=='FH' %}selected{% endif %}>FH - Hal işlik (-yp)
-                            </option>
-                            <option value="FÖ" {% if selected_zaman=='FÖ' %}selected{% endif %}>FÖ - Öten ortak (-an)
-                            </option>
-                            <option value="FÄ" {% if selected_zaman=='FÄ' %}selected{% endif %}>FÄ - Häzirki ortak (-ýan)
-                            </option>
-                            <option value="FG" {% if selected_zaman=='FG' %}selected{% endif %}>FG - Geljek ortak (-jak)
-                            </option>
-                        </optgroup>
-                        <optgroup label="Işlik Derejeleri">
-                            <option value="ETT" {% if selected_zaman=='ETT' %}selected{% endif %}>ETT - Ettirgen (causative)
-                            </option>
-                            <option value="EDL" {% if selected_zaman=='EDL' %}selected{% endif %}>EDL - Edilgen (passive)
-                            </option>
-                        </optgroup>
-                    </select>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kategoriýa</label>
+                    <div class="grid grid-cols-3 gap-2" id="kategoriya-buttons">
+                        <button type="button" data-kat="zaman"
+                            class="kat-btn kat-active px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all duration-200">
+                            Zaman
+                        </button>
+                        <button type="button" data-kat="forma"
+                            class="kat-btn px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all duration-200 border-gray-200 dark:border-zinc-600 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 hover:border-indigo-300">
+                            Forma
+                        </button>
+                        <button type="button" data-kat="fiilimsi"
+                            class="kat-btn px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all duration-200 border-gray-200 dark:border-zinc-600 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 hover:border-indigo-300">
+                            Fiilimsi
+                        </button>
+                    </div>
+                    <input type="hidden" name="kategoriya" id="kategoriya-input" value="zaman">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Şahıs</label>
-                    <select name="sahis" required
-                        class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
-                        <optgroup label="Teklik (Birlik)">
-                            <option value="A1" {% if selected_sahis=='A1' %}selected{% endif %}>A1 - Men (1. Tekil)
-                            </option>
-                            <option value="A2" {% if selected_sahis=='A2' %}selected{% endif %}>A2 - Sen (2. Tekil)
-                            </option>
-                            <option value="A3" {% if selected_sahis=='A3' %}selected{% endif %}>A3 - Ol (3. Tekil)
-                            </option>
-                        </optgroup>
-                        <optgroup label="Çoğulluk (Köplük)">
-                            <option value="B1" {% if selected_sahis=='B1' %}selected{% endif %}>B1 - Biz (1. Çoğul)
-                            </option>
-                            <option value="B2" {% if selected_sahis=='B2' %}selected{% endif %}>B2 - Siz (2. Çoğul)
-                            </option>
-                            <option value="B3" {% if selected_sahis=='B3' %}selected{% endif %}>B3 - Olar (3. Çoğul)
-                            </option>
-                        </optgroup>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Alt Kategoriýa (Dynamic Dropdown) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2" id="sub-label">Zaman</label>
+                        <select name="zaman" id="zaman-select" required
+                            class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                        </select>
+                    </div>
+
+                    <!-- Şahıs (gizlenebilir) -->
+                    <div id="sahis-wrapper">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Şahıs</label>
+                        <select name="sahis" id="sahis-select"
+                            class="input-field w-full p-3 border border-gray-200 rounded-lg bg-white cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-500 outline-none">
+                            <optgroup label="Teklik (Birlik)">
+                                <option value="A1" {% if selected_sahis=='A1' %}selected{% endif %}>A1 - Men (1. Tekil)
+                                </option>
+                                <option value="A2" {% if selected_sahis=='A2' %}selected{% endif %}>A2 - Sen (2. Tekil)
+                                </option>
+                                <option value="A3" {% if selected_sahis=='A3' %}selected{% endif %}>A3 - Ol (3. Tekil)
+                                </option>
+                            </optgroup>
+                            <optgroup label="Çoğulluk (Köplük)">
+                                <option value="B1" {% if selected_sahis=='B1' %}selected{% endif %}>B1 - Biz (1. Çoğul)
+                                </option>
+                                <option value="B2" {% if selected_sahis=='B2' %}selected{% endif %}>B2 - Siz (2. Çoğul)
+                                </option>
+                                <option value="B3" {% if selected_sahis=='B3' %}selected{% endif %}>B3 - Olar (3. Çoğul)
+                                </option>
+                            </optgroup>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -476,7 +467,7 @@
 
             {% if pd.type == 'noun' %}
             <!-- İSİM PARADİGMASI -->
-            {% for section_name, section_data in [('Birlik (Tekil)', pd.singular), ('Köplük (Çoğul)', pd.plural)] %}
+            {% for section_name, section_data, section_headers in [('Birlik (Tekil)', pd.singular, pd.poss_headers_sg), ('Köplük (Çoğul)', pd.plural, pd.poss_headers_pl)] %}
             <div class="mb-6">
                 <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-400 mb-2 uppercase tracking-wider">
                     {{ section_name }}
@@ -486,7 +477,7 @@
                         <thead>
                             <tr class="bg-emerald-50 dark:bg-emerald-900/20">
                                 <th class="py-2 px-3 text-left font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">Düşüm</th>
-                                {% for h in pd.poss_headers %}
+                                {% for h in section_headers %}
                                 <th class="py-2 px-3 text-center font-semibold text-gray-600 dark:text-gray-400 border-b border-emerald-200 dark:border-emerald-800">{{ h }}</th>
                                 {% endfor %}
                             </tr>
@@ -1200,6 +1191,131 @@
         function clearHistory() {
             localStorage.removeItem('turkmenHistory');
             renderHistory();
+        }
+
+        // ─── Fiil Kategoriýa Yönetimi ───
+        const ZAMAN_OPTIONS = {
+            zaman: [
+                { group: "Öten Zaman", items: [
+                    { value: "Ö1", label: "Ö1 - Anyk Öten Zaman" },
+                    { value: "Ö2", label: "Ö2 - Daş Öten Zaman" },
+                    { value: "Ö3", label: "Ö3 - Dowamly Öten Zaman" }
+                ]},
+                { group: "Häzirki Zaman", items: [
+                    { value: "H1", label: "H1 - Umumy Häzirki Zaman" },
+                    { value: "H2", label: "H2 - Anyk Häzirki Zaman" }
+                ]},
+                { group: "Geljek Zaman", items: [
+                    { value: "G1", label: "G1 - Mälim Geljek Zaman" },
+                    { value: "G2", label: "G2 - Nämälim Geljek Zaman" }
+                ]}
+            ],
+            forma: [
+                { group: "İşlik Formalary", items: [
+                    { value: "Ş1", label: "Ş1 - Şert Formasy" },
+                    { value: "B1K", label: "B1K - Buýruk Formasy" },
+                    { value: "HK", label: "HK - Hökmanlyk Formasy" },
+                    { value: "NÖ", label: "NÖ - Nätanyş Öten" },
+                    { value: "AÖ", label: "AÖ - Arzuw-Ökünç" }
+                ]}
+            ],
+            fiilimsi: [
+                { group: "Fiilimsi (Ortaklyğ)", items: [
+                    { value: "FH", label: "FH - Hal işlik (-yp)" },
+                    { value: "FÖ", label: "FÖ - Öten ortak (-an)" },
+                    { value: "FÄ", label: "FÄ - Häzirki ortak (-ýan)" },
+                    { value: "FG", label: "FG - Geljek ortak (-jak)" }
+                ]}
+            ]
+        };
+
+        const KAT_LABELS = { zaman: "Zaman", forma: "Forma", fiilimsi: "Fiilimsi" };
+        const KAT_NO_SAHIS = new Set(["fiilimsi"]);
+
+        function initKategoriya() {
+            const btns = document.querySelectorAll('#kategoriya-buttons .kat-btn');
+            const zamanSelect = document.getElementById('zaman-select');
+            const sahisWrapper = document.getElementById('sahis-wrapper');
+            const sahisSelect = document.getElementById('sahis-select');
+            const katInput = document.getElementById('kategoriya-input');
+            const subLabel = document.getElementById('sub-label');
+
+            const activeClasses = ['border-indigo-500', 'dark:border-violet-500', 'text-indigo-700', 'dark:text-violet-300', 'bg-indigo-50', 'dark:bg-violet-900/30', 'font-bold'];
+            const inactiveClasses = ['border-gray-200', 'dark:border-zinc-600', 'text-gray-600', 'dark:text-gray-400', 'bg-white', 'dark:bg-zinc-800'];
+
+            function populateDropdown(kat, preserveValue) {
+                const groups = ZAMAN_OPTIONS[kat] || [];
+                zamanSelect.innerHTML = '';
+                groups.forEach(g => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = g.group;
+                    g.items.forEach(item => {
+                        const opt = document.createElement('option');
+                        opt.value = item.value;
+                        opt.textContent = item.label;
+                        if (preserveValue && item.value === preserveValue) opt.selected = true;
+                        optgroup.appendChild(opt);
+                    });
+                    zamanSelect.appendChild(optgroup);
+                });
+            }
+
+            function setCategory(kat, preserveValue) {
+                // Update button styles
+                btns.forEach(btn => {
+                    btn.classList.remove(...activeClasses, ...inactiveClasses, 'kat-active');
+                    if (btn.dataset.kat === kat) {
+                        btn.classList.add(...activeClasses, 'kat-active');
+                    } else {
+                        btn.classList.add(...inactiveClasses);
+                    }
+                });
+
+                // Update hidden input
+                katInput.value = kat;
+
+                // Update sub-label
+                subLabel.textContent = KAT_LABELS[kat] || kat;
+
+                // Populate dropdown
+                populateDropdown(kat, preserveValue);
+
+                // Show/hide şahıs
+                if (KAT_NO_SAHIS.has(kat)) {
+                    sahisWrapper.style.display = 'none';
+                    sahisSelect.removeAttribute('required');
+                } else {
+                    sahisWrapper.style.display = '';
+                    sahisSelect.setAttribute('required', '');
+                }
+            }
+
+            // Attach click handlers
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => setCategory(btn.dataset.kat, null));
+            });
+
+            // Determine initial category from selected_zaman
+            const selectedZaman = "{{ selected_zaman|default('') }}";
+            let initKat = 'zaman';
+            if (selectedZaman) {
+                for (const [kat, groups] of Object.entries(ZAMAN_OPTIONS)) {
+                    for (const g of groups) {
+                        if (g.items.some(it => it.value === selectedZaman)) {
+                            initKat = kat;
+                            break;
+                        }
+                    }
+                }
+            }
+            setCategory(initKat, selectedZaman || null);
+        }
+
+        // Initialize on DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initKategoriya);
+        } else {
+            initKategoriya();
         }
     </script>
 

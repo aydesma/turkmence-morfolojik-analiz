@@ -337,7 +337,7 @@ def _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik):
 
     # Çokluk eki (şecereden)
     if cokluk and idx < len(yol_parts):
-        parts.append({"text": yol_parts[idx], "type": "Sayı", "code": s_code})
+        parts.append({"text": yol_parts[idx], "type": "Sayı", "code": "S+"})
         idx += 1
 
     # İyelik eki (şecereden)
@@ -505,17 +505,14 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
     if zaman == "6":
         zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
         if olumsuz:
-            # Olumsuz: kök + jak/jek + däl (değişiklik yok)
+            # Olumsuz: kök + jak/jek + däl
             sonuc = govde + zaman_eki + " däl"
             secere = f"{zamir} + {kok} + {zaman_eki} + däl"
             return f"{zamir} {sonuc}", secere
         else:
-            # enedilim kuralı: kök + jak/jek + dir/dyr + kişi eki
-            kopula_base = "dyr" if sesli_tipi == "yogyn" else "dir"
-            kopula_person = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
-            kopula_eki = kopula_base + kopula_person
-            sonuc = govde + zaman_eki + kopula_eki
-            secere = f"{zamir} + {kok} + {zaman_eki} + {kopula_eki}"
+            # Olumlu: kök + jak/jek (zamir ile)
+            sonuc = govde + zaman_eki
+            secere = f"{zamir} + {kok} + {zaman_eki}"
             return f"{zamir} {sonuc}", secere
 
     # --- Anyk Häzirki (5) — Özel yardımcı fiiller ---
@@ -807,6 +804,38 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         secere = f"{kok} + {ek}"
         return sonuc, secere
 
+    elif zaman == "19":
+        # Düýp Dereje (Temel/kök derece): fiil kökü olduğu gibi döner
+        sonuc = govde
+        secere = f"{kok}"
+        return sonuc, secere
+
+    elif zaman == "20":
+        # Şäriklik Dereje (İşteşlik / Reciprocal): -ş, -yş, -iş, -uş, -üş
+        if unluylebiter:
+            ek = "ş"
+        else:
+            if _tek_heceli_dodak(govde):
+                ek = "uş" if sesli_tipi == "yogyn" else "üş"
+            else:
+                ek = "yş" if sesli_tipi == "yogyn" else "iş"
+        sonuc = govde + ek
+        secere = f"{kok} + {ek}"
+        return sonuc, secere
+
+    elif zaman == "21":
+        # Özlük Dereje (Dönüşlü / Reflexive): -n, -yn, -in, -un, -ün
+        if unluylebiter:
+            ek = "n"
+        else:
+            if _tek_heceli_dodak(govde):
+                ek = "un" if sesli_tipi == "yogyn" else "ün"
+            else:
+                ek = "yn" if sesli_tipi == "yogyn" else "in"
+        sonuc = govde + ek
+        secere = f"{kok} + {ek}"
+        return sonuc, secere
+
     else:
         return f"HATA: Geçersiz zaman kodu '{zaman}'", ""
 
@@ -828,19 +857,67 @@ ZAMAN_DONUSUM = {
     "Ş1": "8", "B1K": "9", "HK": "10",
     "NÖ": "11", "AÖ": "12",
     "FH": "13", "FÖ": "14", "FÄ": "15", "FG": "16",
-    "ETT": "17", "EDL": "18"
+    "ETT": "17", "EDL": "18",
+    "ÝÜK": "17", "GAÝ": "18",
+    "DÜP": "19", "ŞÄR": "20", "ÖZL": "21"
 }
 
 
-def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
+def fiil_dereje_turet(root, dereje_kodu):
+    """
+    Dereje (voice/valence) türetimi: kök + dereje eki → türemiş gövde.
+    
+    Döndürür: (türemiş_gövde, dereje_eki, dereje_adı)
+    DÜP veya boş seçim için kök olduğu gibi döner.
+    """
+    if not dereje_kodu or dereje_kodu in ("", "DÜP", "YOK"):
+        return root.lower(), "", "Düýp"
+
+    dereje_zaman = ZAMAN_DONUSUM.get(dereje_kodu)
+    if not dereje_zaman:
+        return root.lower(), "", ""
+
+    result, _ = fiil_cekimle(root, dereje_zaman, "A3", False)
+    if result.startswith("HATA:"):
+        return root.lower(), "", ""
+
+    ek = result[len(root.lower()):]
+    dereje_adi = {
+        "ÝÜK": "Ýükletme", "ETT": "Ýükletme",
+        "GAÝ": "Gaýdym", "EDL": "Gaýdym",
+        "ŞÄR": "Şäriklik", "ÖZL": "Özlük"
+    }.get(dereje_kodu, "")
+
+    return result, ek, dereje_adi
+
+
+def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False, dereje_kodu=None):
     """
     Flask uyumlu fiil çekimi API'si.
     
     Çekimi yapar ve sonucu template'e uygun 'parts' listesine dönüştürür.
+    dereje_kodu verilirse önce gövde türetilir, sonra zaman+şahıs çekimi yapılır.
     
     Döndürür:
         (parts_list, final_word)
     """
+    # ── Dereje ön-adımı: kök → türemiş gövde → zaman çekimi ──
+    if dereje_kodu and dereje_kodu not in ("", "DÜP", "YOK"):
+        derived_stem, dereje_eki, dereje_adi = fiil_dereje_turet(root, dereje_kodu)
+        # Türemiş gövdeyi normal zaman+şahıs çekimine sok
+        parts, final_word = analyze_verb(derived_stem, zaman_kodu, sahis_kodu, olumsuz, None)
+        # Parts içinde "Kök" girişini orijinal kök + dereje eki olarak böl
+        if dereje_eki:
+            new_parts = []
+            for p in parts:
+                if p.get("code") == "Kök" and p.get("type") == "Kök":
+                    new_parts.append({"text": root.lower(), "type": "Kök", "code": "Kök"})
+                    new_parts.append({"text": dereje_eki, "type": dereje_adi, "code": dereje_kodu})
+                else:
+                    new_parts.append(p)
+            parts = new_parts
+        return parts, final_word
+
     zaman = ZAMAN_DONUSUM.get(zaman_kodu, "1")
     sesli_tipi = unlu_niteligi(root)
 
@@ -932,17 +1009,11 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
             parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
 
     elif zaman_kodu == "G1":
-        # Mälim Geljek
+        # Mälim Geljek: zamir + kök + jak/jek (kopulasız)
         zaman_eki = "jak" if sesli_tipi == "yogyn" else "jek"
         parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
         if olumsuz:
             parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
-        else:
-            # enedilim: kopula + kişi eki
-            kopula_base = "dyr" if sesli_tipi == "yogyn" else "dir"
-            kopula_person = _sahis_ekleri_genisletilmis(sesli_tipi, sahis_kodu)
-            kopula_eki = kopula_base + kopula_person
-            parts.append({"text": kopula_eki, "type": "Kopula", "code": sahis_kodu})
 
     elif zaman_kodu == "G2":
         # Nämälim Geljek
@@ -1087,14 +1158,37 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False):
             }
             parts.append({"text": ek, "type": fiilimsi_tipi[zaman_kodu], "code": zaman_kodu})
 
-    elif zaman_kodu in ("ETT", "EDL"):
+    elif zaman_kodu in ("ETT", "EDL", "ÝÜK", "GAÝ"):
         # Ettirgen/Edilgen (şahıs eki yok, derivasyon)
         parts = [p for p in parts if p.get("type") != "Şahıs"]
         govde = root.lower()
         ek = result[len(govde):]
         if ek:
-            tip = "Ettirgen" if zaman_kodu == "ETT" else "Edilgen"
-            parts.append({"text": ek, "type": tip, "code": zaman_kodu})
+            dereje_tipi = {
+                "ETT": "Ýükletme", "ÝÜK": "Ýükletme",
+                "EDL": "Gaýdym", "GAÝ": "Gaýdym"
+            }
+            parts.append({"text": ek, "type": dereje_tipi[zaman_kodu], "code": zaman_kodu})
+
+    elif zaman_kodu == "DÜP":
+        # Düýp Dereje (temel kök) — zamiri kaldır, sadece kök göster
+        parts = [p for p in parts if p.get("type") != "Şahıs"]
+
+    elif zaman_kodu == "ŞÄR":
+        # Şäriklik Dereje (İşteşlik / Reciprocal)
+        parts = [p for p in parts if p.get("type") != "Şahıs"]
+        govde = root.lower()
+        ek = result[len(govde):]
+        if ek:
+            parts.append({"text": ek, "type": "Şäriklik", "code": zaman_kodu})
+
+    elif zaman_kodu == "ÖZL":
+        # Özlük Dereje (Dönüşlü / Reflexive)
+        parts = [p for p in parts if p.get("type") != "Şahıs"]
+        govde = root.lower()
+        ek = result[len(govde):]
+        if ek:
+            parts.append({"text": ek, "type": "Özlük", "code": zaman_kodu})
 
     return parts, result
 

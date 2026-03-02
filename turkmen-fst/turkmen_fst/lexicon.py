@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from turkmen_fst.phonology import (
     VOWEL_DROP_CANDIDATES, VOWEL_DROP_EXCEPTIONS,
-    SOFTENING_TABLE, PhonologyRules
+    SOFTENING_TABLE, SOFTENING_EXCEPTIONS, PhonologyRules
 )
 
 
@@ -55,10 +55,19 @@ class LexiconEntry:
         return self.features.get("exception_drop", self.word.lower() in VOWEL_DROP_EXCEPTIONS)
 
     def _default_softening(self) -> bool:
-        """Kelimenin son harfine göre varsayılan yumuşama davranışı."""
+        """Kelimenin son harfine göre varsayılan yumuşama davranışı.
+        
+        Kural: K/P/T/Ç ile biten isimler yumuşar,
+        AMA SOFTENING_EXCEPTIONS listesindeki kelimeler (alıntı kelimeler) yumuşamaz.
+        """
         if not self.word:
             return False
-        return self.word[-1].lower() in SOFTENING_TABLE
+        if self.word[-1].lower() not in SOFTENING_TABLE:
+            return False
+        # İstisna listesindeki kelimeler yumuşamaz
+        if self.word.lower() in SOFTENING_EXCEPTIONS:
+            return False
+        return True
 
     def _default_vowel_drop(self) -> bool:
         """Kelime genel düşme adayları listesinde mi?"""
@@ -227,7 +236,11 @@ class Lexicon:
 
         # Ünsüz yumuşaması (isimler için)
         if pos in ("n", "np", "n?") and w and w[-1] in SOFTENING_TABLE:
-            features["softening"] = True
+            # İstisna listesindeki kelimeler yumuşamaz
+            if w in SOFTENING_EXCEPTIONS:
+                features["softening"] = False
+            else:
+                features["softening"] = True
 
         return features
 
@@ -261,6 +274,8 @@ class Lexicon:
                 features["dropped_form"] = dropped_form
             elif token == "softening":
                 features["softening"] = True
+            elif token == "no_softening":
+                features["softening"] = False
             elif token.startswith("homonym:"):
                 features["homonym"] = True
                 # Homonym detayları token'ın geri kalanında
