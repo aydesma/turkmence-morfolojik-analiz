@@ -346,27 +346,60 @@ class MorphologicalAnalyzer:
                                     meaning=anlam
                                 ))
 
-        # Daha fazla eki olan sonuçlar öne
-        results.sort(key=lambda r: (-len(r.suffixes), r.stem))
+        # Sıralama: tam kök eşleşmesi önce, hayalet ekler en sonda
+        def _noun_sort_key(r):
+            w_lower = word.lower().strip()
+            stem_lower = r.stem.lower()
+            is_bare = len(r.suffixes) == 0 and stem_lower == w_lower
+            # Hayalet ek: ek eklendi ama sonuç kök ile aynı kaldı
+            is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
+            return (
+                0 if is_bare else (2 if is_ghost else 1),
+                -len(r.stem),        # uzun kök önce
+                len(r.suffixes),     # az ekli önce
+            )
+        results.sort(key=_noun_sort_key)
         return results
 
     # ------------------------------------------------------------------
     #  FİİL TAHLİLİ
     # ------------------------------------------------------------------
 
+    # Zamir → şahıs eşleştirme
+    _ZAMIRLER = {
+        "men": "A1", "sen": "A2", "ol": "A3",
+        "biz": "B1", "siz": "B2", "olar": "B3"
+    }
+
     def parse_verb(self, word: str) -> list[AnalysisResult]:
         """
         Fiil kelimesini generator ile doğrulayarak çözümler.
         Her kök adayı × her (zaman, şahıs, olumsuzluk) kombinasyonu denenir.
+
+        Çok kelimeli girişi de destekler: "Men geljek", "Biz geldik däl" vb.
+        Zamir + fiil formu → tek çözümleme olarak döner.
         """
         w = word.lower().strip()
         if not w:
             return []
 
+        # ── Çok kelimeli giriş: Zamir + Fiil (+ däl) ──
+        w_parts = w.split()
+        is_multi_word = len(w_parts) > 1
+        verb_token = w  # tek kelimede aynen kullan
+
+        if is_multi_word:
+            first = w_parts[0]
+            # Zamir ile başlıyorsa, fiil kısmını çıkar
+            if first in self._ZAMIRLER:
+                verb_token = w_parts[1]  # "geljek" kısmı
+            else:
+                verb_token = w_parts[0]  # zamir yoksa ilk kelime
+
         results = []
         seen = set()
 
-        candidates = self._generate_stem_candidates(w)
+        candidates = self._generate_stem_candidates(verb_token)
 
         # 1-7: temel zamanlar, 8-18: şert/buýruk/ortaç/ulaç/ettirgen vb.
         tense_opts = [str(i) for i in range(1, 19)]
@@ -384,12 +417,28 @@ class MorphologicalAnalyzer:
                         if not gen.is_valid:
                             continue
 
-                        # Fiil çekimi "Zamir kelime" veya sadece kelime olabilir
+                        # Fiil çekimi "Zamir kelime" veya "kelime" olabilir
                         gen_word = gen.word.lower()
                         gen_parts = gen_word.split()
                         gen_word_only = gen_parts[-1] if len(gen_parts) >= 2 else gen_word
 
-                        if not _rounding_equivalent(gen_word_only, w):
+                        # Eşleşme kontrolü: tam form veya sadece fiil kısmı
+                        matched = False
+                        if is_multi_word:
+                            # Çok kelimeli giriş: tam üretim ("men geljek" vs "men geljek")
+                            if _rounding_equivalent(gen_word, w):
+                                matched = True
+                            # Veya däl içeren olumsuz: "men geljek däl" vs gen+däl
+                            elif len(w_parts) >= 3 and w_parts[-1] in ("däl", "däldir"):
+                                w_without_dal = " ".join(w_parts[:-1])
+                                if _rounding_equivalent(gen_word, w_without_dal):
+                                    matched = True
+                        else:
+                            # Tek kelime: zamirsiz kısım
+                            if _rounding_equivalent(gen_word_only, w):
+                                matched = True
+
+                        if not matched:
                             continue
 
                         tense_disp = TENSE_DISPLAY.get(tense, tense)
@@ -463,6 +512,26 @@ class MorphologicalAnalyzer:
                 seen_breakdowns.add(r.breakdown)
                 unique_results.append(r)
         all_results = unique_results
+
+        # ── Sonuç sıralama: en doğal çözümleme önce ──
+        def _sort_key(r):
+            w_lower = word.lower().strip()
+            stem_lower = r.stem.lower()
+            # 1) Tamamen eşleşen kök (bare root) en yüksek
+            is_bare_root = len(r.suffixes) == 0 and stem_lower == w_lower
+            # 2) Ek içeren fiil çözümlemeleri (değerli analiz)
+            is_verb_with_suffix = r.word_type == "verb" and len(r.suffixes) > 0
+            # 3) "Hayalet ek" tespiti: ek eklendi ama sonuç kök ile aynı kaldı
+            is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
+
+            return (
+                0 if is_bare_root else (1 if is_verb_with_suffix else 2),
+                0 if not is_ghost else 1,
+                -len(r.stem),       # uzun kök önce
+                -len(r.suffixes),   # çok ekli sonra
+            )
+
+        all_results.sort(key=_sort_key)
 
         # Hiç sonuç yoksa bilinmeyen kök olarak döndür
         if not all_results:

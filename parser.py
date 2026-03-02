@@ -83,26 +83,36 @@ def _convert_result(analysis_result):
 # Bilinen çok kelimeli olumsuzluk desenleri
 _OLUMSUZ_PARCACIKLARI = {"däl", "däldir", "dälmi"}
 
+# Türkmen zamirleri
+_ZAMIRLER = {
+    "men": "A1", "sen": "A2", "ol": "A3",
+    "biz": "B1", "siz": "B2", "olar": "B3"
+}
+
+
 def parse_cumle(metin):
     """
-    Birden fazla kelime içeren metni token'lara ayırarak her birini ayrı çözümler.
-    Boşluk içermeyen tekli kelimeler doğrudan parse_kelime_multi'ye yönlendirilir.
+    Birden fazla kelime içeren metni çözümler.
+    
+    Önce tam ifadeyi tek bir fiil çekimi olarak tanımaya çalışır
+    (ör. "Men geljek" → gel + G1 + A1).
+    Bulamazsa token'lara ayırarak her birini ayrı çözümler.
     
     Döndürür:
     {
         "basarili": True/False,
         "orijinal": "tam metin",
         "coklu_kelime": True/False,
+        "birlesik_fiil": True/False,
         "tokenlar": [
-            {"kelime": "Men", "sonuc": {...parse_result...}},
-            {"kelime": "geljek", "sonuc": {...parse_result...}},
-            {"kelime": "däl", "sonuc": {...parse_result...}}
+            {"kelime": "...", "sonuc": {...parse_result...}},
         ]
     }
     """
     metin = metin.strip()
     if not metin:
-        return {"basarili": False, "orijinal": metin, "coklu_kelime": False, "tokenlar": []}
+        return {"basarili": False, "orijinal": metin, "coklu_kelime": False,
+                "birlesik_fiil": False, "tokenlar": []}
     
     tokens = metin.split()
     
@@ -113,16 +123,59 @@ def parse_cumle(metin):
             "basarili": sonuc.get("basarili", False),
             "orijinal": metin,
             "coklu_kelime": False,
+            "birlesik_fiil": False,
             "tokenlar": [{"kelime": tokens[0], "sonuc": sonuc}]
         }
     
-    # Çoklu kelime
+    # ── Çok kelimeli: önce tam ifadeyi fiil olarak dene ──
+    analyzer = _get_analyzer()
+    
+    # Olumsuzluk parçacığını ayır
+    dal_parcacigi = None
+    main_tokens = list(tokens)
+    if main_tokens[-1].lower() in _OLUMSUZ_PARCACIKLARI:
+        dal_parcacigi = main_tokens.pop()
+    
+    # Zamir + fiil deseni kontrolü
+    full_phrase = " ".join(main_tokens)
+    verb_results = analyzer.parse_verb(full_phrase)
+    
+    if verb_results:
+        # Tam ifade fiil çekimi olarak tanındı!
+        best = verb_results[0]
+        sonuc = _convert_result(best)
+        
+        # Zamir bilgisini ek olarak ekle
+        first_lower = main_tokens[0].lower()
+        if first_lower in _ZAMIRLER:
+            sahis_kodu = _ZAMIRLER[first_lower]
+            # Zamir etiketini sonucun başına ekle (eğer yoksa)
+            zamir_eki = {"ek": main_tokens[0], "tip": "Zamyr", "kod": sahis_kodu}
+            if not any(e.get("tip") == "Zamyr" for e in sonuc.get("ekler", [])):
+                sonuc["ekler"].insert(0, zamir_eki)
+                sonuc["analiz"] = f"{main_tokens[0]} ({sahis_kodu}) + {sonuc['analiz']}"
+        
+        # Olumsuzluk parçacığı varsa ekle
+        if dal_parcacigi:
+            sonuc["ekler"].append({"ek": dal_parcacigi, "tip": "Olumsuzluk", "kod": "Olumsuz"})
+            sonuc["analiz"] += f" + {dal_parcacigi} (Olumsuz)"
+        
+        sonuc["orijinal"] = metin
+        
+        return {
+            "basarili": True,
+            "orijinal": metin,
+            "coklu_kelime": True,
+            "birlesik_fiil": True,
+            "tokenlar": [{"kelime": metin, "sonuc": sonuc}]
+        }
+    
+    # ── Fallback: token-by-token çözümleme ──
     tokenlar = []
     any_success = False
     for token in tokens:
         t_lower = token.lower()
         if t_lower in _OLUMSUZ_PARCACIKLARI:
-            # Olumsuzluk parçacığı - doğrudan etiketle
             sonuc = {
                 "basarili": True,
                 "orijinal": token,
@@ -130,6 +183,15 @@ def parse_cumle(metin):
                 "ekler": [],
                 "analiz": f"{token} (Olumsuzluk parçacygy)",
                 "tur": "parçacyk"
+            }
+        elif t_lower in _ZAMIRLER:
+            sonuc = {
+                "basarili": True,
+                "orijinal": token,
+                "kok": token.capitalize(),
+                "ekler": [],
+                "analiz": f"{token.capitalize()} (Zamyr, {_ZAMIRLER[t_lower]})",
+                "tur": "zamyr"
             }
         else:
             sonuc = parse_kelime(token)
@@ -142,6 +204,7 @@ def parse_cumle(metin):
         "basarili": any_success,
         "orijinal": metin,
         "coklu_kelime": True,
+        "birlesik_fiil": False,
         "tokenlar": tokenlar
     }
 

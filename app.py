@@ -70,13 +70,17 @@ def index():
             if ' ' in root:
                 cumle_sonuc = parse_cumle(root)
                 if cumle_sonuc.get("basarili") and cumle_sonuc.get("tokenlar"):
-                    # İlk başarılı token'ı ana sonuç olarak göster
-                    for tk in cumle_sonuc["tokenlar"]:
-                        if tk["sonuc"].get("basarili"):
-                            parse_result = tk["sonuc"]
-                            break
-                    # Tüm tokenları parse_results_all olarak gönder
-                    parse_results_all = [tk["sonuc"] for tk in cumle_sonuc["tokenlar"]]
+                    if cumle_sonuc.get("birlesik_fiil"):
+                        # Tam ifade tek fiil çekimi olarak tanındı
+                        parse_result = cumle_sonuc["tokenlar"][0]["sonuc"]
+                    else:
+                        # Token-by-token: ilk başarılı sonucu ana sonuç yap
+                        for tk in cumle_sonuc["tokenlar"]:
+                            if tk["sonuc"].get("basarili"):
+                                parse_result = tk["sonuc"]
+                                break
+                        # Tüm tokenları çoklu sonuç olarak gönder
+                        parse_results_all = [tk["sonuc"] for tk in cumle_sonuc["tokenlar"]]
                 else:
                     parse_result = parse_kelime(root.replace(' ', ''))
             else:
