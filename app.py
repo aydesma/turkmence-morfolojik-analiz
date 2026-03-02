@@ -410,38 +410,66 @@ def api_analyze():
     """Morfolojik analiz (kelime çözümleme) API endpoint'i.
 
     Tek kelime: {"word": "kitabym"}
-    Çoklu metin: {"text": "kitabymyza geldim"}
+    Çoklu metin: {"text": "Men geljek"}
     """
     data = request.get_json(silent=True) or {}
     text = data.get("text", "").strip() or data.get("word", "").strip()
     if not text:
         return jsonify({"error": "word veya text alanı zorunludur"}), 400
 
-    words = _tokenize(text)
-    all_words = []
-    for w in words:
-        multi = _analyzer.parse(w["word"])
-        results_list = []
-        for r in multi.results:
-            results_list.append({
-                "stem": r.stem,
-                "word_type": r.word_type,
-                "breakdown": r.breakdown,
-                "suffixes": r.suffixes,
-                "meaning": r.meaning
+    # Çok kelimeli girdi: parse_cumle ile zamir+fiil birleşik analiz
+    if ' ' in text:
+        cumle_sonuc = parse_cumle(text)
+        if cumle_sonuc.get("birlesik_fiil"):
+            tk = cumle_sonuc["tokenlar"][0]["sonuc"]
+            return jsonify({
+                "word": text,
+                "success": True,
+                "birlesik_fiil": True,
+                "count": 1,
+                "results": [{
+                    "stem": tk.get("kok", ""),
+                    "word_type": tk.get("tur", "fiil"),
+                    "breakdown": tk.get("analiz", ""),
+                    "suffixes": tk.get("ekler", []),
+                    "meaning": tk.get("anlam", "")
+                }]
             })
-        all_words.append({
-            "word": multi.original,
-            "success": multi.success,
-            "count": multi.count,
-            "results": results_list
+        # Birleşik fiil bulunamadı — token bazında döndür
+        all_words = []
+        for tk in cumle_sonuc.get("tokenlar", []):
+            s = tk["sonuc"]
+            all_words.append({
+                "word": tk["kelime"],
+                "success": s.get("basarili", False),
+                "count": 1,
+                "results": [{
+                    "stem": s.get("kok", ""),
+                    "word_type": s.get("tur", ""),
+                    "breakdown": s.get("analiz", ""),
+                    "suffixes": s.get("ekler", []),
+                    "meaning": s.get("anlam", "")
+                }]
+            })
+        return jsonify({"words": all_words})
+
+    # Tek kelime: parse_kelime_multi ile çoklu sonuç
+    multi = parse_kelime_multi(text)
+    results_list = []
+    for s in multi.get("sonuclar", []):
+        results_list.append({
+            "stem": s.get("kok", ""),
+            "word_type": s.get("tur", ""),
+            "breakdown": s.get("analiz", ""),
+            "suffixes": s.get("ekler", []),
+            "meaning": s.get("anlam", "")
         })
-
-    # Tek kelime gönderildiyse dizi yerine tek obje döndür
-    if len(all_words) == 1:
-        return jsonify(all_words[0])
-
-    return jsonify({"words": all_words})
+    return jsonify({
+        "word": text,
+        "success": multi.get("basarili", False),
+        "count": len(results_list),
+        "results": results_list
+    })
 
 
 @app.route('/api/lexicon/<word>', methods=['GET'])

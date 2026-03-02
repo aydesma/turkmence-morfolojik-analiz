@@ -346,15 +346,22 @@ class MorphologicalAnalyzer:
                                     meaning=anlam
                                 ))
 
-        # Sıralama: tam kök eşleşmesi önce, hayalet ekler en sonda
+        # Hayalet ek filtreleme: ek var ama sonuç kök ile birebir aynı kalmış
+        w_lower = word.lower().strip()
+        filtered = []
+        for r in results:
+            stem_lower = r.stem.lower()
+            if len(r.suffixes) > 0 and stem_lower == w_lower:
+                continue  # ghost suffix — kaldır
+            filtered.append(r)
+        results = filtered if filtered else results  # en az 1 sonuç kalsın
+
+        # Sıralama: tam kök eşleşmesi önce, uzun kök, az ek
         def _noun_sort_key(r):
-            w_lower = word.lower().strip()
             stem_lower = r.stem.lower()
             is_bare = len(r.suffixes) == 0 and stem_lower == w_lower
-            # Hayalet ek: ek eklendi ama sonuç kök ile aynı kaldı
-            is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
             return (
-                0 if is_bare else (2 if is_ghost else 1),
+                0 if is_bare else 1,
                 -len(r.stem),        # uzun kök önce
                 len(r.suffixes),     # az ekli önce
             )
@@ -514,24 +521,30 @@ class MorphologicalAnalyzer:
         all_results = unique_results
 
         # ── Sonuç sıralama: en doğal çözümleme önce ──
+        w_lower = word.lower().strip()
+
         def _sort_key(r):
-            w_lower = word.lower().strip()
             stem_lower = r.stem.lower()
             # 1) Tamamen eşleşen kök (bare root) en yüksek
             is_bare_root = len(r.suffixes) == 0 and stem_lower == w_lower
             # 2) Ek içeren fiil çözümlemeleri (değerli analiz)
             is_verb_with_suffix = r.word_type == "verb" and len(r.suffixes) > 0
-            # 3) "Hayalet ek" tespiti: ek eklendi ama sonuç kök ile aynı kaldı
-            is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
-
             return (
                 0 if is_bare_root else (1 if is_verb_with_suffix else 2),
-                0 if not is_ghost else 1,
                 -len(r.stem),       # uzun kök önce
                 -len(r.suffixes),   # çok ekli sonra
             )
 
         all_results.sort(key=_sort_key)
+
+        # Hayalet ek filtreleme (parse seviyesinde): stem==word ama ek var
+        filtered = []
+        for r in all_results:
+            if len(r.suffixes) > 0 and r.stem.lower() == w_lower:
+                continue
+            filtered.append(r)
+        if filtered:
+            all_results = filtered
 
         # Hiç sonuç yoksa bilinmeyen kök olarak döndür
         if not all_results:

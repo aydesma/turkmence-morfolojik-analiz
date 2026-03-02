@@ -594,6 +594,21 @@
             {% endif %}
 
             <div class="flex flex-wrap justify-center items-start gap-3 mb-6">
+                {# Zamir ekleri kökten önce gösterilir (ör. Men + Gel + jek) #}
+                {% for ek in pr.ekler if ek.tip == 'Zamyr' %}
+                <div class="flex flex-col items-center group">
+                    <div class="mb-1">
+                        <span class="text-base font-semibold text-blue-500 dark:text-blue-400">{{ ek.kod }}</span>
+                    </div>
+                    <div
+                        class="result-box bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 px-5 py-2 rounded-lg font-mono text-lg shadow-sm transition">
+                        {{ ek.ek }}
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ ek.tip }}</span>
+                </div>
+                <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-4">+</span>
+                {% endfor %}
+
                 <!-- Kök -->
                 <div class="flex flex-col items-center group">
                     <div class="mb-1">
@@ -606,7 +621,7 @@
                     <span class="text-sm text-gray-500 dark:text-gray-400 mt-1">&nbsp;</span>
                 </div>
 
-                {% for ek in pr.ekler %}
+                {% for ek in pr.ekler if ek.tip != 'Zamyr' %}
                 <span class="text-gray-300 dark:text-gray-600 text-2xl font-light mt-4">+</span>
                 <div class="flex flex-col items-center group">
                     <div class="mb-1">
