@@ -346,22 +346,14 @@ class MorphologicalAnalyzer:
                                     meaning=anlam
                                 ))
 
-        # Hayalet ek filtreleme: ek var ama sonuç kök ile birebir aynı kalmış
+        # Sıralama: tam kök eşleşmesi önce, hayalet ekler en sona
         w_lower = word.lower().strip()
-        filtered = []
-        for r in results:
-            stem_lower = r.stem.lower()
-            if len(r.suffixes) > 0 and stem_lower == w_lower:
-                continue  # ghost suffix — kaldır
-            filtered.append(r)
-        results = filtered if filtered else results  # en az 1 sonuç kalsın
-
-        # Sıralama: tam kök eşleşmesi önce, uzun kök, az ek
         def _noun_sort_key(r):
             stem_lower = r.stem.lower()
             is_bare = len(r.suffixes) == 0 and stem_lower == w_lower
+            is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
             return (
-                0 if is_bare else 1,
+                0 if is_bare else (2 if is_ghost else 1),
                 -len(r.stem),        # uzun kök önce
                 len(r.suffixes),     # az ekli önce
             )
@@ -529,22 +521,15 @@ class MorphologicalAnalyzer:
             is_bare_root = len(r.suffixes) == 0 and stem_lower == w_lower
             # 2) Ek içeren fiil çözümlemeleri (değerli analiz)
             is_verb_with_suffix = r.word_type == "verb" and len(r.suffixes) > 0
+            # 3) Hayalet ek: ek var ama kök == giriş kelimesi (form değişmemiş)
+            is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
             return (
-                0 if is_bare_root else (1 if is_verb_with_suffix else 2),
+                0 if is_bare_root else (1 if is_verb_with_suffix else (3 if is_ghost else 2)),
                 -len(r.stem),       # uzun kök önce
                 -len(r.suffixes),   # çok ekli sonra
             )
 
         all_results.sort(key=_sort_key)
-
-        # Hayalet ek filtreleme (parse seviyesinde): stem==word ama ek var
-        filtered = []
-        for r in all_results:
-            if len(r.suffixes) > 0 and r.stem.lower() == w_lower:
-                continue
-            filtered.append(r)
-        if filtered:
-            all_results = filtered
 
         # Hiç sonuç yoksa bilinmeyen kök olarak döndür
         if not all_results:
