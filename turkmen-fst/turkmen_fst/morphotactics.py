@@ -324,7 +324,14 @@ class VerbMorphotactics:
         "FH": "13", "FÖ": "14", "FÄ": "15", "FG": "16",
         "ETT": "17", "EDL": "18",
         "ÝÜK": "17", "GAÝ": "18",
-        "DÜP": "19", "ŞÄR": "20", "ÖZL": "21"
+        "DÜP": "19", "ŞÄR": "20", "ÖZL": "21",
+        # Goşma Zamanlar — Hekaýa
+        "HK_GN": "22", "HK_ŞH": "23", "HK_ÖG": "24",
+        "HK_GL": "25", "HK_NY": "26", "HK_ŞR": "27", "HK_HÖ": "28",
+        # Goşma Zamanlar — Rowaýat
+        "RW_GN": "29", "RW_ŞH": "30", "RW_ÖG": "31", "RW_HÖ": "32",
+        # Goşma Zamanlar — Şert
+        "ŞR_GN": "33", "ŞR_GL": "34", "ŞR_NY": "35",
     }
 
     # Zaman görüntüleme isimleri
@@ -350,6 +357,23 @@ class VerbMorphotactics:
         "19": "Düýp dereje",      # Base degree (root form)
         "20": "Şäriklik dereje",  # Reciprocal (-ş/-yş/-iş/-uş/-üş)
         "21": "Özlük dereje",     # Reflexive (-n/-yn/-in/-un/-ün)
+        # Goşma Zamanlar — Hekaýa
+        "22": "Geniş zamanyň hekaýasy",
+        "23": "Häzirki zamanyň hekaýasy",
+        "24": "Öňki öteniň hekaýasy",
+        "25": "Geljek zamanyň hekaýasy",
+        "26": "Niýet geljegiň hekaýasy",
+        "27": "Şertiň hekaýasy",
+        "28": "Hökmanlyygyň hekaýasy",
+        # Goşma Zamanlar — Rowaýat
+        "29": "Geniş zamanyň rowaýaty",
+        "30": "Häzirki zamanyň rowaýaty",
+        "31": "Öňki öteniň rowaýaty",
+        "32": "Hökmanlyygyň rowaýaty",
+        # Goşma Zamanlar — Şert
+        "33": "Geniş zamanyň şerty",
+        "34": "Geljek zamanyň şerty",
+        "35": "Niýet geljegiň şerty",
     }
 
     @classmethod

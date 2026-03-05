@@ -91,6 +91,11 @@ TENSE_DISPLAY = {
     "1": "Ö1", "2": "Ö2", "3": "Ö3",
     "4": "H1", "5": "H2",
     "6": "G1", "7": "G2",
+    # Goşma zamanlar
+    "22": "HK_GN", "23": "HK_HD", "24": "HK_ÖR", "25": "HK_GL",
+    "26": "HK_NY", "27": "HK_ŞR", "28": "HK_HK",
+    "29": "RW_GN", "30": "RW_HD", "31": "RW_ÖR", "32": "RW_HK",
+    "33": "ŞR_GL", "34": "ŞR_NY", "35": "ŞR_ŞR",
 }
 
 
@@ -401,7 +406,8 @@ class MorphologicalAnalyzer:
         candidates = self._generate_stem_candidates(verb_token)
 
         # 1-7: temel zamanlar, 8-18: şert/buýruk/ortaç/ulaç/ettirgen vb.
-        tense_opts = [str(i) for i in range(1, 19)]
+        # 22-35: goşma zamanlar (hekaýa/rowaýat/şert)
+        tense_opts = [str(i) for i in range(1, 19)] + [str(i) for i in range(22, 36)]
         person_opts = ["A1", "A2", "A3", "B1", "B2", "B3"]
 
         for stem in candidates:
@@ -458,8 +464,16 @@ class MorphologicalAnalyzer:
                                 suffixes.append({"suffix": suf, "type": "Olumsuzluk", "code": "Olumsuz"})
                             elif cat == "TENSE":
                                 suffixes.append({"suffix": suf, "type": "Zaman", "code": tense_disp})
-                            elif cat == "PERSON":
+                            elif cat in ("PERSON", "PERSON1", "PERSON2"):
                                 suffixes.append({"suffix": suf, "type": "Şahıs", "code": person})
+                            elif cat == "HEKAYA":
+                                suffixes.append({"suffix": suf, "type": "Hekaýa", "code": "HK"})
+                            elif cat == "ROWAYAT":
+                                suffixes.append({"suffix": suf, "type": "Rowaýat", "code": "RW"})
+                            elif cat == "CONDITIONAL_BOL":
+                                suffixes.append({"suffix": suf, "type": "Şert (bol-)", "code": "ŞR"})
+                            elif cat == "NEGATION+TENSE":
+                                suffixes.append({"suffix": suf, "type": "Olumsuz+Zaman", "code": tense_disp})
 
                         parts = [f"{stem.capitalize()} (Kök)"]
                         for s in suffixes:

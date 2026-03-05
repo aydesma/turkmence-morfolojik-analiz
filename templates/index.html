@@ -264,7 +264,7 @@
                 <!-- Kategoriýa Seçimi (Radio-style buttons) -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kategoriýa</label>
-                    <div class="grid grid-cols-3 gap-2" id="kategoriya-buttons">
+                    <div class="grid grid-cols-4 gap-2" id="kategoriya-buttons">
                         <button type="button" data-kat="zaman"
                             class="kat-btn kat-active px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all duration-200">
                             Zaman
@@ -276,6 +276,10 @@
                         <button type="button" data-kat="fiilimsi"
                             class="kat-btn px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all duration-200 border-gray-200 dark:border-zinc-600 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 hover:border-indigo-300">
                             Fiilimsi
+                        </button>
+                        <button type="button" data-kat="gosma"
+                            class="kat-btn px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all duration-200 border-gray-200 dark:border-zinc-600 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 hover:border-indigo-300">
+                            Goşma
                         </button>
                     </div>
                     <input type="hidden" name="kategoriya" id="kategoriya-input" value="zaman">
@@ -1241,10 +1245,32 @@
                     { value: "FÄ", label: "FÄ - Häzirki ortak (-ýan)" },
                     { value: "FG", label: "FG - Geljek ortak (-jak)" }
                 ]}
+            ],
+            gosma: [
+                { group: "Hekaýa (Hikaye)", items: [
+                    { value: "HK_GN", label: "HK_GN - Geniş zamanyň hekaýasy" },
+                    { value: "HK_ŞH", label: "HK_ŞH - Häzirki zamanyň hekaýasy" },
+                    { value: "HK_ÖG", label: "HK_ÖG - Öňki öteniň hekaýasy" },
+                    { value: "HK_GL", label: "HK_GL - Geljek zamanyň hekaýasy" },
+                    { value: "HK_NY", label: "HK_NY - Niýet geljegiň hekaýasy" },
+                    { value: "HK_ŞR", label: "HK_ŞR - Şertiň hekaýasy" },
+                    { value: "HK_HÖ", label: "HK_HÖ - Hökmanlyygyň hekaýasy" }
+                ]},
+                { group: "Rowaýat (Riwaýet)", items: [
+                    { value: "RW_GN", label: "RW_GN - Geniş zamanyň rowaýaty" },
+                    { value: "RW_ŞH", label: "RW_ŞH - Häzirki zamanyň rowaýaty" },
+                    { value: "RW_ÖG", label: "RW_ÖG - Öňki öteniň rowaýaty" },
+                    { value: "RW_HÖ", label: "RW_HÖ - Hökmanlyygyň rowaýaty" }
+                ]},
+                { group: "Şert (bol-)", items: [
+                    { value: "ŞR_GN", label: "ŞR_GN - Geniş zamanyň şerty" },
+                    { value: "ŞR_GL", label: "ŞR_GL - Geljek zamanyň şerty" },
+                    { value: "ŞR_NY", label: "ŞR_NY - Niýet geljegiň şerty" }
+                ]}
             ]
         };
 
-        const KAT_LABELS = { zaman: "Zaman", forma: "Forma", fiilimsi: "Fiilimsi" };
+        const KAT_LABELS = { zaman: "Zaman", forma: "Forma", fiilimsi: "Fiilimsi", gosma: "Goşma Zaman" };
         const KAT_NO_SAHIS = new Set(["fiilimsi"]);
 
         function initKategoriya() {

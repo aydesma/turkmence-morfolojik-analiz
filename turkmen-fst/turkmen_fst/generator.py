@@ -308,6 +308,176 @@ class VerbGenerator:
             return govde[:-1] + SOFTENING_TABLE[govde[-1]]
         return govde
 
+    # Goşma zaman: tense code → alt zaman eşlemesi
+    _COMPOUND_SUB = {
+        "22": "genis", "23": "simdiki", "24": "ogrenilen",
+        "25": "geljek", "26": "niyet", "27": "sert", "28": "hokmanlyk",
+        "29": "genis", "30": "simdiki", "31": "ogrenilen", "32": "hokmanlyk",
+        "33": "genis", "34": "geljek", "35": "niyet",
+    }
+    _COMPOUND_TYPE = {
+        "22": "hekaya", "23": "hekaya", "24": "hekaya", "25": "hekaya",
+        "26": "hekaya", "27": "hekaya", "28": "hekaya",
+        "29": "rowayat", "30": "rowayat", "31": "rowayat", "32": "rowayat",
+        "33": "sert", "34": "sert", "35": "sert",
+    }
+
+    def _compound_base(self, govde, quality, ends_vowel, sub, negative):
+        """Birleşik zamanın temel gövdesini üretir (şahıssız)."""
+        dal_sonra = False
+
+        if sub == "genis":
+            if negative:
+                ek = "maz" if quality == "yogyn" else "mez"
+                return govde + ek, [("NEGATION+TENSE", ek)], False
+            else:
+                g = self._fiil_yumusama(govde)
+                if g and g[-1] == 'e':
+                    g = g[:-1] + 'ä'
+                ev = g[-1] in VowelSystem.ALL if g else False
+                ek = "r" if ev else ("ar" if quality == "yogyn" else "er")
+                return g + ek, [("TENSE", ek)], False
+
+        elif sub == "simdiki":
+            if negative:
+                ek = "maýar" if quality == "yogyn" else "meýär"
+                return govde + ek, [("NEGATION+TENSE", ek)], False
+            else:
+                g = self._fiil_yumusama(govde)
+                ek = "ýar" if quality == "yogyn" else "ýär"
+                return g + ek, [("TENSE", ek)], False
+
+        elif sub == "ogrenilen":
+            if negative:
+                ek = "man" if quality == "yogyn" else "män"
+                return govde + ek, [("NEGATION+TENSE", ek)], False
+            else:
+                if ends_vowel:
+                    ek = "p"
+                elif self._tek_heceli_dodak(govde):
+                    ek = "up" if quality == "yogyn" else "üp"
+                else:
+                    ek = "yp" if quality == "yogyn" else "ip"
+                return govde + ek, [("TENSE", ek)], False
+
+        elif sub == "geljek":
+            ek = "jak" if quality == "yogyn" else "jek"
+            return govde + ek, [("TENSE", ek)], negative
+
+        elif sub == "niyet":
+            ek = "makçy" if quality == "yogyn" else "mekçi"
+            return govde + ek, [("TENSE", ek)], negative
+
+        elif sub == "sert":
+            if negative:
+                ek = "masa" if quality == "yogyn" else "mese"
+                return govde + ek, [("NEGATION+CONDITIONAL", ek)], False
+            else:
+                ek = "sa" if quality == "yogyn" else "se"
+                return govde + ek, [("CONDITIONAL", ek)], False
+
+        elif sub == "hokmanlyk":
+            ek = "maly" if quality == "yogyn" else "meli"
+            return govde + ek, [("TENSE", ek)], negative
+
+        return govde, [], False
+
+    def _generate_compound(self, stem, govde, quality, ends_vowel, tense, person,
+                           negative, pronoun, morphemes):
+        """Goşma zaman çekimi."""
+        sub = self._COMPOUND_SUB[tense]
+        ctype = self._COMPOUND_TYPE[tense]
+
+        base_form, ek_list, dal_sonra = self._compound_base(
+            govde, quality, ends_vowel, sub, negative)
+
+        for morph_type, morph_val in ek_list:
+            morphemes.append((morph_type, morph_val))
+
+        if ctype == "hekaya":
+            if sub == "sert":
+                sahis1 = self._person_suffix_standard(quality, person)
+                hk = "dy" if quality == "yogyn" else "di"
+                sahis2 = self._person_suffix_standard(quality, person)
+                result = base_form + sahis1 + hk + sahis2
+                if sahis1:
+                    morphemes.append(("PERSON1", sahis1))
+                morphemes.append(("HEKAYA", hk))
+                if sahis2:
+                    morphemes.append(("PERSON2", sahis2))
+                parts = [stem]
+                for _, v in ek_list:
+                    parts.append(v)
+                parts.extend([sahis1 or "(0)", hk, sahis2 or "(0)"])
+                breakdown = " + ".join(parts)
+            else:
+                base_q = PhonologyRules.get_vowel_quality(base_form)
+                hk = "dy" if base_q == "yogyn" else "di"
+                sahis_eki = self._person_suffix_standard(base_q, person)
+                result = base_form + hk + sahis_eki
+                if dal_sonra:
+                    result += " däl"
+                morphemes.append(("HEKAYA", hk))
+                if sahis_eki:
+                    morphemes.append(("PERSON", sahis_eki))
+                if dal_sonra:
+                    morphemes.append(("NEGATION", "däl"))
+                parts = [stem]
+                for _, v in ek_list:
+                    parts.append(v)
+                parts.extend([hk, sahis_eki or "(0)"])
+                if dal_sonra:
+                    parts.append("däl")
+                breakdown = " + ".join(parts)
+
+        elif ctype == "rowayat":
+            base_q = PhonologyRules.get_vowel_quality(base_form)
+            rw = "myş" if base_q == "yogyn" else "miş"
+            rw_q = "yogyn" if rw == "myş" else "ince"
+            sahis_eki = self._person_suffix_extended(rw_q, person)
+            result = base_form + rw + sahis_eki
+            if dal_sonra:
+                result += " däl"
+            morphemes.append(("ROWAYAT", rw))
+            if sahis_eki:
+                morphemes.append(("PERSON", sahis_eki))
+            if dal_sonra:
+                morphemes.append(("NEGATION", "däl"))
+            parts = [stem]
+            for _, v in ek_list:
+                parts.append(v)
+            parts.extend([rw, sahis_eki or "(0)"])
+            if dal_sonra:
+                parts.append("däl")
+            breakdown = " + ".join(parts)
+
+        elif ctype == "sert":
+            if dal_sonra:
+                bol = "bolmasa"
+            else:
+                bol = "bolsa"
+            sahis_eki = self._person_suffix_standard("yogyn", person)
+            result = base_form + " " + bol + sahis_eki
+            morphemes.append(("CONDITIONAL_BOL", bol))
+            if sahis_eki:
+                morphemes.append(("PERSON", sahis_eki))
+            parts = [stem]
+            for _, v in ek_list:
+                parts.append(v)
+            parts.extend([bol, sahis_eki or "(0)"])
+            breakdown = " + ".join(parts)
+        else:
+            return GenerationResult(
+                word=f"HATA: Geçersiz goşma zaman kodu '{tense}'",
+                stem=stem, is_valid=False,
+                error=f"Geçersiz goşma zaman kodu: {tense}"
+            )
+
+        return GenerationResult(
+            word=result, breakdown=breakdown,
+            stem=stem, morphemes=morphemes, is_valid=True
+        )
+
     def generate(self, stem: str, tense: str, person: str,
                  negative: bool = False) -> GenerationResult:
         """
@@ -788,6 +958,19 @@ class VerbGenerator:
                 is_valid=True
             )
 
+        # ================================================================
+        # GOŞMA ZAMANLAR (Birleşik Zamanlar / Compound Tenses)
+        # ================================================================
+        elif tense in ("22", "23", "24", "25", "26", "27", "28",
+                       "29", "30", "31", "32",
+                       "33", "34", "35"):
+            if morphemes and morphemes[-1][0] == "NEGATION":
+                morphemes.pop()
+            neg_suffix = ""
+            return self._generate_compound(
+                stem, govde, quality, ends_vowel, tense, person, negative, pronoun, morphemes
+            )
+
         else:
             return GenerationResult(
                 word=f"HATA: Geçersiz zaman kodu '{tense}'",
@@ -1180,5 +1363,74 @@ class MorphologicalGenerator:
                 }
                 tip = derece_isimleri.get(tense_code, tense_code)
                 parts.append({"text": ek, "type": tip, "code": tense_code})
+
+        # ==================================================================
+        #  GOŞMA ZAMANLAR — Parts oluşturma
+        # ==================================================================
+        elif tense_code.startswith("HK_") or tense_code.startswith("RW_") or tense_code.startswith("ŞR_"):
+            gosma_tip = tense_code[:2]  # HK, RW, ŞR
+            tense_ic = VerbMorphotactics.TENSE_CODE_MAP.get(tense_code, "")
+            sub = self.verb_gen._COMPOUND_SUB.get(tense_ic, "")
+            govde = root.lower()
+            ev = PhonologyRules.ends_with_vowel(govde)
+
+            base_form, ek_list, dal_sonra = self.verb_gen._compound_base(
+                govde, quality, ev, sub, negative)
+
+            # Kök parçasındaki yumuşamayı yansıt
+            if sub in ("genis", "simdiki") and not negative:
+                modified = self.verb_gen._fiil_yumusama(govde)
+                if sub == "genis" and modified and modified[-1] == 'e':
+                    modified = modified[:-1] + 'ä'
+                if modified != govde:
+                    parts[-1] = {"text": modified, "type": "Kök", "code": "Kök"}
+
+            # Temel zaman ekini parts'a ekle (display-friendly type names)
+            _TYPE_DISPLAY = {
+                "TENSE": "Zaman", "NEGATION+TENSE": "Olumsuz+Zaman",
+                "CONDITIONAL": "Şart", "NEGATION+CONDITIONAL": "Olumsuz+Şart",
+            }
+            for ek_tip, ek_text in ek_list:
+                display_type = _TYPE_DISPLAY.get(ek_tip, ek_tip)
+                parts.append({"text": ek_text, "type": display_type, "code": tense_code})
+
+            if gosma_tip == "HK":
+                if sub == "sert":
+                    sahis1 = self.verb_gen._person_suffix_standard(quality, person_code)
+                    if sahis1:
+                        parts.append({"text": sahis1, "type": "Şahıs₁", "code": person_code})
+                    hk_eki = "dy" if quality == "yogyn" else "di"
+                    parts.append({"text": hk_eki, "type": "Hekaýa", "code": "HK"})
+                    sahis2 = self.verb_gen._person_suffix_standard(quality, person_code)
+                    if sahis2:
+                        parts.append({"text": sahis2, "type": "Şahıs₂", "code": person_code})
+                else:
+                    base_q = PhonologyRules.get_vowel_quality(base_form)
+                    hk_eki = "dy" if base_q == "yogyn" else "di"
+                    parts.append({"text": hk_eki, "type": "Hekaýa", "code": "HK"})
+                    sahis_eki = self.verb_gen._person_suffix_standard(base_q, person_code)
+                    if sahis_eki:
+                        parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+                    if dal_sonra:
+                        parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+
+            elif gosma_tip == "RW":
+                base_q = PhonologyRules.get_vowel_quality(base_form)
+                rw_eki = "myş" if base_q == "yogyn" else "miş"
+                parts.append({"text": rw_eki, "type": "Rowaýat", "code": "RW"})
+                rw_q = "yogyn" if rw_eki == "myş" else "ince"
+                sahis_eki = self.verb_gen._person_suffix_extended(rw_q, person_code)
+                if sahis_eki:
+                    parts.append({"text": sahis_eki, "type": "Şahıs", "code": person_code})
+                if dal_sonra:
+                    parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+
+            elif gosma_tip == "ŞR":
+                if dal_sonra:
+                    bol_text = "bolmasa"
+                else:
+                    bol_text = "bolsa"
+                sahis_eki = self.verb_gen._person_suffix_standard("yogyn", person_code)
+                parts.append({"text": bol_text + sahis_eki, "type": "Şert (bol-)", "code": "ŞR"})
 
         return parts, gen_result.word

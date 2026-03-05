@@ -32,6 +32,28 @@ ZAMIRLER = {
 # Ünsüz yumuşama tablosu (sert → yumuşak)
 YUMUSAMA_TABLOSU = {'p': 'b', 'ç': 'j', 't': 'd', 'k': 'g'}
 
+# Ünsüz yumuşaması İSTİSNALARI — K/P/T/Ç ile bitmesine rağmen
+# yumuşamayan isimler. Çoğu Arapça, Farsça veya Avrupa dillerinden alıntıdır.
+# Corpus analizi (metbugat.gov.tm, 50 makale, 33153 token) ile keşfedilmiştir.
+YUMUSAMA_ISTISNALARI = frozenset({
+    # --- Arapça / Farsça alıntılar ---
+    "alyhezret", "gudrat", "hasabat", "hakykat", "hormat",
+    "hyzmat", "ilat", "jemgyýet", "kazyýet", "kuwwat",
+    "maslahat", "medeniýet", "raýat", "sebit", "sekretariat",
+    "senagat", "sungat", "syýasat", "tilsimat", "welaýat",
+    "ymmat", "zynat", "zähmet", "ähmiýet", "döwlet",
+    "hökümet", "şert", "hat", "halk", "wagt",
+    "erk", "ganat", "tarap", "ykdysadyýet", "hakyk",
+    # --- Avrupa dillerinden alıntılar ---
+    "prezident", "parlament", "diplomat", "institut", "internet",
+    "konsert", "komitet", "sport", "bank", "import",
+    "býujet", "žurnalist", "tehnik", "agrotehnik", "etik",
+    # --- Takvim / özel isimler ---
+    "mart", "awgust", "türk",
+    # --- Diğer ---
+    "ştat", "üst", "öňk", "gallaç", "ik",
+})
+
 # Eş sesli kelimeler sözlüğü
 # Her eş sesli kelime için: {anahtar: (anlam_etiketi, yumuşama_izni)}
 ES_SESLILER = {
@@ -411,7 +433,10 @@ def analyze(root, s_code, i_code, h_code):
         return results, True
 
     # --- Normal kelime ---
-    result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal)
+    # Yumuşama istisnası kontrolü: alıntı kelimeler yumuşamaz
+    yumusama_izni = root_lower not in YUMUSAMA_ISTISNALARI
+    result, yol = isim_cekimle(root, cokluk, iyelik, i_tip, hal,
+                               yumusama_izni=yumusama_izni)
     parts = _build_parts(root, result, yol, s_code, i_code, h_code, cokluk, iyelik)
     return [{"parts": parts, "final_word": result, "anlam": None}], False
 
@@ -836,6 +861,39 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         secere = f"{kok} + {ek}"
         return sonuc, secere
 
+    # ==================================================================
+    #  GOŞMA ZAMANLAR (BİRLEŞİK ZAMANLAR / COMPOUND TENSES)
+    # ==================================================================
+    #
+    #  HEKAÝA (Hikaye / Narrative Past):
+    #    base_morph + -dI/-di + şahıs_standart
+    #  ROWAÝAT (Rivayet / Reported):
+    #    base_morph + -mIş/-miş + şahıs_standart  (or + eken + şahıs)
+    #  ŞERT (Şart / Conditional with bol-):
+    #    base_morph [SPACE] bolsa + şahıs_standart  (two-word)
+    #
+    #  Tense codes 22-35:
+    #    22: HK_GN  Geniş zamanyň hekaýasy
+    #    23: HK_ŞH  Häzirki zamanyň hekaýasy
+    #    24: HK_ÖG  Öňki öteniň hekaýasy
+    #    25: HK_GL  Geljek zamanyň hekaýasy
+    #    26: HK_NY  Niýet geljegiň hekaýasy
+    #    27: HK_ŞR  Şertiň hekaýasy
+    #    28: HK_HÖ  Hökmanlyygyň hekaýasy
+    #    29: RW_GN  Geniş zamanyň rowaýaty
+    #    30: RW_ŞH  Häzirki zamanyň rowaýaty
+    #    31: RW_ÖG  Öňki öteniň rowaýaty
+    #    32: RW_HÖ  Hökmanlyygyň rowaýaty
+    #    33: ŞR_GN  Geniş zamanyň şerty
+    #    34: ŞR_GL  Geljek zamanyň şerty
+    #    35: ŞR_NY  Niýet geljegiň şerty
+    # ==================================================================
+
+    elif zaman in ("22", "23", "24", "25", "26", "27", "28",
+                   "29", "30", "31", "32",
+                   "33", "34", "35"):
+        return _gosmma_zaman_cekimle(kok, govde, sesli_tipi, unluylebiter, zaman, sahis, olumsuz)
+
     else:
         return f"HATA: Geçersiz zaman kodu '{zaman}'", ""
 
@@ -843,6 +901,185 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
     sonuc = govde + olumsuz_eki + zaman_eki + sahis_eki
     secere = f"{kok} + {olumsuz_eki + ' + ' if olumsuz_eki else ''}{zaman_eki} + {sahis_eki if sahis_eki else '(0)'}"
     return sonuc, secere
+
+
+# ==============================================================================
+#  GOŞMA ZAMANLAR — Birleşik Zaman Çekim Motoru
+# ==============================================================================
+
+def _gosma_govde(govde, sesli_tipi, unluylebiter, alt_zaman, olumsuz):
+    """
+    Birleşik zamanın temel gövdesini (base morpheme) üretir.
+    
+    alt_zaman: "genis" | "simdiki" | "ogrenilen" | "geljek" | "niyet" | "sert" | "hokmanlyk"
+    
+    Döndürür: (base_form, ek_listesi, dal_olumsuz_sonra)
+      - base_form: gövde + temel zaman eki (şahıssız)
+      - ek_listesi: [("tip", "ek"), ...] secere için
+      - dal_olumsuz_sonra: True ise olumsuzluk "däl" sonda eklenir
+    """
+    dal_sonra = False
+
+    if alt_zaman == "genis":
+        # Geniş zaman gövdesi: kök + -Ar / kök + -mAz
+        if olumsuz:
+            ek = "maz" if sesli_tipi == "yogyn" else "mez"
+            return govde + ek, [("Olumsuz+Zaman", ek)], False
+        else:
+            g = _fiil_yumusama(govde)
+            if g and g[-1] == 'e':
+                g = g[:-1] + 'ä'
+            ev = g[-1] in TUM_UNLULER if g else False
+            ek = "r" if ev else ("ar" if sesli_tipi == "yogyn" else "er")
+            return g + ek, [("Zaman", ek)], False
+
+    elif alt_zaman == "simdiki":
+        # Şimdiki zaman gövdesi: kök + -ýar / kök + -maýar
+        if olumsuz:
+            ek = "maýar" if sesli_tipi == "yogyn" else "meýär"
+            return govde + ek, [("Olumsuz+Zaman", ek)], False
+        else:
+            g = _fiil_yumusama(govde)
+            ek = "ýar" if sesli_tipi == "yogyn" else "ýär"
+            return g + ek, [("Zaman", ek)], False
+
+    elif alt_zaman == "ogrenilen":
+        # Öğrenilen geçmiş gövdesi: kök + -Yp / kök + -mAn
+        if olumsuz:
+            ek = "man" if sesli_tipi == "yogyn" else "män"
+            return govde + ek, [("Olumsuz+Zaman", ek)], False
+        else:
+            if unluylebiter:
+                ek = "p"
+            else:
+                if _tek_heceli_dodak(govde):
+                    ek = "up" if sesli_tipi == "yogyn" else "üp"
+                else:
+                    ek = "yp" if sesli_tipi == "yogyn" else "ip"
+            return govde + ek, [("Zaman", ek)], False
+
+    elif alt_zaman == "geljek":
+        # Gelecek zaman gövdesi: kök + -jAk (olumsuzda däl sonda)
+        ek = "jak" if sesli_tipi == "yogyn" else "jek"
+        return govde + ek, [("Zaman", ek)], olumsuz
+
+    elif alt_zaman == "niyet":
+        # Niýet gövdesi: kök + -mAkçy (olumsuzda däl sonda)
+        ek = "makçy" if sesli_tipi == "yogyn" else "mekçi"
+        return govde + ek, [("Zaman", ek)], olumsuz
+
+    elif alt_zaman == "sert":
+        # Şart gövdesi: kök + [-mA] + -sA + şahıs1 (çifte kişi!)
+        if olumsuz:
+            ek = "masa" if sesli_tipi == "yogyn" else "mese"
+            return govde + ek, [("Olumsuz+Şart", ek)], False
+        else:
+            ek = "sa" if sesli_tipi == "yogyn" else "se"
+            return govde + ek, [("Şart", ek)], False
+
+    elif alt_zaman == "hokmanlyk":
+        # Hökmanlyk gövdesi: kök + -mAly (olumsuzda däl sonda)
+        ek = "maly" if sesli_tipi == "yogyn" else "meli"
+        return govde + ek, [("Zaman", ek)], olumsuz
+
+    return govde, [], False
+
+
+# Tense code → alt zaman eşlemesi
+_GOSMA_ALT_ZAMAN = {
+    # Hekaýa
+    "22": "genis", "23": "simdiki", "24": "ogrenilen",
+    "25": "geljek", "26": "niyet", "27": "sert", "28": "hokmanlyk",
+    # Rowaýat
+    "29": "genis", "30": "simdiki", "31": "ogrenilen", "32": "hokmanlyk",
+    # Şert
+    "33": "genis", "34": "geljek", "35": "niyet",
+}
+
+_GOSMA_TIP = {
+    "22": "hekaya", "23": "hekaya", "24": "hekaya", "25": "hekaya",
+    "26": "hekaya", "27": "hekaya", "28": "hekaya",
+    "29": "rowayat", "30": "rowayat", "31": "rowayat", "32": "rowayat",
+    "33": "sert", "34": "sert", "35": "sert",
+}
+
+
+def _gosmma_zaman_cekimle(kok, govde, sesli_tipi, unluylebiter, zaman, sahis, olumsuz):
+    """
+    Goşma zaman (birleşik zaman) çekimi.
+    
+    Hekaýa:  base + -dI + şahıs_standart
+    Rowaýat: base + -mIş + şahıs_standart
+    Şert:    base [SPACE] bolsa + şahıs_standart (iki söz)
+    
+    Döndürür: (çekimlenmiş_söz, şecere_str)
+    """
+    alt_zaman = _GOSMA_ALT_ZAMAN[zaman]
+    gosma_tip = _GOSMA_TIP[zaman]
+
+    base_form, ek_list, dal_sonra = _gosma_govde(govde, sesli_tipi, unluylebiter, alt_zaman, olumsuz)
+
+    # --- Hekaýa: base + -dI + şahıs ---
+    if gosma_tip == "hekaya":
+        # Şart hikayesi: çifte kişi eki (base zaten -sa/-se)
+        if alt_zaman == "sert":
+            # kök + [-ma]sa + şahıs1 + -dy/-di + şahıs2
+            sahis1 = _sahis_ekleri_standart(sesli_tipi, sahis)
+            hk_eki = "dy" if sesli_tipi == "yogyn" else "di"
+            sahis2 = _sahis_ekleri_standart(sesli_tipi, sahis)
+            sonuc = base_form + sahis1 + hk_eki + sahis2
+            ek_secere = " + ".join(e[1] for e in ek_list)
+            secere = f"{kok} + {ek_secere} + {sahis1 if sahis1 else '(0)'} + {hk_eki} + {sahis2 if sahis2 else '(0)'}"
+            return sonuc, secere
+        else:
+            # base_sesli: son ünlünün niteliği (base formun)
+            base_sesli = unlu_niteligi(base_form)
+            hk_eki = "dy" if base_sesli == "yogyn" else "di"
+            sahis_eki = _sahis_ekleri_standart(base_sesli, sahis)
+            sonuc = base_form + hk_eki + sahis_eki
+            if dal_sonra:
+                sonuc += " däl"
+            ek_secere = " + ".join(e[1] for e in ek_list)
+            secere = f"{kok} + {ek_secere} + {hk_eki} + {sahis_eki if sahis_eki else '(0)'}"
+            if dal_sonra:
+                secere += " + däl"
+            return sonuc, secere
+
+    # --- Rowaýat: base + -mIş + şahıs (genişletilmiş, çünkü -myş ünsüzle biter) ---
+    elif gosma_tip == "rowayat":
+        base_sesli = unlu_niteligi(base_form)
+        rw_eki = "myş" if base_sesli == "yogyn" else "miş"
+        # -myş ünsüzle (ş) biter → genişletilmiş şahıs ekleri gerekli
+        rw_sesli = "yogyn" if rw_eki == "myş" else "ince"
+        sahis_eki = _sahis_ekleri_genisletilmis(rw_sesli, sahis)
+        sonuc = base_form + rw_eki + sahis_eki
+        if dal_sonra:
+            sonuc += " däl"
+        ek_secere = " + ".join(e[1] for e in ek_list)
+        secere = f"{kok} + {ek_secere} + {rw_eki} + {sahis_eki if sahis_eki else '(0)'}"
+        if dal_sonra:
+            secere += " + däl"
+        return sonuc, secere
+
+    # --- Şert: base [SPACE] bolsa + şahıs ---
+    elif gosma_tip == "sert":
+        # bolsa/bolmasa — her zaman "yogyn"
+        if dal_sonra:
+            # Gelecek/niýet olumsuz → base bolmasa+şahıs
+            bol_govde = "bolmasa"
+            dal_sonra = False  # däl yerine bolmasa kullanılıyor
+        elif olumsuz and alt_zaman == "genis":
+            # Geniş olumsuz: kök+maz bolsa → bolsa (olumsuzluk zaten base_form'da)
+            bol_govde = "bolsa"
+        else:
+            bol_govde = "bolsa"
+        sahis_eki = _sahis_ekleri_standart("yogyn", sahis)
+        sonuc = base_form + " " + bol_govde + sahis_eki
+        ek_secere = " + ".join(e[1] for e in ek_list)
+        secere = f"{kok} + {ek_secere} + {bol_govde} + {sahis_eki if sahis_eki else '(0)'}"
+        return sonuc, secere
+
+    return f"HATA: Geçersiz goşma zaman kodu '{zaman}'", ""
 
 
 # ==============================================================================
@@ -859,7 +1096,14 @@ ZAMAN_DONUSUM = {
     "FH": "13", "FÖ": "14", "FÄ": "15", "FG": "16",
     "ETT": "17", "EDL": "18",
     "ÝÜK": "17", "GAÝ": "18",
-    "DÜP": "19", "ŞÄR": "20", "ÖZL": "21"
+    "DÜP": "19", "ŞÄR": "20", "ÖZL": "21",
+    # Goşma Zamanlar — Hekaýa
+    "HK_GN": "22", "HK_ŞH": "23", "HK_ÖG": "24",
+    "HK_GL": "25", "HK_NY": "26", "HK_ŞR": "27", "HK_HÖ": "28",
+    # Goşma Zamanlar — Rowaýat
+    "RW_GN": "29", "RW_ŞH": "30", "RW_ÖG": "31", "RW_HÖ": "32",
+    # Goşma Zamanlar — Şert
+    "ŞR_GN": "33", "ŞR_GL": "34", "ŞR_NY": "35",
 }
 
 
@@ -1189,6 +1433,76 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False, dereje_kodu=None):
         ek = result[len(govde):]
         if ek:
             parts.append({"text": ek, "type": "Özlük", "code": zaman_kodu})
+
+    # ==================================================================
+    #  GOŞMA ZAMANLAR — Parts oluşturma
+    # ==================================================================
+    elif zaman_kodu.startswith("HK_") or zaman_kodu.startswith("RW_") or zaman_kodu.startswith("ŞR_"):
+        gosma_tip = zaman_kodu[:2]  # HK, RW, ŞR
+        zaman_ic = ZAMAN_DONUSUM.get(zaman_kodu, "")
+        alt_zaman = _GOSMA_ALT_ZAMAN.get(zaman_ic, "")
+        govde = root.lower()
+        unluylebiter_root = govde[-1] in TUM_UNLULER
+
+        # Gövde bölümü (base morpheme)
+        base_form, ek_list, dal_sonra = _gosma_govde(
+            govde, sesli_tipi, unluylebiter_root, alt_zaman, olumsuz)
+
+        # Kök parçasını gövdedeki yumuşama yansıtsın
+        if alt_zaman in ("genis", "simdiki") and not olumsuz:
+            modified = _fiil_yumusama(govde)
+            if alt_zaman == "genis" and modified and modified[-1] == 'e':
+                modified = modified[:-1] + 'ä'
+            if modified != govde:
+                parts[-1] = {"text": modified, "type": "Kök", "code": "Kök"}
+
+        # Temel zaman ekini parts'a ekle
+        for ek_tip, ek_text in ek_list:
+            parts.append({"text": ek_text, "type": ek_tip, "code": zaman_kodu})
+
+        # Birleşik zaman eki + şahıs
+        if gosma_tip == "HK":
+            # Hekaýa: -dI + şahıs
+            if alt_zaman == "sert":
+                # Çifte kişi: base + şahıs1 + -dy/-di + şahıs2
+                sahis1 = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
+                if sahis1:
+                    parts.append({"text": sahis1, "type": "Şahıs₁", "code": sahis_kodu})
+                hk_eki = "dy" if sesli_tipi == "yogyn" else "di"
+                parts.append({"text": hk_eki, "type": "Hekaýa", "code": "HK"})
+                sahis2 = _sahis_ekleri_standart(sesli_tipi, sahis_kodu)
+                if sahis2:
+                    parts.append({"text": sahis2, "type": "Şahıs₂", "code": sahis_kodu})
+            else:
+                base_sesli = unlu_niteligi(base_form)
+                hk_eki = "dy" if base_sesli == "yogyn" else "di"
+                parts.append({"text": hk_eki, "type": "Hekaýa", "code": "HK"})
+                sahis_eki = _sahis_ekleri_standart(base_sesli, sahis_kodu)
+                if sahis_eki:
+                    parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+                if dal_sonra:
+                    parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+
+        elif gosma_tip == "RW":
+            # Rowaýat: -myş/-miş + şahıs (genişletilmiş, -myş ünsüzle biter)
+            base_sesli = unlu_niteligi(base_form)
+            rw_eki = "myş" if base_sesli == "yogyn" else "miş"
+            parts.append({"text": rw_eki, "type": "Rowaýat", "code": "RW"})
+            rw_sesli = "yogyn" if rw_eki == "myş" else "ince"
+            sahis_eki = _sahis_ekleri_genisletilmis(rw_sesli, sahis_kodu)
+            if sahis_eki:
+                parts.append({"text": sahis_eki, "type": "Şahıs", "code": sahis_kodu})
+            if dal_sonra:
+                parts.append({"text": "däl", "type": "Olumsuzluk", "code": "Olumsuz"})
+
+        elif gosma_tip == "ŞR":
+            # Şert: [SPACE] bolsa/bolmasa + şahıs
+            if dal_sonra:
+                bol_text = "bolmasa"
+            else:
+                bol_text = "bolsa"
+            sahis_eki = _sahis_ekleri_standart("yogyn", sahis_kodu)
+            parts.append({"text": bol_text + sahis_eki, "type": "Şert (bol-)", "code": "ŞR"})
 
     return parts, result
 
