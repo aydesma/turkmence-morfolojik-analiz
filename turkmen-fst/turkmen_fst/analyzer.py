@@ -509,6 +509,40 @@ class MorphologicalAnalyzer:
         if not word:
             return MultiAnalysisResult(original=word)
 
+        w_lower = word.lower()
+
+        # ── Sıra sayı tanıma: "2024-nji", "25-njy", "ýedinji" ──
+        import re as _re
+        _ordinal_m = _re.match(r'^(\d+)-(nji|njy)$', w_lower)
+        if _ordinal_m:
+            num = _ordinal_m.group(1)
+            suf = _ordinal_m.group(2)
+            return MultiAnalysisResult(original=word, results=[AnalysisResult(
+                success=True, original=word,
+                stem=num, suffixes=[{"suffix": suf, "type": "Sıra", "code": "SıS"}],
+                breakdown=f"{num} + {suf} (Sıra sayı)",
+                word_type="noun"
+            )])
+
+        # ── Tireli bağlaç/zarf tanıma ──
+        _TIRELI_BAGLACLAR = {
+            "hem-de": ("hem-de", "bağlaç", "ayrıca, ve"),
+            "has-da": ("has-da", "bağlaç", "daha da"),
+            "beýläk-de": ("beýläk-de", "bağlaç", "bundan böyle"),
+            "hususan-da": ("hususan-da", "zarf", "özellikle"),
+            "ýene-de": ("ýene-de", "bağlaç", "yine de"),
+            "başga-da": ("başga-da", "bağlaç", "başka da"),
+            "şeýle-de": ("şeýle-de", "bağlaç", "ayrıca, öyle de"),
+        }
+        if w_lower in _TIRELI_BAGLACLAR:
+            stem, wtype, meaning = _TIRELI_BAGLACLAR[w_lower]
+            return MultiAnalysisResult(original=word, results=[AnalysisResult(
+                success=True, original=word,
+                stem=stem.capitalize(), suffixes=[],
+                breakdown=f"{stem.capitalize()} ({wtype})",
+                word_type="noun", meaning=meaning
+            )])
+
         all_results = []
 
         # İsim olarak çözümle

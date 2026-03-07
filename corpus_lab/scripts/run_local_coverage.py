@@ -28,24 +28,78 @@ from turkmen_fst.analyzer import MorphologicalAnalyzer
 from turkmen_fst.lexicon import Lexicon
 
 # ==============================================================================
-#  Tokenization (corpus_coverage_test.py ile aynı)
+#  Tokenization — geliştirilmiş (v2)
 # ==============================================================================
 
+# Ana kelime regex'i: Türkmence harflerden oluşan kelimeler + tireli bileşikler
 TURKMEN_WORD_RE = re.compile(
     r"\b([a-zA-ZçÇäÄöÖüÜşŞňŇžŽýÝ][a-zA-ZçÇäÄöÖüÜşŞňŇžŽýÝ'-]*[a-zA-ZçÇäÄöÖüÜşŞňŇžŽýÝ]|[a-zA-ZçÇäÄöÖüÜşŞňŇžŽýÝ])\b"
 )
 SKIP_RE = re.compile(r"^(\d+|[IVXLCDM]+|[A-Z]{1,3}\.?)$")
 
+# Sıra sayı kalıbı: 1-nji, 2024-nji, 25-njy vb.
+ORDINAL_RE = re.compile(r"\b(\d+)-(nji|njy)\b")
+
+# Sözlükte kayıtlı 2-harfli kelimeler (beyaz liste).
+# Bu listedeki kelimeler 2 harf olsa da geçerli token olarak kabul edilir.
+# Sözlük yüklendikten sonra dinamik olarak da doldurulabilir.
+_TWO_LETTER_WHITELIST: set[str] = set()
+
+# Bilinen tireli bağlaçlar/zarflar — tek token olarak kabul edilir
+TIRELI_SABIT_LISTE = {
+    "hem-de", "has-da", "beýläk-de", "hususan-da",
+    "ýene-de", "başga-da", "şeýle-de", "hatda",
+}
+
+
+def _build_two_letter_whitelist(lexicon: Lexicon | None = None):
+    """Sözlükten 2 harfli geçerli kelimeleri beyaz listeye ekle."""
+    global _TWO_LETTER_WHITELIST
+    if lexicon is None:
+        return
+    for entries in lexicon._entries.values():
+        for e in entries:
+            if len(e.word) == 2:
+                _TWO_LETTER_WHITELIST.add(e.word.lower())
+
 
 def tokenize(text: str) -> list[str]:
     tokens = []
+
+    # 1. Sıra sayılarını ön-işle: "2024-nji" → "2024nji" (tire kaldır)
+    #    Böylece ana regex tarafından yakalanmaz, ayrı ele alınır.
+    ordinals_found: list[str] = []
+    def _replace_ordinal(m):
+        ordinals_found.append(m.group(0).lower())
+        return " "  # boşlukla değiştir (ana regex'ten gizle)
+    text = ORDINAL_RE.sub(_replace_ordinal, text)
+
     for match in TURKMEN_WORD_RE.finditer(text):
         word = match.group(1)
         if SKIP_RE.match(word):
             continue
         word = word.strip("-'")
-        if len(word) >= 2:
-            tokens.append(word.lower())
+        w_lower = word.lower()
+
+        # Tireli sabit liste kontrolü
+        if w_lower in TIRELI_SABIT_LISTE:
+            tokens.append(w_lower)
+            continue
+
+        # Tireli bileşik: parçalara ayır ve her birini ayrı token olarak ekle
+        if "-" in w_lower:
+            parts = [p.strip() for p in w_lower.split("-") if p.strip()]
+            for part in parts:
+                if len(part) >= 3 or part in _TWO_LETTER_WHITELIST:
+                    tokens.append(part)
+            continue
+
+        # Minimum uzunluk filtresi: 3+ harf VEYA beyaz listede
+        if len(w_lower) >= 3 or w_lower in _TWO_LETTER_WHITELIST:
+            tokens.append(w_lower)
+
+    # Sıra sayılarını ayrı token olarak ekle
+    tokens.extend(ordinals_found)
     return tokens
 
 
@@ -57,18 +111,20 @@ def categorize_unrecognized(word: str) -> str:
     """Tanınmayan kelimeyi olası hata kategorisine ata."""
     w = word.lower()
 
-    # 1. Tireli birleşik yapılar: hem-de, has-da, beýläk-de
+    # 1. Sıra sayı: "2024-nji", "nji", "ýedinji" vb. (tireli kontrolünden ÖNCE)
+    if re.match(r"^\d+-?nji$", w) or re.match(r"^\d+-?njy$", w):
+        return "sira_sayi"
+    if w.endswith("njy") or w.endswith("nji") or w == "nji" or w == "njy":
+        return "sira_sayi"
+
+    # 2. Tireli birleşik yapılar: hem-de, has-da, beýläk-de
     if "-" in w:
         return "tireli_bilesik"
 
-    # 2. Özel isimler (büyük harfle başlayan — tokenize lowercase yapıyor,
+    # 3. Özel isimler (büyük harfle başlayan — tokenize lowercase yapıyor,
     #    ama bazı kalıplar tanınabilir)
     if any(w.startswith(p) for p in ["berdimuhamedow", "türkmenistan"]):
         return "ozel_isim"
-
-    # 3. -njy/-nji sıra sayı eki
-    if w.endswith("njy") or w.endswith("nji") or w == "nji" or w == "njy":
-        return "sira_sayi"
 
     # 4. Ettirgen/Edilgen fiil gövdeleri: -dyr/-dir, -yl/-il, -yr/-ir
     ettirgen_pats = ["dürme", "dürip", "düril", "dirmek", "dirme", "dirip",
@@ -152,6 +208,8 @@ def run_coverage(corpus_path: str, sample_size: int = 0):
     if os.path.exists(dict_path):
         lexicon.load(dict_path)
         print(f"  Sözlük: {lexicon._word_count} giriş")
+        _build_two_letter_whitelist(lexicon)
+        print(f"  2-harfli beyaz liste: {len(_TWO_LETTER_WHITELIST)} kelime")
     else:
         print(f"  UYARI: Sözlük bulunamadı: {dict_path}")
     analyzer = MorphologicalAnalyzer(lexicon)
