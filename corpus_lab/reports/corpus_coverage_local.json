@@ -1,27 +1,27 @@
 {
-  "test_date": "2026-03-07T17:06:19.390112",
+  "test_date": "2026-03-07T17:13:34.964888",
   "corpus_file": "metbugat_corpus.txt",
   "total_corpus_words": 679142,
   "sample_size": 20000,
   "results": {
     "total_tokens": 20000,
     "total_types": 5517,
-    "recognized_tokens": 17360,
-    "unrecognized_tokens": 2640,
-    "recognized_types": 4133,
-    "unrecognized_types": 1384,
-    "token_coverage_pct": 86.8,
-    "type_coverage_pct": 74.91,
+    "recognized_tokens": 17639,
+    "unrecognized_tokens": 2361,
+    "recognized_types": 4184,
+    "unrecognized_types": 1333,
+    "token_coverage_pct": 88.2,
+    "type_coverage_pct": 75.84,
     "pos_distribution": {
-      "noun": 3220,
-      "verb": 906,
-      "adjective": 7
+      "noun": 3251,
+      "verb": 907,
+      "adjective": 26
     }
   },
   "error_categories": {
     "diger": {
-      "type_count": 1194,
-      "token_count": 2216,
+      "type_count": 1174,
+      "token_count": 2048,
       "top_examples": [
         [
           "niň",
@@ -40,20 +40,8 @@
           34
         ],
         [
-          "ösüş",
-          26
-        ],
-        [
           "munuň",
           22
-        ],
-        [
-          "halkbank",
-          19
-        ],
-        [
-          "galkynyşy",
-          18
         ],
         [
           "len",
@@ -72,14 +60,6 @@
           16
         ],
         [
-          "yglan",
-          14
-        ],
-        [
-          "ösüşi",
-          14
-        ],
-        [
           "nis",
           13
         ],
@@ -96,104 +76,38 @@
           12
         ],
         [
-          "oňyn",
-          12
-        ],
-        [
           "mak",
           11
-        ]
-      ]
-    },
-    "yapim_ekli": {
-      "type_count": 48,
-      "token_count": 131,
-      "top_examples": [
-        [
-          "üstünlikli",
-          21
         ],
         [
-          "köpugurly",
-          15
+          "lyk",
+          11
         ],
         [
-          "gerimli",
-          12
+          "bin",
+          11
         ],
         [
-          "hilli",
-          9
+          "kabinetiniň",
+          11
         ],
         [
-          "ynsanperwerlik",
-          6
+          "ryň",
+          10
         ],
         [
-          "arkadagly",
-          6
+          "gülläp",
+          10
         ],
         [
-          "wekilçilikli",
-          4
-        ],
-        [
-          "türkmenhaly",
-          3
-        ],
-        [
-          "fransuz",
-          3
-        ],
-        [
-          "sazly",
-          3
-        ],
-        [
-          "söýüjilikli",
-          3
-        ],
-        [
-          "işewürlik",
-          3
-        ],
-        [
-          "tutumly",
-          2
-        ],
-        [
-          "dünýägaraýyşly",
-          2
-        ],
-        [
-          "hoşniýetlilik",
-          2
-        ],
-        [
-          "ýurtly",
-          2
-        ],
-        [
-          "tizlikli",
-          2
-        ],
-        [
-          "ugurly",
-          2
-        ],
-        [
-          "öňdengörüjilikli",
-          2
-        ],
-        [
-          "maýakçylyk",
-          1
+          "eýedir",
+          10
         ]
       ]
     },
     "fiil_cekimi": {
-      "type_count": 51,
-      "token_count": 84,
+      "type_count": 50,
+      "token_count": 83,
       "top_examples": [
         [
           "köptaraplaýyn",
@@ -448,8 +362,8 @@
       ]
     },
     "cok_ekli_isim": {
-      "type_count": 33,
-      "token_count": 42,
+      "type_count": 31,
+      "token_count": 39,
       "top_examples": [
         [
           "wekiliýetleriň",
@@ -469,10 +383,6 @@
         ],
         [
           "sagalmaklary",
-          2
-        ],
-        [
-          "ösüşleriň",
           2
         ],
         [
@@ -530,6 +440,96 @@
         [
           "edýändikleri",
           1
+        ],
+        [
+          "gazananlary",
+          1
+        ]
+      ]
+    },
+    "yapim_ekli": {
+      "type_count": 20,
+      "token_count": 24,
+      "top_examples": [
+        [
+          "türkmenhaly",
+          3
+        ],
+        [
+          "fransuz",
+          3
+        ],
+        [
+          "maýakçylyk",
+          1
+        ],
+        [
+          "binali",
+          1
+        ],
+        [
+          "darajali",
+          1
+        ],
+        [
+          "görogly",
+          1
+        ],
+        [
+          "anadolu",
+          1
+        ],
+        [
+          "beili",
+          1
+        ],
+        [
+          "sinandali",
+          1
+        ],
+        [
+          "gatyşmazlyk",
+          1
+        ],
+        [
+          "köpdilli",
+          1
+        ],
+        [
+          "muhammetguly",
+          1
+        ],
+        [
+          "emomali",
+          1
+        ],
+        [
+          "geçirijilik",
+          1
+        ],
+        [
+          "çarigali",
+          1
+        ],
+        [
+          "wideoşekilli",
+          1
+        ],
+        [
+          "gyýanly",
+          1
+        ],
+        [
+          "nebitgazly",
+          1
+        ],
+        [
+          "köpasyrlyk",
+          1
+        ],
+        [
+          "osmanguly",
+          1
         ]
       ]
     },
@@ -574,28 +574,12 @@
       34
     ],
     [
-      "ösüş",
-      26
-    ],
-    [
       "munuň",
       22
     ],
     [
-      "üstünlikli",
-      21
-    ],
-    [
-      "halkbank",
-      19
-    ],
-    [
       "other",
       19
-    ],
-    [
-      "galkynyşy",
-      18
     ],
     [
       "len",
@@ -614,20 +598,8 @@
       16
     ],
     [
-      "köpugurly",
-      15
-    ],
-    [
       "berdimuhamedowyň",
       15
-    ],
-    [
-      "yglan",
-      14
-    ],
-    [
-      "ösüşi",
-      14
     ],
     [
       "nis",
@@ -654,23 +626,11 @@
       12
     ],
     [
-      "oňyn",
-      12
-    ],
-    [
-      "gerimli",
-      12
-    ],
-    [
       "mak",
       11
     ],
     [
       "lyk",
-      11
-    ],
-    [
-      "birnäçe",
       11
     ],
     [
@@ -694,18 +654,6 @@
       10
     ],
     [
-      "ösüşiň",
-      10
-    ],
-    [
-      "döwletara",
-      10
-    ],
-    [
-      "hilli",
-      9
-    ],
-    [
       "mek",
       9
     ],
@@ -723,10 +671,6 @@
     ],
     [
       "wise",
-      8
-    ],
-    [
-      "ösüşiniň",
       8
     ],
     [
@@ -750,10 +694,6 @@
       7
     ],
     [
-      "şunda",
-      7
-    ],
-    [
       "içine",
       6
     ],
@@ -774,19 +714,7 @@
       6
     ],
     [
-      "ösüşine",
-      6
-    ],
-    [
       "oguljahan",
-      6
-    ],
-    [
-      "ynsanperwerlik",
-      6
-    ],
-    [
-      "arkadagly",
       6
     ],
     [
@@ -918,10 +846,6 @@
       4
     ],
     [
-      "wekilçilikli",
-      4
-    ],
-    [
       "pug",
       4
     ],
@@ -952,6 +876,82 @@
     [
       "tyn",
       4
+    ],
+    [
+      "dün",
+      4
+    ],
+    [
+      "döredilmegine",
+      4
+    ],
+    [
+      "ziň",
+      4
+    ],
+    [
+      "şeý",
+      4
+    ],
+    [
+      "hyzmatdaşlyga",
+      4
+    ],
+    [
+      "atabaýewa",
+      4
+    ],
+    [
+      "goýýandygym",
+      4
+    ],
+    [
+      "beslenmegini",
+      4
+    ],
+    [
+      "artisti",
+      4
+    ],
+    [
+      "belläp",
+      4
+    ],
+    [
+      "zerurdygyny",
+      4
+    ],
+    [
+      "sebitleýin",
+      4
+    ],
+    [
+      "aöb",
+      4
+    ],
+    [
+      "atagulyýew",
+      3
+    ],
+    [
+      "möwsümleýin",
+      3
+    ],
+    [
+      "annamyradowiç",
+      3
+    ],
+    [
+      "keramiki",
+      3
+    ],
+    [
+      "türkmenabat",
+      3
+    ],
+    [
+      "wekiliýetleriň",
+      3
     ]
   ]
 }

@@ -32060,3 +32060,33 @@ göñük	%<v%>
 ýöriteleş	%<v%>
 işjeňleş	%<v%>
 meýilleş	%<v%>
+ösüş	%<n%>	softening
+galkynyş	%<n%>	softening
+yglan	%<n%>
+kabinet	%<n%>	softening
+birnäçe	%<det%>
+oňyn	%<adj%>
+döwletara	%<adj%>
+halkbank	%<np%>
+köpugur	%<n%>
+şunda	%<adv%>
+ösüş	%<n%>	softening
+galkynyş	%<n%>	softening
+yglan	%<n%>
+kabinet	%<n%>	softening
+birnäçe	%<det%>
+oňyn	%<adj%>
+döwletara	%<adj%>
+halkbank	%<np%>
+köpugur	%<n%>
+şunda	%<adv%>
+ösüş	%<n%>	softening
+galkynyş	%<n%>	softening
+yglan	%<n%>
+kabinet	%<n%>	softening
+birnäçe	%<det%>
+oňyn	%<adj%>
+döwletara	%<adj%>
+halkbank	%<np%>
+köpugur	%<n%>
+şunda	%<adv%>

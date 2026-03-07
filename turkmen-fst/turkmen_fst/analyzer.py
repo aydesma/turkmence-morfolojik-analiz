@@ -834,6 +834,91 @@ class MorphologicalAnalyzer:
         return results
 
     # ------------------------------------------------------------------
+    #  YAPIM EKLERİ ÇÖZÜMLEMESİ  (-lI, -lIk, -sIz, -çI, -dAş)
+    # ------------------------------------------------------------------
+    # (ek, hedef_pos, etiket, kod, is_front, kaynak_pos_filtre)
+    #   kaynak_pos_filtre: None = her POS kabul, "n" = sadece isim bazlı, "adj" = sıfat bazlı
+    _DERIVATION = [
+        # -lI  → sıfat yapım eki (isimden sıfat)
+        ("ly",  "adjective", "Sıfat yapım eki", "-lI",  False, "n"),
+        ("li",  "adjective", "Sıfat yapım eki", "-lI",  True,  "n"),
+        # -lIk → isim yapım eki (sıfattan/isimden isim)
+        ("lyk", "noun", "İsim yapım eki", "-lIk", False, None),
+        ("lik", "noun", "İsim yapım eki", "-lIk", True,  None),
+        ("luk", "noun", "İsim yapım eki", "-lIk", False, None),
+        ("lük", "noun", "İsim yapım eki", "-lIk", True,  None),
+        # -sIz → yokluk sıfat eki
+        ("syz", "adjective", "Yokluk eki", "-sIz", False, "n"),
+        ("siz", "adjective", "Yokluk eki", "-sIz", True,  "n"),
+        ("suz", "adjective", "Yokluk eki", "-sIz", False, "n"),
+        ("süz", "adjective", "Yokluk eki", "-sIz", True,  "n"),
+        # -çI  → meslek eki (isim/fiilden isim)
+        ("çy",  "noun", "Meslek eki", "-çI", False, None),
+        ("çi",  "noun", "Meslek eki", "-çI", True,  None),
+        # -dAş → ortaklık eki (isimden isim)
+        ("daş", "noun", "Ortaklık eki", "-dAş", False, "n"),
+        ("deş", "noun", "Ortaklık eki", "-dAş", True,  "n"),
+    ]
+
+    def parse_derivation(self, word: str) -> list[AnalysisResult]:
+        """
+        Yapım eki çözümlemesi.  kök + yapım_eki
+
+        Örnekler:
+          üstünlikli   → üstünlik(n) + li  (-lI)
+          ynsanperwerlik → ynsanperwer(adj) + lik (-lIk)
+          arkadagly    → arkadag(n) + ly (-lI)
+        """
+        w = word.lower().strip()
+        if len(w) < 4:
+            return []
+
+        results: list[AnalysisResult] = []
+        seen: set[str] = set()
+
+        for suf, target_pos, label, code, is_front, base_filter in self._DERIVATION:
+            if not w.endswith(suf):
+                continue
+            base = w[:-len(suf)]
+            if len(base) < 2:
+                continue
+
+            # Ünlü uyumu kontrolü
+            stem_quality = PhonologyRules.get_vowel_quality(base)
+            if is_front and stem_quality == "yogyn":
+                continue
+            if not is_front and stem_quality == "ince":
+                continue
+
+            if not self.lexicon:
+                continue
+            entries = self.lexicon.lookup(base)
+            if not entries:
+                continue
+
+            # Kaynak POS filtresi
+            if base_filter:
+                entries = [e for e in entries if e.pos == base_filter]
+            if not entries:
+                continue
+
+            sig = f"drv|{base}|{suf}"
+            if sig in seen:
+                continue
+            seen.add(sig)
+
+            results.append(AnalysisResult(
+                success=True,
+                original=word,
+                stem=base.capitalize(),
+                suffixes=[{"suffix": suf, "type": label, "code": code}],
+                breakdown=f"{base.capitalize()} (Kök) + {suf} ({label})",
+                word_type=target_pos
+            ))
+
+        return results
+
+    # ------------------------------------------------------------------
     #  ANA GİRİŞ NOKTASI
     # ------------------------------------------------------------------
 
@@ -920,6 +1005,9 @@ class MorphologicalAnalyzer:
 
         # Türetilmiş fiil (ettirgen/edilgen + dış çekim)
         all_results.extend(self.parse_derived_verb(word))
+
+        # Yapım ekleri (-lI, -lIk, -sIz, -çI, -dAş)
+        all_results.extend(self.parse_derivation(word))
 
         # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
         seen_breakdowns = set()
