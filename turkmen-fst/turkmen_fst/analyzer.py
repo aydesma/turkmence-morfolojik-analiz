@@ -612,6 +612,228 @@ class MorphologicalAnalyzer:
         return results
 
     # ------------------------------------------------------------------
+    #  TÜRETİLMİŞ FİİL ÇÖZÜMLEMESİ  (Ettirgen / Edilgen + Dış Çekim)
+    # ------------------------------------------------------------------
+    # Dış çekim kalıpları: (ek, etiket, kod, is_front)
+    #   is_front=True  → ince (front) ünlü uyumu
+    #   is_front=False → kalın (back) ünlü uyumu
+    #   is_front=None  → her ikisi de olabilir
+    _DERIVED_OUTER = [
+        # ── Mastar + hal (uzundan kısaya) ──
+        ("magyň",  "Mastar+İlgi",     "-mAk+A2", False),
+        ("megiň",  "Mastar+İlgi",     "-mAk+A2", True),
+        ("magy",   "Mastar+Belirtme", "-mAk+A4", False),
+        ("megi",   "Mastar+Belirtme", "-mAk+A4", True),
+        ("maga",   "Mastar+Yönelme",  "-mAk+A3", False),
+        ("mäge",   "Mastar+Yönelme",  "-mAk+A3", True),
+        ("makda",  "Mastar+Bulunma",  "-mAk+A5", False),
+        ("mekde",  "Mastar+Bulunma",  "-mAk+A5", True),
+        ("makdan", "Mastar+Çıkma",    "-mAk+A6", False),
+        ("mekden", "Mastar+Çıkma",    "-mAk+A6", True),
+        ("mak",    "Mastar",          "-mAk",    False),
+        ("mek",    "Mastar",          "-mAk",    True),
+        # ── Zarf-fiil (converb) -Ip ──
+        ("yp", "Zarf-fiil", "-Ip", False),
+        ("ip", "Zarf-fiil", "-Ip", True),
+        ("up", "Zarf-fiil", "-Ip", False),
+        ("üp", "Zarf-fiil", "-Ip", True),
+        ("p",  "Zarf-fiil", "-Ip", None),
+        # ── Geçmiş ortaç -An ──
+        ("an", "Ortaç", "-An", False),
+        ("en", "Ortaç", "-An", True),
+        # ── Şimdiki ortaç -ýAn ──
+        ("ýan", "Ortaç-ş", "-ýAn", False),
+        ("ýän", "Ortaç-ş", "-ýAn", True),
+        # ── Gelecek ortaç -jAk ──
+        ("jak", "Ortaç-g", "-jAk", False),
+        ("jek", "Ortaç-g", "-jAk", True),
+        # ── Sonlu çekim (finite) — sık karşılaşılan 3.şahıs ──
+        # Geçmiş -dI  (3.şahıs)
+        ("dylar", "Geçmiş-3ç",  "Z1+3ç", False),
+        ("diler", "Geçmiş-3ç",  "Z1+3ç", True),
+        ("dy",    "Geçmiş",      "Z1",    False),
+        ("di",    "Geçmiş",      "Z1",    True),
+        # Şimdiki -ýAr (3.şahıs)
+        ("ýarlar", "Şimdiki-3ç", "Z3+3ç", False),
+        ("ýärler", "Şimdiki-3ç", "Z3+3ç", True),
+        ("ýar",    "Şimdiki",    "Z3",    False),
+        ("ýär",    "Şimdiki",    "Z3",    True),
+    ]
+
+    # Çatı ekleri (voice): (ek, etiket, kod, is_front)
+    _VOICE = [
+        # Ettirgen (causative) — uzundan kısaya
+        ("dyr", "Ettirgen", "ETT", False),
+        ("dir", "Ettirgen", "ETT", True),
+        ("dur", "Ettirgen", "ETT", False),
+        ("dür", "Ettirgen", "ETT", True),
+        ("t",   "Ettirgen", "ETT", None),
+        # Edilgen (passive) — uzundan kısaya
+        ("yl", "Edilgen", "EDL", False),
+        ("il", "Edilgen", "EDL", True),
+        ("ul", "Edilgen", "EDL", False),
+        ("ül", "Edilgen", "EDL", True),
+        ("yn", "Edilgen", "EDL", False),
+        ("in", "Edilgen", "EDL", True),
+        ("un", "Edilgen", "EDL", False),
+        ("ün", "Edilgen", "EDL", True),
+        ("l",  "Edilgen", "EDL", None),
+        ("n",  "Edilgen", "EDL", None),
+        # İşteş (reciprocal)
+        ("yş", "İşteş", "İŞT", False),
+        ("iş", "İşteş", "İŞT", True),
+        ("uş", "İşteş", "İŞT", False),
+        ("üş", "İşteş", "İŞT", True),
+        ("ş",  "İşteş", "İŞT", None),
+    ]
+
+    # Bildiriş kopulası (copula) — opsiyonel son katman
+    _COPULA = ["dyr", "dir", "dur", "dür"]
+
+    # ---- yardımcılar ----
+    def _reverse_soften(self, base: str) -> list[str]:
+        """Ters yumuşama adayları: d→t, g→k"""
+        candidates = [base]
+        if base.endswith("d"):
+            candidates.append(base[:-1] + "t")
+        elif base.endswith("g"):
+            candidates.append(base[:-1] + "k")
+        return candidates
+
+    def _is_verb(self, stem: str) -> bool:
+        """Sözlükte fiil kökü mü?"""
+        if not self.lexicon:
+            return False
+        return any(e.pos == "v" for e in self.lexicon.lookup(stem))
+
+    def parse_derived_verb(self, word: str) -> list[AnalysisResult]:
+        """
+        Türetilmiş fiil çözümlemesi.      kök_fiil + çatı_eki + dış_çekim
+
+        Tek çatı örnekleri:
+          ösdürmek   → ös + dür(ETT) + mek(Mastar)
+          edilen     → et + il(EDL) + en(Ortaç)
+          alnyp      → al + n(EDL) + yp(Zarf-fiil)
+
+        Çift çatı örnekleri:
+          göñükdirilen → göñük + dir(ETT) + il(EDL) + en(Ortaç)
+        """
+        w = word.lower().strip()
+        if len(w) < 5:
+            return []
+
+        results: list[AnalysisResult] = []
+        seen: set[str] = set()
+
+        # Kopula katmanı: orijinal + opsiyonel -dIr sıyırma
+        bases_to_try: list[tuple[str, str | None]] = [(w, None)]
+        for cop in self._COPULA:
+            if w.endswith(cop) and len(w) > len(cop) + 5:
+                bases_to_try.append((w[:-len(cop)], cop))
+                break  # tek kopula yeterli
+
+        for base_w, copula in bases_to_try:
+
+            # ═══ 1) Tek çatı:  base + voice + outer ═══
+            for o_suf, o_lbl, o_code, o_fr in self._DERIVED_OUTER:
+                if not base_w.endswith(o_suf):
+                    continue
+                derived = base_w[:-len(o_suf)]
+                if len(derived) < 3:
+                    continue
+
+                for v_suf, v_lbl, v_code, v_fr in self._VOICE:
+                    if not derived.endswith(v_suf):
+                        continue
+                    raw = derived[:-len(v_suf)]
+                    if len(raw) < 2:
+                        continue
+
+                    for base in self._reverse_soften(raw):
+                        if not self._is_verb(base):
+                            continue
+                        sig = f"dv|{base}|{v_suf}|{o_suf}|{copula}"
+                        if sig in seen:
+                            continue
+                        seen.add(sig)
+
+                        suf_list = [
+                            {"suffix": v_suf, "type": v_lbl, "code": v_code},
+                            {"suffix": o_suf, "type": o_lbl, "code": o_code},
+                        ]
+                        parts = f"{base.capitalize()} (Kök) + {v_suf} ({v_lbl}) + {o_suf} ({o_lbl})"
+                        if copula:
+                            suf_list.append({"suffix": copula, "type": "Bildiriş", "code": "-dIr"})
+                            parts += f" + {copula} (Bildiriş)"
+
+                        results.append(AnalysisResult(
+                            success=True, original=word,
+                            stem=base.capitalize(),
+                            suffixes=suf_list,
+                            breakdown=parts,
+                            word_type="verb"
+                        ))
+
+            # ═══ 2) Çift çatı:  base + voice₁ + voice₂ + outer ═══
+            for o_suf, o_lbl, o_code, o_fr in self._DERIVED_OUTER:
+                if not base_w.endswith(o_suf):
+                    continue
+                rest1 = base_w[:-len(o_suf)]
+                if len(rest1) < 5:
+                    continue
+
+                for v2s, v2l, v2c, _ in self._VOICE:
+                    if not rest1.endswith(v2s):
+                        continue
+                    rest2 = rest1[:-len(v2s)]
+                    if len(rest2) < 4:
+                        continue
+
+                    for v1s, v1l, v1c, _ in self._VOICE:
+                        # Aynı çatı tipi: Edilgen+Edilgen izin ver (n+il gibi),
+                        # diğerlerinde (ETT+ETT, İŞT+İŞT) atla
+                        if v1l == v2l and v1l != "Edilgen":
+                            continue
+                        if not rest2.endswith(v1s):
+                            continue
+                        raw = rest2[:-len(v1s)]
+                        if len(raw) < 2:
+                            continue
+
+                        for base in self._reverse_soften(raw):
+                            if not self._is_verb(base):
+                                continue
+                            sig = f"dv2|{base}|{v1s}|{v2s}|{o_suf}|{copula}"
+                            if sig in seen:
+                                continue
+                            seen.add(sig)
+
+                            suf_list = [
+                                {"suffix": v1s, "type": v1l, "code": v1c},
+                                {"suffix": v2s, "type": v2l, "code": v2c},
+                                {"suffix": o_suf, "type": o_lbl, "code": o_code},
+                            ]
+                            parts = (
+                                f"{base.capitalize()} (Kök)"
+                                f" + {v1s} ({v1l})"
+                                f" + {v2s} ({v2l})"
+                                f" + {o_suf} ({o_lbl})"
+                            )
+                            if copula:
+                                suf_list.append({"suffix": copula, "type": "Bildiriş", "code": "-dIr"})
+                                parts += f" + {copula} (Bildiriş)"
+
+                            results.append(AnalysisResult(
+                                success=True, original=word,
+                                stem=base.capitalize(),
+                                suffixes=suf_list,
+                                breakdown=parts,
+                                word_type="verb"
+                            ))
+
+        return results
+
+    # ------------------------------------------------------------------
     #  ANA GİRİŞ NOKTASI
     # ------------------------------------------------------------------
 
@@ -695,6 +917,9 @@ class MorphologicalAnalyzer:
 
         # Mastar (infinitive) olarak çözümle
         all_results.extend(self.parse_infinitive(word))
+
+        # Türetilmiş fiil (ettirgen/edilgen + dış çekim)
+        all_results.extend(self.parse_derived_verb(word))
 
         # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
         seen_breakdowns = set()

@@ -32054,3 +32054,9 @@ zut	%<n%>	softening
 şowa	%<n%>
 şu	%<n%>
 žýuri	%<n%>
+ynan	%<v%>
+göñük	%<v%>
+şertle	%<v%>
+ýöriteleş	%<v%>
+işjeňleş	%<v%>
+meýilleş	%<v%>
