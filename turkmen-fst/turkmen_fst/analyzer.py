@@ -485,6 +485,24 @@ class MorphologicalAnalyzer:
                                 suffixes.append({"suffix": suf, "type": "Şert (bol-)", "code": "ŞR"})
                             elif cat == "NEGATION+TENSE":
                                 suffixes.append({"suffix": suf, "type": "Olumsuz+Zaman", "code": tense_disp})
+                            elif cat == "CONVERB":
+                                suffixes.append({"suffix": suf, "type": "Zarf-fiil", "code": tense_disp})
+                            elif cat == "PARTICIPLE":
+                                suffixes.append({"suffix": suf, "type": "Sıfat-fiil", "code": tense_disp})
+                            elif cat == "CONDITIONAL":
+                                suffixes.append({"suffix": suf, "type": "Şert", "code": tense_disp})
+                            elif cat in ("NEGATION+CONDITIONAL",):
+                                suffixes.append({"suffix": suf, "type": "Olumsuz+Şert", "code": tense_disp})
+                            elif cat == "NEG_COPULA":
+                                suffixes.append({"suffix": suf, "type": "Olumsuz", "code": "däl"})
+                            elif cat == "CAUSATIVE":
+                                suffixes.append({"suffix": suf, "type": "Ettirgen", "code": "Caus"})
+                            elif cat == "PASSIVE":
+                                suffixes.append({"suffix": suf, "type": "Edilgen", "code": "Pass"})
+                            elif cat == "RECIPROCAL":
+                                suffixes.append({"suffix": suf, "type": "İşteşlik", "code": "Rec"})
+                            elif cat == "REFLEXIVE":
+                                suffixes.append({"suffix": suf, "type": "Dönüşlü", "code": "Ref"})
 
                         parts = [f"{stem.capitalize()} (Kök)"]
                         for s in suffixes:
@@ -498,6 +516,98 @@ class MorphologicalAnalyzer:
                             breakdown=" + ".join(parts),
                             word_type="verb"
                         ))
+
+        return results
+
+    # ------------------------------------------------------------------
+    #  MASTAR (İNFİNİTİVE) TAHLİLİ
+    #  -mAk/-mek + opsiyonel hal eki → fiilimsi isim
+    #  Tabaklar §141: etmek, bermek, etmäge, edilmegi...
+    # ------------------------------------------------------------------
+
+    # Mastar ek kalıpları: (suffix, is_front, case_label, display)
+    _INFINITIVE_PATTERNS = [
+        # Yönelme (dative) — en yaygın, k→g + A/Ä
+        ("maga", False, "A3", "-mAk+A3"),
+        ("mäge", True, "A3", "-mAk+A3"),
+        # Belirtme (accusative) — k→g + y/i
+        ("magy", False, "A4", "-mAk+A4"),
+        ("megi", True, "A4", "-mAk+A4"),
+        # İlgi (genitive) — k→g + yň/iň
+        ("magyň", False, "A2", "-mAk+A2"),
+        ("megiň", True, "A2", "-mAk+A2"),
+        # Bulunma (locative) — mAk+dA
+        ("makda", False, "A5", "-mAk+A5"),
+        ("mekde", True, "A5", "-mAk+A5"),
+        # Çıkma (ablative) — mAk+dAn
+        ("makdan", False, "A6", "-mAk+A6"),
+        ("mekden", True, "A6", "-mAk+A6"),
+        # Yalın (bare infinitive) — en son dene (daha kısa, daha çok false positive)
+        ("mak", False, None, "-mAk"),
+        ("mek", True, None, "-mAk"),
+    ]
+
+    def parse_infinitive(self, word: str) -> list[AnalysisResult]:
+        """
+        Kelimeyi mastar (infinitive) olarak çözümler.
+        
+        -mAk/-mek mastar ekleri + opsiyonel hal çekimi:
+        bermek, goramak, etmäge, edilmegi, berkitmäge...
+        """
+        w = word.lower().strip()
+        if len(w) < 4:  # en kısa: et+mek = 5 harf
+            return []
+
+        results = []
+        seen = set()
+
+        for suffix, is_front, case_label, display in self._INFINITIVE_PATTERNS:
+            if not w.endswith(suffix):
+                continue
+
+            stem_part = w[:-len(suffix)]
+            if len(stem_part) < 2:
+                continue
+
+            # Ünlü uyumu kontrolü: kalın kök + mak, ince kök + mek
+            from turkmen_fst.phonology import PhonologyRules
+            stem_quality = PhonologyRules.get_vowel_quality(stem_part)
+            if is_front and stem_quality == "yogyn":
+                continue
+            if not is_front and stem_quality == "ince":
+                continue
+
+            # Sözlükte fiil olarak var mı?
+            if self.lexicon:
+                entries = self.lexicon.lookup(stem_part)
+                verb_entries = [e for e in entries if e.pos == "v"]
+                if not verb_entries:
+                    continue
+            else:
+                continue
+
+            sig = f"inf|{stem_part}|{suffix}"
+            if sig in seen:
+                continue
+            seen.add(sig)
+
+            # Ek bilgisi oluştur
+            suffixes = [{"suffix": suffix, "type": "Mastar", "code": display}]
+            if case_label:
+                case_names = {"A2": "İlgi", "A3": "Yönelme", "A4": "Belirtme",
+                              "A5": "Bulunma", "A6": "Çıkma"}
+                parts_str = f"{stem_part.capitalize()} (Kök) + {suffix} ({display})"
+            else:
+                parts_str = f"{stem_part.capitalize()} (Kök) + {suffix} (Mastar)"
+
+            results.append(AnalysisResult(
+                success=True,
+                original=word,
+                stem=stem_part.capitalize(),
+                suffixes=suffixes,
+                breakdown=parts_str,
+                word_type="verb"
+            ))
 
         return results
 
@@ -582,6 +692,9 @@ class MorphologicalAnalyzer:
 
         # Fiil olarak çözümle
         all_results.extend(self.parse_verb(word))
+
+        # Mastar (infinitive) olarak çözümle
+        all_results.extend(self.parse_infinitive(word))
 
         # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
         seen_breakdowns = set()

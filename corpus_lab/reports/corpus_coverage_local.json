@@ -1,27 +1,27 @@
 {
-  "test_date": "2026-03-07T16:41:15.876711",
+  "test_date": "2026-03-07T16:50:34.053097",
   "corpus_file": "metbugat_corpus.txt",
   "total_corpus_words": 679142,
   "sample_size": 20000,
   "results": {
     "total_tokens": 20000,
     "total_types": 5517,
-    "recognized_tokens": 16431,
-    "unrecognized_tokens": 3569,
-    "recognized_types": 3777,
-    "unrecognized_types": 1740,
-    "token_coverage_pct": 82.16,
-    "type_coverage_pct": 68.46,
+    "recognized_tokens": 17026,
+    "unrecognized_tokens": 2974,
+    "recognized_types": 4018,
+    "unrecognized_types": 1499,
+    "token_coverage_pct": 85.13,
+    "type_coverage_pct": 72.83,
     "pos_distribution": {
-      "noun": 3225,
-      "verb": 545,
+      "noun": 3220,
+      "verb": 791,
       "adjective": 7
     }
   },
   "error_categories": {
     "diger": {
-      "type_count": 1247,
-      "token_count": 2320,
+      "type_count": 1211,
+      "token_count": 2255,
       "top_examples": [
         [
           "niň",
@@ -105,119 +105,17 @@
         ]
       ]
     },
-    "fiilimsi_zarf": {
-      "type_count": 193,
-      "token_count": 532,
-      "top_examples": [
-        [
-          "alnyp",
-          38
-        ],
-        [
-          "ynanyşmak",
-          28
-        ],
-        [
-          "geçirmek",
-          18
-        ],
-        [
-          "ýazylmak",
-          18
-        ],
-        [
-          "goramak",
-          16
-        ],
-        [
-          "bermek",
-          11
-        ],
-        [
-          "edip",
-          11
-        ],
-        [
-          "goýmak",
-          10
-        ],
-        [
-          "etmäge",
-          9
-        ],
-        [
-          "edilmegi",
-          9
-        ],
-        [
-          "geçirilmegi",
-          9
-        ],
-        [
-          "almak",
-          8
-        ],
-        [
-          "diýlip",
-          8
-        ],
-        [
-          "bellemek",
-          8
-        ],
-        [
-          "ulanmaga",
-          8
-        ],
-        [
-          "berkitmäge",
-          6
-        ],
-        [
-          "döretmek",
-          6
-        ],
-        [
-          "geçirmäge",
-          6
-        ],
-        [
-          "çekmek",
-          6
-        ],
-        [
-          "berkitmek",
-          6
-        ]
-      ]
-    },
     "ettirgen_edilgen": {
-      "type_count": 131,
-      "token_count": 295,
+      "type_count": 96,
+      "token_count": 193,
       "top_examples": [
         [
           "gönükdirilen",
           23
         ],
         [
-          "ösdürmek",
-          21
-        ],
-        [
-          "ösdürmegiň",
-          15
-        ],
-        [
-          "ösdürmäge",
-          13
-        ],
-        [
           "ýöriteleşdirilen",
           11
-        ],
-        [
-          "kämilleşdirmek",
-          8
         ],
         [
           "ýokarlandyrmak",
@@ -241,10 +139,6 @@
         ],
         [
           "çuňlaşdyrmaga",
-          5
-        ],
-        [
-          "artdyrmak",
           5
         ],
         [
@@ -272,8 +166,28 @@
           3
         ],
         [
-          "özleşdirmek",
+          "işjeňleşdirmegi",
           3
+        ],
+        [
+          "ýokarlandyrylmagy",
+          3
+        ],
+        [
+          "birleşdirmek",
+          3
+        ],
+        [
+          "pugtalandyrmaga",
+          3
+        ],
+        [
+          "ösdürilmegine",
+          3
+        ],
+        [
+          "şertlendirýär",
+          2
         ]
       ]
     },
@@ -445,6 +359,92 @@
         ],
         [
           "seýitnazar",
+          1
+        ]
+      ]
+    },
+    "fiilimsi_zarf": {
+      "type_count": 23,
+      "token_count": 104,
+      "top_examples": [
+        [
+          "alnyp",
+          38
+        ],
+        [
+          "ynanyşmak",
+          28
+        ],
+        [
+          "diýlip",
+          8
+        ],
+        [
+          "ynanyşmagy",
+          5
+        ],
+        [
+          "girizilmegi",
+          3
+        ],
+        [
+          "hödürlenilýär",
+          2
+        ],
+        [
+          "döredilmegi",
+          2
+        ],
+        [
+          "gurlup",
+          2
+        ],
+        [
+          "bellenilýär",
+          2
+        ],
+        [
+          "ýetilýär",
+          1
+        ],
+        [
+          "berlip",
+          1
+        ],
+        [
+          "giňeldilýär",
+          1
+        ],
+        [
+          "girizilýär",
+          1
+        ],
+        [
+          "rilip",
+          1
+        ],
+        [
+          "deňelýär",
+          1
+        ],
+        [
+          "hormatlanylýan",
+          1
+        ],
+        [
+          "döredilýär",
+          1
+        ],
+        [
+          "boşadylyp",
+          1
+        ],
+        [
+          "nahaýýan",
+          1
+        ],
+        [
+          "sarpalanýan",
           1
         ]
       ]
@@ -662,10 +662,6 @@
       22
     ],
     [
-      "ösdürmek",
-      21
-    ],
-    [
       "üstünlikli",
       21
     ],
@@ -676,14 +672,6 @@
     [
       "other",
       19
-    ],
-    [
-      "geçirmek",
-      18
-    ],
-    [
-      "ýazylmak",
-      18
     ],
     [
       "galkynyşy",
@@ -698,10 +686,6 @@
       16
     ],
     [
-      "goramak",
-      16
-    ],
-    [
       "and",
       16
     ],
@@ -711,10 +695,6 @@
     ],
     [
       "köpugurly",
-      15
-    ],
-    [
-      "ösdürmegiň",
       15
     ],
     [
@@ -739,10 +719,6 @@
     ],
     [
       "innowasion",
-      13
-    ],
-    [
-      "ösdürmäge",
       13
     ],
     [
@@ -794,19 +770,7 @@
       11
     ],
     [
-      "bermek",
-      11
-    ],
-    [
-      "edip",
-      11
-    ],
-    [
       "ryň",
-      10
-    ],
-    [
-      "edýän",
       10
     ],
     [
@@ -822,20 +786,12 @@
       10
     ],
     [
-      "goýmak",
-      10
-    ],
-    [
       "ösüşiň",
       10
     ],
     [
       "döwletara",
       10
-    ],
-    [
-      "etmäge",
-      9
     ],
     [
       "hilli",
@@ -848,18 +804,6 @@
     [
       "köptaraplaýyn",
       9
-    ],
-    [
-      "edilmegi",
-      9
-    ],
-    [
-      "geçirilmegi",
-      9
-    ],
-    [
-      "almak",
-      8
     ],
     [
       "lar",
@@ -886,19 +830,7 @@
       8
     ],
     [
-      "kämilleşdirmek",
-      8
-    ],
-    [
-      "bellemek",
-      8
-    ],
-    [
       "gurbangulyýewiç",
-      8
-    ],
-    [
-      "ulanmaga",
       8
     ],
     [
@@ -926,14 +858,6 @@
       7
     ],
     [
-      "eden",
-      7
-    ],
-    [
-      "berkitmäge",
-      6
-    ],
-    [
       "içine",
       6
     ],
@@ -946,15 +870,7 @@
       6
     ],
     [
-      "döretmek",
-      6
-    ],
-    [
       "paýtagtymyzyň",
-      6
-    ],
-    [
-      "geçirmäge",
       6
     ],
     [
@@ -982,10 +898,6 @@
       6
     ],
     [
-      "çekmek",
-      6
-    ],
-    [
       "arkadagly",
       6
     ],
@@ -995,10 +907,6 @@
     ],
     [
       "açylyş",
-      6
-    ],
-    [
-      "berkitmek",
       6
     ],
     [
@@ -1020,6 +928,98 @@
     [
       "dyr",
       5
+    ],
+    [
+      "pugtalandyrmak",
+      5
+    ],
+    [
+      "meýilleşdirilýän",
+      5
+    ],
+    [
+      "şoňa",
+      5
+    ],
+    [
+      "ýokarlandyrmaga",
+      5
+    ],
+    [
+      "parlamentara",
+      5
+    ],
+    [
+      "çuňlaşdyrmaga",
+      5
+    ],
+    [
+      "bolşy",
+      5
+    ],
+    [
+      "biridir",
+      5
+    ],
+    [
+      "kafedrasynyň",
+      5
+    ],
+    [
+      "toplumlaýyn",
+      5
+    ],
+    [
+      "döredilen",
+      5
+    ],
+    [
+      "ýetiriji",
+      5
+    ],
+    [
+      "gatnaşmagynda",
+      5
+    ],
+    [
+      "ynanyşmagy",
+      5
+    ],
+    [
+      "şawkat",
+      5
+    ],
+    [
+      "kar",
+      5
+    ],
+    [
+      "kararnamanyň",
+      5
+    ],
+    [
+      "ugry",
+      5
+    ],
+    [
+      "jemleýji",
+      5
+    ],
+    [
+      "gyň",
+      4
+    ],
+    [
+      "dikeldilýän",
+      4
+    ],
+    [
+      "dörän",
+      4
+    ],
+    [
+      "riň",
+      4
     ]
   ]
 }

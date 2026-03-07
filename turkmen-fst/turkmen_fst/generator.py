@@ -391,13 +391,14 @@ class VerbGenerator:
                 ek = "man" if quality == "yogyn" else "män"
                 return govde + ek, [("NEGATION+TENSE", ek)], False
             else:
+                g = self._fiil_yumusama(govde)
                 if ends_vowel:
                     ek = "p"
-                elif self._tek_heceli_dodak(govde):
+                elif self._tek_heceli_dodak(g):
                     ek = "up" if quality == "yogyn" else "üp"
                 else:
                     ek = "yp" if quality == "yogyn" else "ip"
-                return govde + ek, [("TENSE", ek)], False
+                return g + ek, [("TENSE", ek)], False
 
         elif sub == "geljek":
             ek = "jak" if quality == "yogyn" else "jek"
@@ -821,12 +822,14 @@ class VerbGenerator:
 
         elif tense == "13":
             # Hal işlik (converb): kök + yp/ip/up/üp/p (neg: man/män)
+            # Fiil yumuşaması: et→ed, git→gid (ünlü başlayan ek öncesi)
             if morphemes and morphemes[-1][0] == "NEGATION":
                 morphemes.pop()
             neg_suffix = ""
             if negative:
                 suffix = "man" if quality == "yogyn" else "män"
             else:
+                govde = self._fiil_yumusama(govde)
                 if ends_vowel:
                     suffix = "p"
                 elif self._tek_heceli_dodak(govde):
@@ -844,12 +847,14 @@ class VerbGenerator:
 
         elif tense == "14":
             # Öten ortak işlik (past participle): kök + an/en (neg: madyk/medik)
+            # Fiil yumuşaması: et→ed+en=eden, git→gid+en=giden
             if morphemes and morphemes[-1][0] == "NEGATION":
                 morphemes.pop()
             neg_suffix = ""
             if negative:
                 suffix = "madyk" if quality == "yogyn" else "medik"
             else:
+                govde = self._fiil_yumusama(govde)
                 if ends_vowel:
                     suffix = "n"
                 else:
@@ -865,12 +870,14 @@ class VerbGenerator:
 
         elif tense == "15":
             # Häzirki ortak işlik (present participle): kök + ýan/ýän (neg: maýan/meýän)
+            # Fiil yumuşaması: et→ed+ýän=edýän
             if morphemes and morphemes[-1][0] == "NEGATION":
                 morphemes.pop()
             neg_suffix = ""
             if negative:
                 suffix = "maýan" if quality == "yogyn" else "meýän"
             else:
+                govde = self._fiil_yumusama(govde)
                 suffix = "ýan" if quality == "yogyn" else "ýän"
             morphemes.append(("PARTICIPLE", suffix))
             return GenerationResult(
