@@ -32090,3 +32090,12 @@ döwletara	%<adj%>
 halkbank	%<np%>
 köpugur	%<n%>
 şunda	%<adv%>
+binýatlaýyn	%<adj%>
+enjamlaýyn	%<adj%>
+köptaraplaýyn	%<adj%>
+maksatnamalaýyn	%<adj%>
+mazmunlaýyn	%<adj%>
+möwsümleýin	%<adj%>
+sebitleýin	%<adj%>
+toplumlaýyn	%<adj%>
+üçtaraplaýyn	%<adj%>

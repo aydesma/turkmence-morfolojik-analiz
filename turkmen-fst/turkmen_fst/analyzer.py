@@ -919,6 +919,217 @@ class MorphologicalAnalyzer:
         return results
 
     # ------------------------------------------------------------------
+    #  ZAMİR PARADİGMASI  (Şahıs + İşaret zamirleri)
+    # ------------------------------------------------------------------
+    # Tabaklar §241: Şahıs zamirlerinin çekimi
+    # Tabaklar §243: İşaret zamirlerinin çekimi
+    _PRONOUN_PARADIGM: dict[str, dict] = {
+        # ═══ ŞAHİS ZAMİRLERİ  (men / sen / biz / siz) ═══
+        # ol → işaret zamiri olarak da kullanılır, aşağıda
+        # yalın
+        "men":    {"stem": "men", "case": None, "plural": False},
+        "sen":    {"stem": "sen", "case": None, "plural": False},
+        "biz":    {"stem": "biz", "case": None, "plural": False},
+        "siz":    {"stem": "siz", "case": None, "plural": False},
+        # ilgi (genitif)
+        "meniň":  {"stem": "men", "case": "İlgi",    "suf": "iň",   "code": "A₂", "plural": False},
+        "seniň":  {"stem": "sen", "case": "İlgi",    "suf": "iň",   "code": "A₂", "plural": False},
+        "biziň":  {"stem": "biz", "case": "İlgi",    "suf": "iň",   "code": "A₂", "plural": False},
+        "siziň":  {"stem": "siz", "case": "İlgi",    "suf": "iň",   "code": "A₂", "plural": False},
+        # belirtme (akkuzatif)
+        "meni":   {"stem": "men", "case": "Belirtme", "suf": "i",    "code": "A₄", "plural": False},
+        "seni":   {"stem": "sen", "case": "Belirtme", "suf": "i",    "code": "A₄", "plural": False},
+        "bizi":   {"stem": "biz", "case": "Belirtme", "suf": "i",    "code": "A₄", "plural": False},
+        "sizi":   {"stem": "siz", "case": "Belirtme", "suf": "i",    "code": "A₄", "plural": False},
+        # yönelme (datif) — men→maňa, sen→saňa düzensiz
+        "maňa":   {"stem": "men", "case": "Yönelme",  "suf": "ňa",   "code": "A₃", "plural": False},
+        "saňa":   {"stem": "sen", "case": "Yönelme",  "suf": "ňa",   "code": "A₃", "plural": False},
+        "bize":   {"stem": "biz", "case": "Yönelme",  "suf": "e",    "code": "A₃", "plural": False},
+        "size":   {"stem": "siz", "case": "Yönelme",  "suf": "e",    "code": "A₃", "plural": False},
+        # bulunma (lokatif)
+        "mende":  {"stem": "men", "case": "Bulunma",  "suf": "de",   "code": "A₅", "plural": False},
+        "sende":  {"stem": "sen", "case": "Bulunma",  "suf": "de",   "code": "A₅", "plural": False},
+        "bizde":  {"stem": "biz", "case": "Bulunma",  "suf": "de",   "code": "A₅", "plural": False},
+        "sizde":  {"stem": "siz", "case": "Bulunma",  "suf": "de",   "code": "A₅", "plural": False},
+        # çıkma (ablatif)
+        "menden": {"stem": "men", "case": "Çıkma",    "suf": "den",  "code": "A₆", "plural": False},
+        "senden": {"stem": "sen", "case": "Çıkma",    "suf": "den",  "code": "A₆", "plural": False},
+        "bizden": {"stem": "biz", "case": "Çıkma",    "suf": "den",  "code": "A₆", "plural": False},
+        "sizden": {"stem": "siz", "case": "Çıkma",    "suf": "den",  "code": "A₆", "plural": False},
+        # ═══ İŞARET ZAMİRLERİ  (bu / şu / ol / şol) ═══
+        # Not: "bu" → oblique kök "mun-", "şu" → "şun-", "ol" → "on-", "şol" → "şon-"
+        # tekil — yalın
+        "bu":     {"stem": "bu",  "case": None,  "plural": False},
+        "şu":     {"stem": "şu",  "case": None,  "plural": False},
+        "ol":     {"stem": "ol",  "case": None,  "plural": False},
+        "şol":    {"stem": "şol", "case": None,  "plural": False},
+        # tekil — ilgi (genitif)
+        "munuň":  {"stem": "bu",  "case": "İlgi",    "suf": "nuň",  "code": "A₂", "plural": False},
+        "şunuň":  {"stem": "şu",  "case": "İlgi",    "suf": "nuň",  "code": "A₂", "plural": False},
+        "onuň":   {"stem": "ol",  "case": "İlgi",    "suf": "nuň",  "code": "A₂", "plural": False},
+        "şonuň":  {"stem": "şol", "case": "İlgi",    "suf": "nuň",  "code": "A₂", "plural": False},
+        # tekil — belirtme (akkuzatif)
+        "muny":   {"stem": "bu",  "case": "Belirtme", "suf": "ny",   "code": "A₄", "plural": False},
+        "şuny":   {"stem": "şu",  "case": "Belirtme", "suf": "ny",   "code": "A₄", "plural": False},
+        "ony":    {"stem": "ol",  "case": "Belirtme", "suf": "ny",   "code": "A₄", "plural": False},
+        "şony":   {"stem": "şol", "case": "Belirtme", "suf": "ny",   "code": "A₄", "plural": False},
+        # tekil — yönelme (datif)
+        "muňa":   {"stem": "bu",  "case": "Yönelme",  "suf": "ňa",   "code": "A₃", "plural": False},
+        "şuňa":   {"stem": "şu",  "case": "Yönelme",  "suf": "ňa",   "code": "A₃", "plural": False},
+        "oňa":    {"stem": "ol",  "case": "Yönelme",  "suf": "ňa",   "code": "A₃", "plural": False},
+        "şoňa":   {"stem": "şol", "case": "Yönelme",  "suf": "ňa",   "code": "A₃", "plural": False},
+        # tekil — bulunma (lokatif)
+        "munda":  {"stem": "bu",  "case": "Bulunma",  "suf": "nda",  "code": "A₅", "plural": False},
+        "şunda":  {"stem": "şu",  "case": "Bulunma",  "suf": "nda",  "code": "A₅", "plural": False},
+        "onda":   {"stem": "ol",  "case": "Bulunma",  "suf": "nda",  "code": "A₅", "plural": False},
+        "şonda":  {"stem": "şol", "case": "Bulunma",  "suf": "nda",  "code": "A₅", "plural": False},
+        # tekil — çıkma (ablatif)
+        "mundan": {"stem": "bu",  "case": "Çıkma",    "suf": "ndan", "code": "A₆", "plural": False},
+        "şundan": {"stem": "şu",  "case": "Çıkma",    "suf": "ndan", "code": "A₆", "plural": False},
+        "ondan":  {"stem": "ol",  "case": "Çıkma",    "suf": "ndan", "code": "A₆", "plural": False},
+        "şondan": {"stem": "şol", "case": "Çıkma",    "suf": "ndan", "code": "A₆", "plural": False},
+        # tekil — eşitlik
+        "munça":  {"stem": "bu",  "case": "Eşitlik",  "suf": "nça",  "code": "+çA", "plural": False},
+        "şunça":  {"stem": "şu",  "case": "Eşitlik",  "suf": "nça",  "code": "+çA", "plural": False},
+        "onça":   {"stem": "ol",  "case": "Eşitlik",  "suf": "nça",  "code": "+çA", "plural": False},
+        "şonça":  {"stem": "şol", "case": "Eşitlik",  "suf": "nça",  "code": "+çA", "plural": False},
+        # çoğul — yalın
+        "bular":  {"stem": "bu",  "case": None,  "plural": True},
+        "şular":  {"stem": "şu",  "case": None,  "plural": True},
+        "olar":   {"stem": "ol",  "case": None,  "plural": True},
+        "şolar":  {"stem": "şol", "case": None,  "plural": True},
+        # çoğul — ilgi
+        "bularyň":  {"stem": "bu",  "case": "İlgi", "suf": "yň", "code": "A₂", "plural": True},
+        "şularyň":  {"stem": "şu",  "case": "İlgi", "suf": "yň", "code": "A₂", "plural": True},
+        "olaryň":   {"stem": "ol",  "case": "İlgi", "suf": "yň", "code": "A₂", "plural": True},
+        "şolaryň":  {"stem": "şol", "case": "İlgi", "suf": "yň", "code": "A₂", "plural": True},
+        # çoğul — belirtme
+        "bulary":   {"stem": "bu",  "case": "Belirtme", "suf": "y", "code": "A₄", "plural": True},
+        "şulary":   {"stem": "şu",  "case": "Belirtme", "suf": "y", "code": "A₄", "plural": True},
+        "olary":    {"stem": "ol",  "case": "Belirtme", "suf": "y", "code": "A₄", "plural": True},
+        "şolary":   {"stem": "şol", "case": "Belirtme", "suf": "y", "code": "A₄", "plural": True},
+        # çoğul — yönelme
+        "bulara":   {"stem": "bu",  "case": "Yönelme", "suf": "a", "code": "A₃", "plural": True},
+        "şulara":   {"stem": "şu",  "case": "Yönelme", "suf": "a", "code": "A₃", "plural": True},
+        "olara":    {"stem": "ol",  "case": "Yönelme", "suf": "a", "code": "A₃", "plural": True},
+        "şolara":   {"stem": "şol", "case": "Yönelme", "suf": "a", "code": "A₃", "plural": True},
+        # çoğul — bulunma
+        "bularda":  {"stem": "bu",  "case": "Bulunma", "suf": "da", "code": "A₅", "plural": True},
+        "şularda":  {"stem": "şu",  "case": "Bulunma", "suf": "da", "code": "A₅", "plural": True},
+        "olarda":   {"stem": "ol",  "case": "Bulunma", "suf": "da", "code": "A₅", "plural": True},
+        "şolarda":  {"stem": "şol", "case": "Bulunma", "suf": "da", "code": "A₅", "plural": True},
+        # çoğul — çıkma
+        "bulardan": {"stem": "bu",  "case": "Çıkma", "suf": "dan", "code": "A₆", "plural": True},
+        "şulardan": {"stem": "şu",  "case": "Çıkma", "suf": "dan", "code": "A₆", "plural": True},
+        "olardan":  {"stem": "ol",  "case": "Çıkma", "suf": "dan", "code": "A₆", "plural": True},
+        "şolardan": {"stem": "şol", "case": "Çıkma", "suf": "dan", "code": "A₆", "plural": True},
+    }
+
+    def parse_pronoun(self, word: str) -> list[AnalysisResult]:
+        """
+        İşaret zamiri çözümlemesi (Tabaklar §243).
+        bu/şu/ol/şol + hal eki → mundan, şoňa, olaryň vb.
+        """
+        w = word.lower().strip()
+        info = self._PRONOUN_PARADIGM.get(w)
+        if info is None:
+            return []
+
+        stem = info["stem"]
+        case_name = info.get("case")
+        plural = info["plural"]
+
+        # Şahıs vs İşaret zamiri ayrımı
+        _SAHIS = {"men", "sen", "biz", "siz"}
+        pron_label = "Şahıs zamiri" if stem in _SAHIS else "İşaret zamiri"
+
+        suffixes = []
+        parts = [f"{stem.capitalize()} ({pron_label})"]
+
+        if plural:
+            suffixes.append({"suffix": "lar", "type": "Çoğul", "code": "S2"})
+            parts.append("lar (Çoğul)")
+
+        if case_name:
+            suf = info["suf"]
+            code = info["code"]
+            suffixes.append({"suffix": suf, "type": case_name, "code": code})
+            parts.append(f"{suf} ({case_name})")
+
+        return [AnalysisResult(
+            success=True,
+            original=word,
+            stem=stem.capitalize(),
+            suffixes=suffixes,
+            breakdown=" + ".join(parts),
+            word_type="pronoun"
+        )]
+
+    # ------------------------------------------------------------------
+    #  KISALTMA + EK  (BMG-niň, ÝUNESKO-nyň, ABŞ-da vb.)
+    # ------------------------------------------------------------------
+    # Bilinen Türkmen hal ekleri — kısaltmaya eklenebilecek son-ekler
+    _ABBR_SUFFIX_MAP: list[tuple[str, str, str]] = [
+        # (son-ek, hal adı, kod)  — uzundan kısaya sıralı
+        ("laryň",  "İlgi (çoğul)",    "A₂"),
+        ("lary",   "Belirtme (çoğul)", "A₄"),
+        ("lara",   "Yönelme (çoğul)",  "A₃"),
+        ("larda",  "Bulunma (çoğul)",  "A₅"),
+        ("lardan", "Çıkma (çoğul)",    "A₆"),
+        ("laryň",  "İlgi (çoğul)",    "A₂"),
+        ("niň",    "İlgi",            "A₂"),
+        ("nyň",    "İlgi",            "A₂"),
+        ("nuň",    "İlgi",            "A₂"),
+        ("nüň",    "İlgi",            "A₂"),
+        ("na",     "Yönelme",         "A₃"),
+        ("ne",     "Yönelme",         "A₃"),
+        ("ny",     "Belirtme",        "A₄"),
+        ("ni",     "Belirtme",        "A₄"),
+        ("da",     "Bulunma",         "A₅"),
+        ("de",     "Bulunma",         "A₅"),
+        ("dan",    "Çıkma",           "A₆"),
+        ("den",    "Çıkma",           "A₆"),
+        ("daky",   "Aitlik",          "+dAky"),
+        ("däki",   "Aitlik",          "+dAky"),
+    ]
+
+    def parse_abbreviation(self, word: str) -> list[AnalysisResult]:
+        """
+        Kısaltma+ek çözümlemesi.
+        BMG-niň → BMG (Kısaltma) + niň (İlgi)
+        """
+        w = word.strip()
+        if "-" not in w:
+            return []
+
+        dash = w.index("-")
+        left = w[:dash]
+        right = w[dash+1:]
+
+        # Sol taraf büyük harf kısaltma olmalı (orijinal büyüklük kontrolü)
+        left_upper = left.upper()
+        if len(left) < 2 or left.lower() == left:
+            # lowercase girmiş olabilir (tokenizer lowercase yapar)
+            # o zaman sağ tarafın ek olup olmadığını kontrol et
+            pass
+
+        # lowercase'den gelebilir: bmg-niň → BMG-niň
+        right_lower = right.lower()
+        for suf, label, code in self._ABBR_SUFFIX_MAP:
+            if right_lower == suf:
+                abbr = left.upper()
+                return [AnalysisResult(
+                    success=True,
+                    original=word,
+                    stem=abbr,
+                    suffixes=[{"suffix": suf, "type": label, "code": code}],
+                    breakdown=f"{abbr} (Kısaltma) + {suf} ({label})",
+                    word_type="noun"
+                )]
+
+        return []
+
+    # ------------------------------------------------------------------
     #  ANA GİRİŞ NOKTASI
     # ------------------------------------------------------------------
 
@@ -994,6 +1205,12 @@ class MorphologicalAnalyzer:
 
         all_results = []
 
+        # Kısaltma+ek (BMG-niň, ÝUNESKO-nyň vb.)
+        if "-" in word:
+            abbr_results = self.parse_abbreviation(word)
+            if abbr_results:
+                return MultiAnalysisResult(original=word, results=abbr_results)
+
         # İsim olarak çözümle
         all_results.extend(self.parse_noun(word))
 
@@ -1008,6 +1225,9 @@ class MorphologicalAnalyzer:
 
         # Yapım ekleri (-lI, -lIk, -sIz, -çI, -dAş)
         all_results.extend(self.parse_derivation(word))
+
+        # İşaret zamirleri (bu/şu/ol/şol paradigması)
+        all_results.extend(self.parse_pronoun(word))
 
         # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
         seen_breakdowns = set()
@@ -1025,12 +1245,15 @@ class MorphologicalAnalyzer:
             stem_lower = r.stem.lower()
             # 1) Tamamen eşleşen kök (bare root) en yüksek
             is_bare_root = len(r.suffixes) == 0 and stem_lower == w_lower
-            # 2) Ek içeren fiil çözümlemeleri (değerli analiz)
+            # 2) Zamir çözümlemeleri (paradigma tablosundan gelen kesin eşleşme)
+            is_pronoun = r.word_type == "pronoun"
+            # 3) Ek içeren fiil çözümlemeleri (değerli analiz)
             is_verb_with_suffix = r.word_type == "verb" and len(r.suffixes) > 0
-            # 3) Hayalet ek: ek var ama kök == giriş kelimesi (form değişmemiş)
+            # 4) Hayalet ek: ek var ama kök == giriş kelimesi (form değişmemiş)
             is_ghost = len(r.suffixes) > 0 and stem_lower == w_lower
             return (
-                0 if is_bare_root else (1 if is_verb_with_suffix else (3 if is_ghost else 2)),
+                0 if is_bare_root else (0 if is_pronoun else (1 if is_verb_with_suffix else (3 if is_ghost else 2))),
+                0 if is_pronoun else 1,  # zamir çözümlemeleri aynı seviyede öne çıksın
                 -len(r.stem),       # uzun kök önce
                 -len(r.suffixes),   # çok ekli sonra
             )

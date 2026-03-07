@@ -86,6 +86,17 @@ def tokenize(text: str) -> list[str]:
             tokens.append(w_lower)
             continue
 
+        # Kısaltma+ek kalıbı: BMG-niň, ÝUNESKO-nyň, ABŞ-da vb.
+        # Sol taraf TAMAMEN büyük harf (2+ karakter), sağ taraf küçük harf eki
+        if "-" in w_lower:
+            _dash = word.index("-")
+            _left = word[:_dash]
+            _right = word[_dash+1:]
+            if (len(_left) >= 2 and _left == _left.upper()
+                    and _right and _right == _right.lower()):
+                tokens.append(w_lower)       # tek token olarak tut
+                continue
+
         # Tireli bileşik: parçalara ayır ve her birini ayrı token olarak ekle
         if "-" in w_lower:
             parts = [p.strip() for p in w_lower.split("-") if p.strip()]
