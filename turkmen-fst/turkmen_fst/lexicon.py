@@ -273,7 +273,11 @@ class Lexicon:
                 features["exception_drop"] = True
                 features["dropped_form"] = dropped_form
             elif token == "softening":
-                features["softening"] = True
+                # SOFTENING_EXCEPTIONS listesi her zaman önceliklidir
+                if word.lower() in SOFTENING_EXCEPTIONS:
+                    features["softening"] = False
+                else:
+                    features["softening"] = True
             elif token == "no_softening":
                 features["softening"] = False
             elif token.startswith("homonym:"):

@@ -228,6 +228,9 @@ class NounGenerator:
                     yol_eki = degisen
                 else:
                     ek = "a" if nit == "yogyn" else "e"
+                    govde = PhonologyRules.apply_vowel_drop(govde, ek)
+                    if yumusama_izni:
+                        govde = PhonologyRules.apply_consonant_softening(govde)
 
             elif case == "A4":  # Belirtme hali
                 if n_kay:

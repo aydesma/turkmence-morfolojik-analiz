@@ -66,6 +66,10 @@ def _build_two_letter_whitelist(lexicon: Lexicon | None = None):
 def tokenize(text: str) -> list[str]:
     tokens = []
 
+    # 0. Soft-hyphen (U+00AD) temizle — corpus'ta 47K+ görünmez kesme işareti var
+    #    Bu karakter kelimeleri ortadan bölüyor: hyzmatdaş\u00adlyk → 2 token
+    text = text.replace("\u00ad", "")
+
     # 1. Sıra sayılarını ön-işle: "2024-nji" → "2024nji" (tire kaldır)
     #    Böylece ana regex tarafından yakalanmaz, ayrı ele alınır.
     ordinals_found: list[str] = []

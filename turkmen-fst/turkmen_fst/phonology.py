@@ -64,14 +64,23 @@ SOFTENING_EXCEPTIONS = frozenset({
     "ymmat", "zynat", "zähmet", "ähmiýet", "döwlet",
     "hökümet", "şert", "hat", "halk", "wagt",
     "erk", "ganat", "tarap", "ykdysadyýet", "hakyk",
+    "şöhrat", "hereket", "taglymat", "tebigat", "sahawat",
+    "dykgat", "gaýrat", "hümmet", "babat", "gymmat",
+    "müdiriýet", "häsiýet", "edebiýat", "nazaryýet", "şahsyýet",
+    "iýmit", "nebit", "möhlet",
     # --- Avrupa dillerinden alıntılar ---
     "prezident", "parlament", "diplomat", "institut", "internet",
     "konsert", "komitet", "sport", "bank", "import",
     "býujet", "žurnalist", "tehnik", "agrotehnik", "etik",
+    "kabinet", "uniwersitet", "gazet", "fakultet", "internat",
+    "artist", "format", "trest", "eksport", "departament",
+    "wokalist", "maşinist", "oblast", "kombinat", "senat",
+    "çempionat", "assistent", "kondensat", "laborant", "kandidat",
+    "fizik", "keramik", "himik", "simfonik", "tematik", "solist",
     # --- Takvim / özel isimler ---
     "mart", "awgust", "türk",
     # --- Diğer ---
-    "ştat", "üst", "öňk", "gallaç", "ik",
+    "ştat", "üst", "öňk", "gallaç", "ik", "paýtagt",
 })
 
 

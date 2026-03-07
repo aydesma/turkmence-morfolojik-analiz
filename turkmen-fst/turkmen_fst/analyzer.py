@@ -1205,6 +1205,17 @@ class MorphologicalAnalyzer:
 
         all_results = []
 
+        # ── Kopula (bildiriş) -dIr soyma ──
+        # degişlidir → degişli + dir,  baglanyşyklydyr → baglanyşykly + dyr
+        _COPULA_SUFFIXES = ["dyr", "dir", "dur", "dür"]
+        copula_base = None
+        copula_suf = None
+        for _cop in _COPULA_SUFFIXES:
+            if w_lower.endswith(_cop) and len(w_lower) > len(_cop) + 2:
+                copula_base = w_lower[:-len(_cop)]
+                copula_suf = _cop
+                break
+
         # Kısaltma+ek (BMG-niň, ÝUNESKO-nyň vb.)
         if "-" in word:
             abbr_results = self.parse_abbreviation(word)
@@ -1228,6 +1239,27 @@ class MorphologicalAnalyzer:
 
         # İşaret zamirleri (bu/şu/ol/şol paradigması)
         all_results.extend(self.parse_pronoun(word))
+
+        # ── Kopula denemesi: kelime -dIr ile bitiyorsa, soyup altını analiz et ──
+        if copula_base and not all_results:
+            sub = self.parse(copula_base)
+            if sub.results and sub.results[0].word_type != "unknown":
+                for sr in sub.results:
+                    if sr.word_type == "unknown":
+                        continue
+                    new_suffixes = list(sr.suffixes) + [
+                        {"suffix": copula_suf, "type": "Bildiriş", "code": "-dIr"}
+                    ]
+                    new_breakdown = sr.breakdown + f" + {copula_suf} (Bildiriş)"
+                    all_results.append(AnalysisResult(
+                        success=True,
+                        original=word,
+                        stem=sr.stem,
+                        suffixes=new_suffixes,
+                        breakdown=new_breakdown,
+                        word_type=sr.word_type,
+                        meaning=sr.meaning
+                    ))
 
         # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
         seen_breakdowns = set()
