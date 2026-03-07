@@ -90,7 +90,7 @@ VOWEL_DROP_CANDIDATES = frozenset({
     "burun", "alyn", "agyz", "gobek", "ogul", "erin",
     "bagyr", "sabyr", "kömür", "sygyr", "deňiz",
     "goýun", "boýun", "howuz", "tomus", "tizir",
-    "köwüş", "orun", "garyn", "gelin"
+    "köwüş", "orun", "garyn", "gelin", "döwür"
 })
 
 # Özel yuvarlaklaşma listesi (y/i → u/ü dönüşümü)

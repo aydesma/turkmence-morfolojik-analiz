@@ -76,7 +76,7 @@ DUSME_ADAYLARI = {
     "burun", "alyn", "agyz", "gobek", "ogul", "erin",
     "bagyr", "sabyr", "kömür", "sygyr", "deňiz",
     "goýun", "boýun", "howuz", "tomus", "tizir",
-    "köwüş", "orun", "garyn", "gelin"
+    "köwüş", "orun", "garyn", "gelin", "döwür"
 }
 
 # Özel yuvarlaklaşma listesi (y/i → u/ü dönüşümü)
@@ -267,12 +267,18 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
         n_kay = iyelik == "A3"
 
         # Orta Hece Yuvarlaklaşma (Ogluny, Burnuny)
-        if n_kay and kok_yuvarlak and govde[-1] in "yi":
+        # Sadece ünlü düşme / yuvarlaklaşma adaylarında uygulanır (ogul, burun vb.)
+        kok_lower = kok.lower()
+        yuvarlaklasma_adayi = (kok_lower in DUSME_ADAYLARI or kok_lower in YUVARLAKLASMA_LISTESI)
+        if n_kay and kok_yuvarlak and govde[-1] in "yi" and yuvarlaklasma_adayi:
             govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
+
+        # Yuvarlaklaşma sonrası niteligi güncelle
+        nit = unlu_niteligi(govde)
 
         if hal == "A2":  # İlgi hali
             if n_kay:
-                ek = "nyň"
+                ek = "nyň" if nit == "yogyn" else "niň"
             elif is_unlu:
                 ek = "nyň" if nit == "yogyn" else "niň"
             else:
@@ -308,10 +314,16 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
                     govde = tam_yumusama(govde)
 
         elif hal == "A5":  # Bulunma hali
-            ek = "nda" if n_kay else ("da" if nit == "yogyn" else "de")
+            if n_kay:
+                ek = "nda" if nit == "yogyn" else "nde"
+            else:
+                ek = "da" if nit == "yogyn" else "de"
 
         elif hal == "A6":  # Çıkma hali
-            ek = "ndan" if n_kay else ("dan" if nit == "yogyn" else "den")
+            if n_kay:
+                ek = "ndan" if nit == "yogyn" else "nden"
+            else:
+                ek = "dan" if nit == "yogyn" else "den"
 
         govde += ek
         yol.append(yol_eki if yol_eki is not None else ek)

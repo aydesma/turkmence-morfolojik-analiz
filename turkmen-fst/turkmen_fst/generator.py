@@ -191,13 +191,18 @@ class NounGenerator:
             # 3. iyelikten sonra n-kaynaştırma
             n_kay = possessive == "A3"
 
-            # Orta Hece Yuvarlaklaşma
-            if n_kay and kok_yuvarlak and govde[-1] in "yi":
+            # Orta Hece Yuvarlaklaşma — sadece ünlü düşme/yuvarlaklaşma adayları
+            from turkmen_fst.phonology import VOWEL_DROP_CANDIDATES, YUVARLAKLASMA_LISTESI as _YL
+            _yuv_adayi = (stem.lower() in VOWEL_DROP_CANDIDATES or stem.lower() in _YL)
+            if n_kay and kok_yuvarlak and govde[-1] in "yi" and _yuv_adayi:
                 govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
+
+            # Yuvarlaklaşma sonrası niteligi güncelle
+            nit = PhonologyRules.get_vowel_quality(govde)
 
             if case == "A2":  # İlgi hali
                 if n_kay:
-                    ek = "nyň"
+                    ek = "nyň" if nit == "yogyn" else "niň"
                 elif is_unlu:
                     ek = "nyň" if nit == "yogyn" else "niň"
                 else:
@@ -233,10 +238,16 @@ class NounGenerator:
                         govde = PhonologyRules.apply_consonant_softening(govde)
 
             elif case == "A5":  # Bulunma hali
-                ek = "nda" if n_kay else ("da" if nit == "yogyn" else "de")
+                if n_kay:
+                    ek = "nda" if nit == "yogyn" else "nde"
+                else:
+                    ek = "da" if nit == "yogyn" else "de"
 
             elif case == "A6":  # Çıkma hali
-                ek = "ndan" if n_kay else ("dan" if nit == "yogyn" else "den")
+                if n_kay:
+                    ek = "ndan" if nit == "yogyn" else "nden"
+                else:
+                    ek = "dan" if nit == "yogyn" else "den"
 
             govde += ek
             yol.append(yol_eki if yol_eki is not None else ek)
