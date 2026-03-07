@@ -1,0 +1,262 @@
+{
+  "build_date": "2026-03-02T02:13:19.923488",
+  "source": "metbugat.gov.tm",
+  "total_articles": 1000,
+  "total_words_approx": 656864,
+  "id_range": "3929..1816",
+  "tried": 2114,
+  "errors": 0,
+  "elapsed_seconds": 1441.8,
+  "articles": [
+    {
+      "id": 1911,
+      "words": 577,
+      "chars": 5218
+    },
+    {
+      "id": 1907,
+      "words": 158,
+      "chars": 1270
+    },
+    {
+      "id": 1906,
+      "words": 501,
+      "chars": 4604
+    },
+    {
+      "id": 1902,
+      "words": 567,
+      "chars": 5037
+    },
+    {
+      "id": 1901,
+      "words": 557,
+      "chars": 4831
+    },
+    {
+      "id": 1900,
+      "words": 584,
+      "chars": 5197
+    },
+    {
+      "id": 1899,
+      "words": 294,
+      "chars": 2499
+    },
+    {
+      "id": 1898,
+      "words": 68,
+      "chars": 572
+    },
+    {
+      "id": 1896,
+      "words": 615,
+      "chars": 5439
+    },
+    {
+      "id": 1895,
+      "words": 499,
+      "chars": 4459
+    },
+    {
+      "id": 1894,
+      "words": 53,
+      "chars": 440
+    },
+    {
+      "id": 1893,
+      "words": 48,
+      "chars": 418
+    },
+    {
+      "id": 1891,
+      "words": 459,
+      "chars": 4070
+    },
+    {
+      "id": 1889,
+      "words": 129,
+      "chars": 1129
+    },
+    {
+      "id": 1888,
+      "words": 101,
+      "chars": 901
+    },
+    {
+      "id": 1885,
+      "words": 1535,
+      "chars": 13979
+    },
+    {
+      "id": 1882,
+      "words": 129,
+      "chars": 1164
+    },
+    {
+      "id": 1880,
+      "words": 140,
+      "chars": 1224
+    },
+    {
+      "id": 1879,
+      "words": 59,
+      "chars": 506
+    },
+    {
+      "id": 1876,
+      "words": 566,
+      "chars": 4983
+    },
+    {
+      "id": 1874,
+      "words": 392,
+      "chars": 3442
+    },
+    {
+      "id": 1873,
+      "words": 88,
+      "chars": 798
+    },
+    {
+      "id": 1872,
+      "words": 54,
+      "chars": 473
+    },
+    {
+      "id": 1871,
+      "words": 50,
+      "chars": 447
+    },
+    {
+      "id": 1869,
+      "words": 1430,
+      "chars": 13125
+    },
+    {
+      "id": 1868,
+      "words": 586,
+      "chars": 5700
+    },
+    {
+      "id": 1867,
+      "words": 514,
+      "chars": 4615
+    },
+    {
+      "id": 1864,
+      "words": 523,
+      "chars": 4759
+    },
+    {
+      "id": 1862,
+      "words": 128,
+      "chars": 1159
+    },
+    {
+      "id": 1861,
+      "words": 106,
+      "chars": 963
+    },
+    {
+      "id": 1859,
+      "words": 274,
+      "chars": 2438
+    },
+    {
+      "id": 1857,
+      "words": 122,
+      "chars": 1061
+    },
+    {
+      "id": 1855,
+      "words": 530,
+      "chars": 4454
+    },
+    {
+      "id": 1854,
+      "words": 445,
+      "chars": 3827
+    },
+    {
+      "id": 1853,
+      "words": 1800,
+      "chars": 16780
+    },
+    {
+      "id": 1851,
+      "words": 123,
+      "chars": 1084
+    },
+    {
+      "id": 1850,
+      "words": 1476,
+      "chars": 13533
+    },
+    {
+      "id": 1849,
+      "words": 278,
+      "chars": 2483
+    },
+    {
+      "id": 1848,
+      "words": 224,
+      "chars": 1939
+    },
+    {
+      "id": 1847,
+      "words": 511,
+      "chars": 4595
+    },
+    {
+      "id": 1844,
+      "words": 296,
+      "chars": 2628
+    },
+    {
+      "id": 1843,
+      "words": 145,
+      "chars": 1307
+    },
+    {
+      "id": 1842,
+      "words": 370,
+      "chars": 3364
+    },
+    {
+      "id": 1841,
+      "words": 327,
+      "chars": 2551
+    },
+    {
+      "id": 1838,
+      "words": 653,
+      "chars": 6047
+    },
+    {
+      "id": 1831,
+      "words": 1559,
+      "chars": 14329
+    },
+    {
+      "id": 1830,
+      "words": 58,
+      "chars": 499
+    },
+    {
+      "id": 1829,
+      "words": 470,
+      "chars": 4334
+    },
+    {
+      "id": 1822,
+      "words": 64,
+      "chars": 586
+    },
+    {
+      "id": 1816,
+      "words": 524,
+      "chars": 4522
+    }
+  ]
+}

@@ -1,20 +1,21 @@
 {
-  "test_date": "2026-03-07T15:53:04.698927",
+  "test_date": "2026-03-07T16:31:01.456107",
   "corpus_file": "metbugat_corpus.txt",
   "total_corpus_words": 679142,
   "sample_size": 20000,
   "results": {
     "total_tokens": 20000,
     "total_types": 5517,
-    "recognized_tokens": 16289,
-    "unrecognized_tokens": 3711,
-    "recognized_types": 3733,
-    "unrecognized_types": 1784,
+    "recognized_tokens": 16291,
+    "unrecognized_tokens": 3709,
+    "recognized_types": 3734,
+    "unrecognized_types": 1783,
     "token_coverage_pct": 81.45,
-    "type_coverage_pct": 67.66,
+    "type_coverage_pct": 67.68,
     "pos_distribution": {
-      "noun": 3188,
-      "verb": 545
+      "noun": 3182,
+      "verb": 545,
+      "adjective": 7
     }
   },
   "error_categories": {
@@ -619,16 +620,6 @@
         [
           "edýändikleri",
           1
-        ]
-      ]
-    },
-    "sira_sayi": {
-      "type_count": 1,
-      "token_count": 2,
-      "top_examples": [
-        [
-          "ýedinji",
-          2
         ]
       ]
     }

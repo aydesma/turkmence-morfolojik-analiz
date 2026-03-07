@@ -1,0 +1,80 @@
+# Corpus Lab — Sözlük Değişiklik Günlüğü
+# Tarih: 2026-03-02
+# Bu dosya, corpus analizinden keşfedilen ve sözlüğe yansıtılan değişiklikleri kaydeder.
+#
+# Format:
+#   [TARİH] İŞLEM_TÜRÜ | kelime | eski_durum → yeni_durum | kaynak | not
+#
+# İŞLEM TÜRLERİ:
+#   SOFTENING_FIX  — yumuşama bayrağı düzeltmesi (softening → no_softening)
+#   NEW_WORD       — sözlüğe yeni kelime ekleme
+#   POS_FIX        — kelime türü düzeltmesi
+#   FEATURE_ADD    — yeni özellik ekleme
+#
+# ==============================================================================
+
+# ==============================================================================
+# [2026-03-02] SOFTENING_FIX — Corpus analizi ile keşfedilen 58 istisna kelime
+# Kaynak: metbugat.gov.tm (50 makale, 33153 token)
+# Araç: corpus_lab/scripts/discover_softening_exceptions.py
+# Rapor: corpus_lab/reports/softening_report.json
+# ==============================================================================
+
+[2026-03-02] SOFTENING_FIX | agrotehnik   | softening → no_softening | metbugat korpusu | Avrupa alıntısı, -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | alyhezret    | softening → no_softening | metbugat korpusu | Arapça alıntı, -t yumuşamaz
+[2026-03-02] SOFTENING_FIX | awgust       | softening → no_softening | metbugat korpusu | Avrupa alıntısı (Latince Augustus)
+[2026-03-02] SOFTENING_FIX | bank         | softening → no_softening | metbugat korpusu | Avrupa alıntısı, -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | býujet       | softening → no_softening | metbugat korpusu | Avrupa alıntısı (Fr. budget)
+[2026-03-02] SOFTENING_FIX | diplomat     | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | döwlet       | softening → no_softening | metbugat korpusu | Farsça alıntı (devlet)
+[2026-03-02] SOFTENING_FIX | erk          | softening → no_softening | metbugat korpusu | -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | etik         | softening → no_softening | metbugat korpusu | Avrupa alıntısı (ethic)
+[2026-03-02] SOFTENING_FIX | gallaç       | softening → no_softening | metbugat korpusu | -ç yumuşamaz
+[2026-03-02] SOFTENING_FIX | ganat        | softening → no_softening | metbugat korpusu | Arapça alıntı (kanat)
+[2026-03-02] SOFTENING_FIX | gudrat       | softening → no_softening | metbugat korpusu | Arapça alıntı (kudret)
+[2026-03-02] SOFTENING_FIX | hakyk        | softening → no_softening | metbugat korpusu | -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | hakykat      | softening → no_softening | metbugat korpusu | Arapça alıntı (hakikat)
+[2026-03-02] SOFTENING_FIX | halk         | softening → no_softening | metbugat korpusu | Arapça alıntı
+[2026-03-02] SOFTENING_FIX | hasabat      | softening → no_softening | metbugat korpusu | Arapça alıntı (hesabat)
+[2026-03-02] SOFTENING_FIX | hat          | softening → no_softening | metbugat korpusu | Arapça alıntı
+[2026-03-02] SOFTENING_FIX | hormat       | softening → no_softening | metbugat korpusu | Arapça alıntı (hürmet)
+[2026-03-02] SOFTENING_FIX | hyzmat       | softening → no_softening | metbugat korpusu | Arapça alıntı (hizmet)
+[2026-03-02] SOFTENING_FIX | hökümet      | softening → no_softening | metbugat korpusu | Arapça alıntı (hükümet)
+[2026-03-02] SOFTENING_FIX | ik           | softening → no_softening | metbugat korpusu | -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | ilat         | softening → no_softening | metbugat korpusu | Arapça alıntı
+[2026-03-02] SOFTENING_FIX | import       | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | institut     | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | internet     | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | jemgyýet     | softening → no_softening | metbugat korpusu | Arapça alıntı (cemaat/cemiyet)
+[2026-03-02] SOFTENING_FIX | kazyýet      | softening → no_softening | metbugat korpusu | Arapça alıntı (kaziye)
+[2026-03-02] SOFTENING_FIX | komitet      | softening → no_softening | metbugat korpusu | Avrupa alıntısı (Rus. komitet)
+[2026-03-02] SOFTENING_FIX | konsert      | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | kuwwat       | softening → no_softening | metbugat korpusu | Arapça alıntı (kuvvet)
+[2026-03-02] SOFTENING_FIX | mart         | softening → no_softening | metbugat korpusu | Avrupa alıntısı (Latince Martius)
+[2026-03-02] SOFTENING_FIX | maslahat     | softening → no_softening | metbugat korpusu | Arapça alıntı (maslahat)
+[2026-03-02] SOFTENING_FIX | medeniýet    | softening → no_softening | metbugat korpusu | Arapça alıntı (medeniyet)
+[2026-03-02] SOFTENING_FIX | parlament    | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | prezident    | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | raýat        | softening → no_softening | metbugat korpusu | Arapça alıntı
+[2026-03-02] SOFTENING_FIX | sebit        | softening → no_softening | metbugat korpusu | Arapça alıntı
+[2026-03-02] SOFTENING_FIX | sekretariat  | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | senagat      | softening → no_softening | metbugat korpusu | Arapça alıntı (sanayi)
+[2026-03-02] SOFTENING_FIX | sport        | softening → no_softening | metbugat korpusu | Avrupa alıntısı
+[2026-03-02] SOFTENING_FIX | sungat       | softening → no_softening | metbugat korpusu | Arapça alıntı (sanat)
+[2026-03-02] SOFTENING_FIX | syýasat      | softening → no_softening | metbugat korpusu | Arapça alıntı (siyaset)
+[2026-03-02] SOFTENING_FIX | tarap        | softening → no_softening | metbugat korpusu | Arapça alıntı (taraf)
+[2026-03-02] SOFTENING_FIX | tehnik       | softening → no_softening | metbugat korpusu | Avrupa alıntısı (teknik)
+[2026-03-02] SOFTENING_FIX | tilsimat     | softening → no_softening | metbugat korpusu | Arapça alıntı (tılsım)
+[2026-03-02] SOFTENING_FIX | türk         | softening → no_softening | metbugat korpusu | -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | wagt         | softening → no_softening | metbugat korpusu | Arapça alıntı (vakit)
+[2026-03-02] SOFTENING_FIX | welaýat      | softening → no_softening | metbugat korpusu | Arapça alıntı (vilayet)
+[2026-03-02] SOFTENING_FIX | ykdysadyýet  | softening → no_softening | metbugat korpusu | Arapça alıntı (iktisadiyet)
+[2026-03-02] SOFTENING_FIX | ymmat        | softening → no_softening | metbugat korpusu | Arapça alıntı (ümmet)
+[2026-03-02] SOFTENING_FIX | zynat        | softening → no_softening | metbugat korpusu | Arapça alıntı (ziynet)
+[2026-03-02] SOFTENING_FIX | zähmet       | softening → no_softening | metbugat korpusu | Arapça alıntı (zahmet)
+[2026-03-02] SOFTENING_FIX | ähmiýet      | softening → no_softening | metbugat korpusu | Arapça alıntı (ehemmiyet)
+[2026-03-02] SOFTENING_FIX | öňk          | softening → no_softening | metbugat korpusu | -k yumuşamaz
+[2026-03-02] SOFTENING_FIX | üst          | softening → no_softening | metbugat korpusu | Farsça alıntı (üst)
+[2026-03-02] SOFTENING_FIX | şert         | softening → no_softening | metbugat korpusu | Arapça alıntı (şart)
+[2026-03-02] SOFTENING_FIX | ştat         | softening → no_softening | metbugat korpusu | Avrupa alıntısı (Rus. shtat < Alm. Staat)
+[2026-03-02] SOFTENING_FIX | žurnalist    | softening → no_softening | metbugat korpusu | Avrupa alıntısı

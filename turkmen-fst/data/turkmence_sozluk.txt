@@ -11471,6 +11471,7 @@ segment	%<n%>	softening
 segmentasiýa	%<n%>
 segsenlik	%<n%>	softening
 sekans	%<n%>
+sekizinji	%<adj%>
 sekizgoçak	%<n%>	softening
 sekizgyraňlyk	%<n%>	softening
 sekizkeşd	%<n%>
@@ -14857,6 +14858,7 @@ züwwetdin	%<n%>
 ýaşçik	%<n%>	softening
 ýaşşik	%<n%>	softening
 ýedigen	%<n%>
+ýedinji	%<adj%>
 ýedilik	%<n%>	softening
 ýeditop	%<n%>	softening
 ýediýyllyk	%<n%>	softening

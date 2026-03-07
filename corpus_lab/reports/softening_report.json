@@ -1,0 +1,1293 @@
+{
+  "summary": {
+    "total_kptc": 6812,
+    "confirmed": 117,
+    "exceptions": 58,
+    "ambiguous": 2,
+    "no_evidence": 6635,
+    "corpus_tokens": 33153,
+    "corpus_unique": 5593,
+    "articles": 50
+  },
+  "exception_stems": [
+    "agrotehnik",
+    "alyhezret",
+    "awgust",
+    "bank",
+    "býujet",
+    "diplomat",
+    "döwlet",
+    "erk",
+    "etik",
+    "gallaç",
+    "ganat",
+    "gudrat",
+    "hakyk",
+    "hakykat",
+    "halk",
+    "hasabat",
+    "hat",
+    "hormat",
+    "hyzmat",
+    "hökümet",
+    "ik",
+    "ilat",
+    "import",
+    "institut",
+    "internet",
+    "jemgyýet",
+    "kazyýet",
+    "komitet",
+    "konsert",
+    "kuwwat",
+    "mart",
+    "maslahat",
+    "medeniýet",
+    "parlament",
+    "prezident",
+    "raýat",
+    "sebit",
+    "sekretariat",
+    "senagat",
+    "sport",
+    "sungat",
+    "syýasat",
+    "tarap",
+    "tehnik",
+    "tilsimat",
+    "türk",
+    "wagt",
+    "welaýat",
+    "ykdysadyýet",
+    "ymmat",
+    "zynat",
+    "zähmet",
+    "ähmiýet",
+    "öňk",
+    "üst",
+    "şert",
+    "ştat",
+    "žurnalist"
+  ],
+  "confirmed_stems": [
+    "abadançylyk",
+    "adamzat",
+    "agzybirlik",
+    "arabaglanyşyk",
+    "aragatnaşyk",
+    "arassalyk",
+    "arkalaşyk",
+    "asudalyk",
+    "açyklyk",
+    "aýratynlyk",
+    "aşgabat",
+    "bagtyýarlyk",
+    "barmak",
+    "baýrak",
+    "baýramçylyk",
+    "başlangyç",
+    "başlyk",
+    "behişt",
+    "bileleşik",
+    "binýat",
+    "birleşik",
+    "bitaraplyk",
+    "bolmak",
+    "buýsanç",
+    "bäsleşik",
+    "bölek",
+    "deňlik",
+    "doganlyk",
+    "dolanyşyk",
+    "dostluk",
+    "durnuklylyk",
+    "duşuşyk",
+    "edep",
+    "ekerançylyk",
+    "elýeterlilik",
+    "enelik",
+    "et",
+    "etmek",
+    "etrap",
+    "eýeçilik",
+    "garaşsyzlyk",
+    "gatnaşyk",
+    "geljek",
+    "goňşuçylyk",
+    "goşant",
+    "gulluk",
+    "gurluşyk",
+    "gurt",
+    "görmek",
+    "gözegçilik",
+    "güýç",
+    "harp",
+    "haryt",
+    "hasap",
+    "hasyllylyk",
+    "haç",
+    "hojalyk",
+    "howpsuzlyk",
+    "hukuk",
+    "hususyýetçilik",
+    "hyzmatdaşlyk",
+    "häkimlik",
+    "jebislik",
+    "jemgyýetçilik",
+    "jogapkärçilik",
+    "keşp",
+    "köneürgenç",
+    "künjek",
+    "lak",
+    "lukmançylyk",
+    "maksat",
+    "maldarçylyk",
+    "mekdep",
+    "ministrlik",
+    "mowzuk",
+    "mukaddeslik",
+    "myrat",
+    "mümkinçilik",
+    "müňýyllyk",
+    "onýyllyk",
+    "parahatçylyk",
+    "patyşalyk",
+    "pudak",
+    "raýdaşlyk",
+    "rehimdarlyk",
+    "ruhubelentlik",
+    "sagdynlyk",
+    "saglyk",
+    "sazlaşyk",
+    "serk",
+    "synanyşyk",
+    "syýahatçylyk",
+    "söhbetdeşlik",
+    "söýüjilik",
+    "sürt",
+    "tabşyryk",
+    "tanyşlyk",
+    "teklip",
+    "telekeçilik",
+    "tertip",
+    "toprak",
+    "umyt",
+    "ygtybarlylyk",
+    "ykdysat",
+    "ylalaşyk",
+    "yzygiderlilik",
+    "zolak",
+    "çagalyk",
+    "çakylyk",
+    "önümçilik",
+    "üpjünçilik",
+    "üstünlik",
+    "ýurt",
+    "ýyllyk",
+    "ýüpek",
+    "ýüpekçilik",
+    "ýüplük"
+  ],
+  "ambiguous_stems": [
+    "alt",
+    "at"
+  ],
+  "exceptions_detail": {
+    "agrotehnik": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "agrotehniki",
+          "freq": 9
+        },
+        {
+          "form": "belirtme",
+          "word": "agrotehniki",
+          "freq": 9
+        }
+      ],
+      "ending": "k"
+    },
+    "alyhezret": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "alyhezreti",
+          "freq": 29
+        },
+        {
+          "form": "belirtme",
+          "word": "alyhezreti",
+          "freq": 29
+        }
+      ],
+      "ending": "t"
+    },
+    "awgust": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "awgusty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "awgusty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "bank": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "banky",
+          "freq": 2
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "bankynyň",
+          "freq": 7
+        },
+        {
+          "form": "belirtme",
+          "word": "banky",
+          "freq": 2
+        }
+      ],
+      "ending": "k"
+    },
+    "býujet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "býujeti",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "býujetiň",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "býujeti",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "diplomat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "diplomaty",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "diplomatyň",
+          "freq": 3
+        },
+        {
+          "form": "belirtme",
+          "word": "diplomaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "döwlet": {
+      "evidence": [
+        {
+          "form": "ilgi",
+          "word": "döwletiň",
+          "freq": 26
+        }
+      ],
+      "ending": "t"
+    },
+    "erk": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "erki",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "erki",
+          "freq": 1
+        }
+      ],
+      "ending": "k"
+    },
+    "etik": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "etiki",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "etiki",
+          "freq": 1
+        }
+      ],
+      "ending": "k"
+    },
+    "gallaç": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "gallaçy",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "gallaçy",
+          "freq": 1
+        }
+      ],
+      "ending": "ç"
+    },
+    "ganat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "ganaty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "ganaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "gudrat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "gudraty",
+          "freq": 8
+        },
+        {
+          "form": "belirtme",
+          "word": "gudraty",
+          "freq": 8
+        }
+      ],
+      "ending": "t"
+    },
+    "hakyk": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "hakyky",
+          "freq": 4
+        },
+        {
+          "form": "belirtme",
+          "word": "hakyky",
+          "freq": 4
+        }
+      ],
+      "ending": "k"
+    },
+    "hakykat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "hakykaty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "hakykaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "halk": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "halky",
+          "freq": 5
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "halkynyň",
+          "freq": 38
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "halkyň",
+          "freq": 3
+        },
+        {
+          "form": "ilgi",
+          "word": "halkyň",
+          "freq": 3
+        },
+        {
+          "form": "belirtme",
+          "word": "halky",
+          "freq": 5
+        }
+      ],
+      "ending": "k"
+    },
+    "hasabat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "hasabaty",
+          "freq": 22
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "hasabatyň",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "hasabatyň",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "hasabaty",
+          "freq": 22
+        }
+      ],
+      "ending": "t"
+    },
+    "hat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "haty",
+          "freq": 2
+        },
+        {
+          "form": "belirtme",
+          "word": "haty",
+          "freq": 2
+        }
+      ],
+      "ending": "t"
+    },
+    "hormat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "hormaty",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "hormatyň",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "hormaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "hyzmat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "hyzmaty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "hyzmaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "hökümet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "hökümeti",
+          "freq": 6
+        },
+        {
+          "form": "ilgi",
+          "word": "hökümetiň",
+          "freq": 2
+        },
+        {
+          "form": "belirtme",
+          "word": "hökümeti",
+          "freq": 6
+        }
+      ],
+      "ending": "t"
+    },
+    "ik": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "iki",
+          "freq": 28
+        },
+        {
+          "form": "belirtme",
+          "word": "iki",
+          "freq": 28
+        }
+      ],
+      "ending": "k"
+    },
+    "ilat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "ilaty",
+          "freq": 4
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "ilatynyň",
+          "freq": 3
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "ilatyň",
+          "freq": 14
+        },
+        {
+          "form": "ilgi",
+          "word": "ilatyň",
+          "freq": 14
+        },
+        {
+          "form": "belirtme",
+          "word": "ilaty",
+          "freq": 4
+        }
+      ],
+      "ending": "t"
+    },
+    "import": {
+      "evidence": [
+        {
+          "form": "ilgi",
+          "word": "importyň",
+          "freq": 2
+        }
+      ],
+      "ending": "t"
+    },
+    "institut": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "instituty",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "institutyň",
+          "freq": 5
+        },
+        {
+          "form": "belirtme",
+          "word": "instituty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "internet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "interneti",
+          "freq": 3
+        },
+        {
+          "form": "belirtme",
+          "word": "interneti",
+          "freq": 3
+        }
+      ],
+      "ending": "t"
+    },
+    "jemgyýet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "jemgyýeti",
+          "freq": 1
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "jemgyýetiň",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "jemgyýetiň",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "jemgyýeti",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "kazyýet": {
+      "evidence": [
+        {
+          "form": "2sg-iyelik",
+          "word": "kazyýetiň",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "kazyýetiň",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "komitet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "komiteti",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "komiteti",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "konsert": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "konserti",
+          "freq": 2
+        },
+        {
+          "form": "belirtme",
+          "word": "konserti",
+          "freq": 2
+        }
+      ],
+      "ending": "t"
+    },
+    "kuwwat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "kuwwaty",
+          "freq": 5
+        },
+        {
+          "form": "belirtme",
+          "word": "kuwwaty",
+          "freq": 5
+        }
+      ],
+      "ending": "t"
+    },
+    "mart": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "marty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "marty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "maslahat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "maslahaty",
+          "freq": 6
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "maslahatynyň",
+          "freq": 35
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "maslahatyň",
+          "freq": 6
+        },
+        {
+          "form": "ilgi",
+          "word": "maslahatyň",
+          "freq": 6
+        },
+        {
+          "form": "belirtme",
+          "word": "maslahaty",
+          "freq": 6
+        }
+      ],
+      "ending": "t"
+    },
+    "medeniýet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "medeniýeti",
+          "freq": 1
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "medeniýetiň",
+          "freq": 3
+        },
+        {
+          "form": "ilgi",
+          "word": "medeniýetiň",
+          "freq": 3
+        },
+        {
+          "form": "belirtme",
+          "word": "medeniýeti",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "parlament": {
+      "evidence": [
+        {
+          "form": "2sg-iyelik",
+          "word": "parlamentiň",
+          "freq": 2
+        },
+        {
+          "form": "ilgi",
+          "word": "parlamentiň",
+          "freq": 2
+        }
+      ],
+      "ending": "t"
+    },
+    "prezident": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "prezidenti",
+          "freq": 75
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "prezidentiň",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "prezidentiň",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "prezidenti",
+          "freq": 75
+        }
+      ],
+      "ending": "t"
+    },
+    "raýat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "raýaty",
+          "freq": 1
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "raýatyň",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "raýatyň",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "raýaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "sebit": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "sebiti",
+          "freq": 7
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "sebitiň",
+          "freq": 10
+        },
+        {
+          "form": "ilgi",
+          "word": "sebitiň",
+          "freq": 10
+        },
+        {
+          "form": "belirtme",
+          "word": "sebiti",
+          "freq": 7
+        }
+      ],
+      "ending": "t"
+    },
+    "sekretariat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "sekretariatynyň",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "senagat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "senagaty",
+          "freq": 11
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "senagatynyň",
+          "freq": 2
+        },
+        {
+          "form": "belirtme",
+          "word": "senagaty",
+          "freq": 11
+        }
+      ],
+      "ending": "t"
+    },
+    "sport": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "sporty",
+          "freq": 10
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "sportunyň",
+          "freq": 3
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "sportuň",
+          "freq": 5
+        },
+        {
+          "form": "belirtme",
+          "word": "sporty",
+          "freq": 10
+        }
+      ],
+      "ending": "t"
+    },
+    "sungat": {
+      "evidence": [
+        {
+          "form": "ilgi",
+          "word": "sungatyň",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "syýasat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "syýasaty",
+          "freq": 12
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "syýasatynyň",
+          "freq": 28
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "syýasatyň",
+          "freq": 3
+        },
+        {
+          "form": "ilgi",
+          "word": "syýasatyň",
+          "freq": 3
+        },
+        {
+          "form": "belirtme",
+          "word": "syýasaty",
+          "freq": 12
+        }
+      ],
+      "ending": "t"
+    },
+    "tarap": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "tarapy",
+          "freq": 1
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "tarapynyň",
+          "freq": 4
+        },
+        {
+          "form": "belirtme",
+          "word": "tarapy",
+          "freq": 1
+        }
+      ],
+      "ending": "p"
+    },
+    "tehnik": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "tehniki",
+          "freq": 15
+        },
+        {
+          "form": "belirtme",
+          "word": "tehniki",
+          "freq": 15
+        }
+      ],
+      "ending": "k"
+    },
+    "tilsimat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "tilsimaty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "tilsimaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "türk": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "türki",
+          "freq": 6
+        },
+        {
+          "form": "belirtme",
+          "word": "türki",
+          "freq": 6
+        }
+      ],
+      "ending": "k"
+    },
+    "wagt": {
+      "evidence": [
+        {
+          "form": "2sg-iyelik",
+          "word": "wagtyň",
+          "freq": 2
+        },
+        {
+          "form": "ilgi",
+          "word": "wagtyň",
+          "freq": 2
+        }
+      ],
+      "ending": "t"
+    },
+    "welaýat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "welaýaty",
+          "freq": 2
+        },
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "welaýatynyň",
+          "freq": 22
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "welaýatyň",
+          "freq": 8
+        },
+        {
+          "form": "ilgi",
+          "word": "welaýatyň",
+          "freq": 8
+        },
+        {
+          "form": "belirtme",
+          "word": "welaýaty",
+          "freq": 2
+        }
+      ],
+      "ending": "t"
+    },
+    "ykdysadyýet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "ykdysadyýeti",
+          "freq": 21
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "ykdysadyýetiň",
+          "freq": 21
+        },
+        {
+          "form": "ilgi",
+          "word": "ykdysadyýetiň",
+          "freq": 21
+        },
+        {
+          "form": "belirtme",
+          "word": "ykdysadyýeti",
+          "freq": 21
+        }
+      ],
+      "ending": "t"
+    },
+    "ymmat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "ymmatynyň",
+          "freq": 4
+        }
+      ],
+      "ending": "t"
+    },
+    "zynat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "zynaty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "zynaty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "zähmet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "zähmeti",
+          "freq": 5
+        },
+        {
+          "form": "belirtme",
+          "word": "zähmeti",
+          "freq": 5
+        }
+      ],
+      "ending": "t"
+    },
+    "ähmiýet": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "ähmiýeti",
+          "freq": 4
+        },
+        {
+          "form": "belirtme",
+          "word": "ähmiýeti",
+          "freq": 4
+        }
+      ],
+      "ending": "t"
+    },
+    "öňk": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "öňki",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "öňki",
+          "freq": 1
+        }
+      ],
+      "ending": "k"
+    },
+    "üst": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "üsti",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "üsti",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "şert": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "şerti",
+          "freq": 8
+        },
+        {
+          "form": "belirtme",
+          "word": "şerti",
+          "freq": 8
+        }
+      ],
+      "ending": "t"
+    },
+    "ştat": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "ştatynyň",
+          "freq": 1
+        },
+        {
+          "form": "2sg-iyelik",
+          "word": "ştatyň",
+          "freq": 1
+        },
+        {
+          "form": "ilgi",
+          "word": "ştatyň",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "žurnalist": {
+      "evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "žurnalisti",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "žurnalisti",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    }
+  },
+  "ambiguous_detail": {
+    "alt": {
+      "true_evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "aldy",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "aldy",
+          "freq": 1
+        }
+      ],
+      "false_evidence": [
+        {
+          "form": "3sg-iyelik+ilgi",
+          "word": "altynyň",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    },
+    "at": {
+      "true_evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "ady",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "ady",
+          "freq": 1
+        }
+      ],
+      "false_evidence": [
+        {
+          "form": "3sg-iyelik",
+          "word": "aty",
+          "freq": 1
+        },
+        {
+          "form": "belirtme",
+          "word": "aty",
+          "freq": 1
+        }
+      ],
+      "ending": "t"
+    }
+  }
+}

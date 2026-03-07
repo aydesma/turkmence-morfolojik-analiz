@@ -511,7 +511,7 @@ class MorphologicalAnalyzer:
 
         w_lower = word.lower()
 
-        # ── Sıra sayı tanıma: "2024-nji", "25-njy", "ýedinji" ──
+        # ── Sıra sayı tanıma: "2024-nji", "25-njy" ──
         import re as _re
         _ordinal_m = _re.match(r'^(\d+)-(nji|njy)$', w_lower)
         if _ordinal_m:
@@ -522,6 +522,27 @@ class MorphologicalAnalyzer:
                 stem=num, suffixes=[{"suffix": suf, "type": "Sıra", "code": "SıS"}],
                 breakdown=f"{num} + {suf} (Sıra sayı)",
                 word_type="noun"
+            )])
+
+        # ── Yazılı sıra sayı tanıma: "ýedinji", "birinji", "ilkinji" vb. ──
+        _CARDINAL_ORDINAL_MAP = {
+            "bir": "birinji", "iki": "ikinji", "üç": "üçünji",
+            "dört": "dördünji", "bäş": "bäşinji", "alty": "altynjy",
+            "ýedi": "ýedinji", "sekiz": "sekizinji", "dokuz": "dokuzynjy",
+            "on": "onunjy", "ýigrimi": "ýigriminji", "otuz": "otuzynjy",
+            "kyrk": "kyrkynjy", "elli": "ellinji", "altmyş": "altmyşynjy",
+            "ýetmiş": "ýetmişinji", "segsen": "segseninji", "togsan": "togsanynjy",
+            "ýüz": "ýüzünji", "müň": "müňünji", "ilki": "ilkinji",
+        }
+        _ORDINAL_TO_CARDINAL = {v: k for k, v in _CARDINAL_ORDINAL_MAP.items()}
+        if w_lower in _ORDINAL_TO_CARDINAL:
+            cardinal = _ORDINAL_TO_CARDINAL[w_lower]
+            suffix = w_lower[len(cardinal):]  # nji, njy, ünji etc.
+            return MultiAnalysisResult(original=word, results=[AnalysisResult(
+                success=True, original=word,
+                stem=cardinal, suffixes=[{"suffix": "+OncI", "type": "Sıra sayı (yapım eki)", "code": "SıS"}],
+                breakdown=f"{cardinal} + {suffix} (Sıra sayı sıfatı)",
+                word_type="adjective"
             )])
 
         # ── Tireli bağlaç/zarf tanıma ──
