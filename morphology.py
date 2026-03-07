@@ -158,7 +158,7 @@ def dusme_uygula(kok, ek):
 #  İSİM ÇEKİMİ
 # ==============================================================================
 
-def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True):
+def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama_izni=True, daky=False):
     """
     Türkmen Türkçesi isim çekimi yapar (v27.0).
     
@@ -169,12 +169,13 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
         i_tip  : İyelik tipi: "tek" (tekil) veya "cog" (çoğul)
         hal    : Hal kodu: "A2"-"A6" veya None
         yumusama_izni : Ünsüz yumuşaması uygulanacak mı (eş sesliler için)
+        daky   : Aitlik eki -daky/-däki eklensin mi (lokatif+kI → göreceli sıfat)
     
     Döndürür:
         (çekimlenmiş_kelime, şecere_str)
         Örnek: ("kitabym", "kitap + ym")
     
-    Ek sırası: KÖK + [çokluk] + [iyelik] + [hal]
+    Ek sırası: KÖK + [çokluk] + [iyelik] + [hal | daky]
     """
     govde = kok.lower()
     yol = [kok]
@@ -257,7 +258,7 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
     #    A2: İlgi (-yň)   A3: Yönelme (-a)   A4: Belirtme (-y/-ny)
     #    A5: Bulunma (-da) A6: Çıkma (-dan)
     # ------------------------------------------------------------------
-    if hal:
+    if hal and not daky:
         nit = unlu_niteligi(govde)
         is_unlu = govde[-1] in TUM_UNLULER
         kok_yuvarlak = yuvarlak_mi(govde)
@@ -327,6 +328,31 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
 
         govde += ek
         yol.append(yol_eki if yol_eki is not None else ek)
+
+    # ------------------------------------------------------------------
+    # 4. AİTLİK EKİ  -daky / -däki  (Lokatif + kI → göreceli sıfat)
+    #    Tabaklar §2121: öýdäki, adyndaky, arasyndaky ...
+    # ------------------------------------------------------------------
+    if daky:
+        nit = unlu_niteligi(govde)
+        kok_yuvarlak = yuvarlak_mi(govde)
+        n_kay = iyelik == "A3"
+
+        # Orta Hece Yuvarlaklaşma (ogly→ogluny dizisiyle tutarlı)
+        kok_lower = kok.lower()
+        yuvarlaklasma_adayi = (kok_lower in DUSME_ADAYLARI or kok_lower in YUVARLAKLASMA_LISTESI)
+        if n_kay and kok_yuvarlak and govde[-1] in "yi" and yuvarlaklasma_adayi:
+            govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
+            nit = unlu_niteligi(govde)
+
+        # Aitlik eki: kalın→daky, ince→däki; A3 sonrası n-kaynaştırma
+        if n_kay:
+            ek = "ndaky" if nit == "yogyn" else "ndäki"
+        else:
+            ek = "daky" if nit == "yogyn" else "däki"
+
+        govde += ek
+        yol.append(ek)
 
     return govde, " + ".join(yol)
 

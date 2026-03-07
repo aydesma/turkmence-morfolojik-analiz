@@ -82,7 +82,8 @@ class NounGenerator:
     def generate(self, stem: str, plural: bool = False,
                  possessive: Optional[str] = None, poss_type: str = "tek",
                  case: Optional[str] = None,
-                 yumusama_izni: bool = True) -> GenerationResult:
+                 yumusama_izni: bool = True,
+                 daky: bool = False) -> GenerationResult:
         """
         İsim çekimi yapar.
         
@@ -93,6 +94,7 @@ class NounGenerator:
             poss_type: İyelik tipi: "tek" (tekil) veya "cog" (çoğul)
             case: Hal kodu: "A2"-"A6" veya None
             yumusama_izni: Ünsüz yumuşaması uygulanacak mı (eş sesliler için)
+            daky: Aitlik eki -daky/-däki eklensin mi (lokatif+kI → göreceli sıfat)
             
         Returns:
             GenerationResult
@@ -182,7 +184,7 @@ class NounGenerator:
         # ================================================================
         # 3) HAL EKLERİ
         # ================================================================
-        if case:
+        if case and not daky:
             nit = PhonologyRules.get_vowel_quality(govde)
             is_unlu = PhonologyRules.ends_with_vowel(govde)
             kok_yuvarlak = PhonologyRules.has_rounded_vowel(govde)
@@ -252,6 +254,32 @@ class NounGenerator:
             govde += ek
             yol.append(yol_eki if yol_eki is not None else ek)
             morphemes.append(("CASE", yol_eki if yol_eki is not None else ek))
+
+        # ================================================================
+        # 4) AİTLİK EKİ  -daky / -däki  (Lokatif + kI → göreceli sıfat)
+        #    Tabaklar §2121: öýdäki, adyndaky, arasyndaky ...
+        # ================================================================
+        if daky:
+            nit = PhonologyRules.get_vowel_quality(govde)
+            kok_yuvarlak = PhonologyRules.has_rounded_vowel(govde)
+            n_kay = possessive == "A3"
+
+            # Orta Hece Yuvarlaklaşma (ogly→ogluny dizisiyle tutarlı)
+            from turkmen_fst.phonology import VOWEL_DROP_CANDIDATES, YUVARLAKLASMA_LISTESI as _YL
+            _yuv_adayi = (stem.lower() in VOWEL_DROP_CANDIDATES or stem.lower() in _YL)
+            if n_kay and kok_yuvarlak and govde[-1] in "yi" and _yuv_adayi:
+                govde = govde[:-1] + ("u" if nit == "yogyn" else "ü")
+                nit = PhonologyRules.get_vowel_quality(govde)
+
+            # Aitlik eki: kalın→daky, ince→däki; A3 sonrası n-kaynaştırma
+            if n_kay:
+                ek = "ndaky" if nit == "yogyn" else "ndäki"
+            else:
+                ek = "daky" if nit == "yogyn" else "däki"
+
+            govde += ek
+            yol.append(ek)
+            morphemes.append(("DAKY", ek))
 
         return GenerationResult(
             word=govde,

@@ -249,7 +249,12 @@ class MorphologicalAnalyzer:
         plural_opts = [False, True]
         poss_opts = [None, "A1", "A2", "A3"]
         poss_type_opts = ["tek", "cog"]
-        case_opts = [None, "A2", "A3", "A4", "A5", "A6"]
+        # case + daky pairs: normal cases OR daky (aitlik eki replaces case)
+        case_daky_opts = [
+            (None, False), ("A2", False), ("A3", False),
+            ("A4", False), ("A5", False), ("A6", False),
+            (None, True),  # daky: lokatif+kI → göreceli sıfat
+        ]
 
         for stem in candidates:
             # Eş sesli kelime kontrolü
@@ -278,9 +283,9 @@ class MorphologicalAnalyzer:
                             if poss is None and poss_type == "cog":
                                 continue
 
-                            for case in case_opts:
+                            for case, daky_flag in case_daky_opts:
                                 # Yalın hal + ek yok = sadece kök
-                                if not plural and poss is None and case is None:
+                                if not plural and poss is None and case is None and not daky_flag:
                                     if stem == w:
                                         key = f"{stem}|bare|{anlam}"
                                         if key not in seen:
@@ -299,7 +304,8 @@ class MorphologicalAnalyzer:
                                 try:
                                     gen = self.noun_gen.generate(
                                         stem, plural, poss, poss_type, case,
-                                        yumusama_izni=yumusama_izni
+                                        yumusama_izni=yumusama_izni,
+                                        daky=daky_flag
                                     )
                                 except Exception:
                                     continue
@@ -312,7 +318,7 @@ class MorphologicalAnalyzer:
                                 if poss and poss_type == "cog":
                                     actual_poss_code = {"A1": "B1", "A2": "B2"}.get(poss, poss)
 
-                                sig = f"{stem}|{plural}|{actual_poss_code}|{case}|{anlam}"
+                                sig = f"{stem}|{plural}|{actual_poss_code}|{case}|{daky_flag}|{anlam}"
                                 if sig in seen:
                                     continue
                                 seen.add(sig)
@@ -332,10 +338,15 @@ class MorphologicalAnalyzer:
                                     suffixes.append({"suffix": suf, "type": "Degişlilik", "code": disp})
                                     mi += 1
 
-                                if case and mi < len(gen.morphemes):
+                                if case and not daky_flag and mi < len(gen.morphemes):
                                     _, suf = gen.morphemes[mi]
                                     disp = CASE_DISPLAY.get(case, case)
                                     suffixes.append({"suffix": suf, "type": "Düşüm", "code": disp})
+                                    mi += 1
+
+                                if daky_flag and mi < len(gen.morphemes):
+                                    _, suf = gen.morphemes[mi]
+                                    suffixes.append({"suffix": suf, "type": "Aitlik", "code": "+kI"})
 
                                 parts = [f"{stem.capitalize()} (Kök)"]
                                 for s in suffixes:

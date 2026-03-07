@@ -1,27 +1,27 @@
 {
-  "test_date": "2026-03-07T16:31:01.456107",
+  "test_date": "2026-03-07T16:41:15.876711",
   "corpus_file": "metbugat_corpus.txt",
   "total_corpus_words": 679142,
   "sample_size": 20000,
   "results": {
     "total_tokens": 20000,
     "total_types": 5517,
-    "recognized_tokens": 16291,
-    "unrecognized_tokens": 3709,
-    "recognized_types": 3734,
-    "unrecognized_types": 1783,
-    "token_coverage_pct": 81.45,
-    "type_coverage_pct": 67.68,
+    "recognized_tokens": 16431,
+    "unrecognized_tokens": 3569,
+    "recognized_types": 3777,
+    "unrecognized_types": 1740,
+    "token_coverage_pct": 82.16,
+    "type_coverage_pct": 68.46,
     "pos_distribution": {
-      "noun": 3182,
+      "noun": 3225,
       "verb": 545,
       "adjective": 7
     }
   },
   "error_categories": {
     "diger": {
-      "type_count": 1289,
-      "token_count": 2454,
+      "type_count": 1247,
+      "token_count": 2320,
       "top_examples": [
         [
           "niň",
@@ -40,20 +40,12 @@
           34
         ],
         [
-          "adyndaky",
-          26
-        ],
-        [
           "ösüş",
           26
         ],
         [
           "munuň",
           22
-        ],
-        [
-          "arasyndaky",
-          20
         ],
         [
           "halkbank",
@@ -80,10 +72,6 @@
           16
         ],
         [
-          "bilelikdäki",
-          14
-        ],
-        [
           "yglan",
           14
         ],
@@ -102,6 +90,18 @@
         [
           "den",
           12
+        ],
+        [
+          "ler",
+          12
+        ],
+        [
+          "oňyn",
+          12
+        ],
+        [
+          "mak",
+          11
         ]
       ]
     },
@@ -450,8 +450,8 @@
       ]
     },
     "ozel_isim": {
-      "type_count": 5,
-      "token_count": 76,
+      "type_count": 4,
+      "token_count": 70,
       "top_examples": [
         [
           "berdimuhamedow",
@@ -464,10 +464,6 @@
         [
           "berdimuhamedowa",
           13
-        ],
-        [
-          "türkmenistandaky",
-          6
         ],
         [
           "berdimuhamedowy",
@@ -654,10 +650,6 @@
       28
     ],
     [
-      "adyndaky",
-      26
-    ],
-    [
       "ösüş",
       26
     ],
@@ -676,10 +668,6 @@
     [
       "üstünlikli",
       21
-    ],
-    [
-      "arasyndaky",
-      20
     ],
     [
       "halkbank",
@@ -732,10 +720,6 @@
     [
       "berdimuhamedowyň",
       15
-    ],
-    [
-      "bilelikdäki",
-      14
     ],
     [
       "yglan",
@@ -970,10 +954,6 @@
       6
     ],
     [
-      "ugurdaky",
-      6
-    ],
-    [
       "geçirmäge",
       6
     ],
@@ -982,15 +962,7 @@
       6
     ],
     [
-      "respublikasyndaky",
-      6
-    ],
-    [
       "howandarlyga",
-      6
-    ],
-    [
-      "ýanyndaky",
       6
     ],
     [
@@ -1014,16 +986,40 @@
       6
     ],
     [
-      "türkmenistandaky",
-      6
-    ],
-    [
       "arkadagly",
       6
     ],
     [
       "tan",
       6
+    ],
+    [
+      "açylyş",
+      6
+    ],
+    [
+      "berkitmek",
+      6
+    ],
+    [
+      "ýunesko",
+      6
+    ],
+    [
+      "uniwersitetiniň",
+      5
+    ],
+    [
+      "degişlidir",
+      5
+    ],
+    [
+      "deňze",
+      5
+    ],
+    [
+      "dyr",
+      5
     ]
   ]
 }
