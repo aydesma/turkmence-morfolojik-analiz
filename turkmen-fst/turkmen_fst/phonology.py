@@ -81,6 +81,8 @@ SOFTENING_EXCEPTIONS = frozenset({
     "mart", "awgust", "türk",
     # --- Diğer ---
     "ştat", "üst", "öňk", "gallaç", "ik", "paýtagt",
+    # --- Yumuşamayan yerli kelimeler ---
+    "iç", "saç", "dost",
 })
 
 
@@ -99,7 +101,10 @@ VOWEL_DROP_CANDIDATES = frozenset({
     "burun", "alyn", "agyz", "gobek", "ogul", "erin",
     "bagyr", "sabyr", "kömür", "sygyr", "deňiz",
     "goýun", "boýun", "howuz", "tomus", "tizir",
-    "köwüş", "orun", "garyn", "gelin", "döwür"
+    "köwüş", "orun", "garyn", "gelin", "döwür",
+    # corpus analizinden eklenenler (2026-03-08)
+    "ugur", "ýeňiş", "ömür", "şekil", "pikir",
+    "akyl", "gyzyl", "ýagyr", "ýüzük",
 })
 
 # Özel yuvarlaklaşma listesi (y/i → u/ü dönüşümü)

@@ -206,6 +206,12 @@ class NounGenerator:
                 if n_kay:
                     ek = "nyň" if nit == "yogyn" else "niň"
                 elif is_unlu:
+                    # Ünlüyle biten köklerde son ünlü değişimi:
+                    # e → ä  (hepde → hepdäniň, çäre → çäräniň)
+                    # a, y, i vb. değişmez
+                    son = govde[-1]
+                    if son == "e":
+                        govde = govde[:-1] + "ä"
                     ek = "nyň" if nit == "yogyn" else "niň"
                 else:
                     if len(stem) <= 4 and kok_yuvarlak:
@@ -239,6 +245,7 @@ class NounGenerator:
                     ek = "ny" if nit == "yogyn" else "ni"
                 else:
                     ek = "y" if nit == "yogyn" else "i"
+                    govde = PhonologyRules.apply_vowel_drop(govde, ek)
                     if yumusama_izni:
                         govde = PhonologyRules.apply_consonant_softening(govde)
 
@@ -834,6 +841,9 @@ class VerbGenerator:
             else:
                 govde = self._fiil_yumusama(govde)
                 if ends_vowel:
+                    # e→ä dönüşümü: gülle+p → gülläp, beze+p → bezäp
+                    if govde.endswith("e"):
+                        govde = govde[:-1] + "ä"
                     suffix = "p"
                 elif self._tek_heceli_dodak(govde):
                     suffix = "up" if quality == "yogyn" else "üp"

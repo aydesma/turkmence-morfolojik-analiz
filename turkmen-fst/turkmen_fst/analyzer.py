@@ -188,6 +188,15 @@ class MorphologicalAnalyzer:
         # Kelime doğrudan kök olabilir
         candidates.add(w)
 
+        # Yönelme hali (A3) geri dönüşümü: ünlüyle biten köklerde son ünlü değişir
+        # ä→e/i/ü/ö (ince), a→y (kalın) — derejä→dereje, sergä→sergi
+        if w and w[-1] == 'ä':
+            base = w[:-1]
+            for v in ('e', 'i', 'ü', 'ö'):
+                candidates.add(base + v)
+        elif w and w[-1] == 'a' and len(w) > 2:
+            candidates.add(w[:-1] + 'y')
+
         # Son 1-12 karakteri soyarak olası kökler
         for end_len in range(1, min(13, len(w))):
             remaining = w[:-end_len]
@@ -218,6 +227,13 @@ class MorphologicalAnalyzer:
                 candidates.add(remaining[:-1] + 'y')
             elif remaining and remaining[-1] == 'ü':
                 candidates.add(remaining[:-1] + 'i')
+
+            # ä→e geri dönüşümü: gülläp→güllä→gülle, bezäp→bezä→beze
+            if remaining and remaining[-1] == 'ä':
+                candidates.add(remaining[:-1] + 'e')
+            elif remaining and remaining[-1] == 'a' and len(remaining) > 1:
+                # a→e varyantı (nadir ama tireli bileşiklerde olabilir)
+                pass
 
         # Sözlükte olanları filtrele
         if self.lexicon:
@@ -619,6 +635,17 @@ class MorphologicalAnalyzer:
     #   is_front=False → kalın (back) ünlü uyumu
     #   is_front=None  → her ikisi de olabilir
     _DERIVED_OUTER = [
+        # ── Mastar + 3.şahıs iyelik + hal (en uzundan kısaya) ──
+        ("magyndan", "Mastar+D₃b+A₆", "-mAgy+A6", False),
+        ("meginden", "Mastar+D₃b+A₆", "-mAgy+A6", True),
+        ("magynyň",  "Mastar+D₃b+A₂", "-mAgy+A2", False),
+        ("meginiň",  "Mastar+D₃b+A₂", "-mAgy+A2", True),
+        ("magynda",  "Mastar+D₃b+A₅", "-mAgy+A5", False),
+        ("meginde",  "Mastar+D₃b+A₅", "-mAgy+A5", True),
+        ("magyna",   "Mastar+D₃b+A₃", "-mAgy+A3", False),
+        ("megine",   "Mastar+D₃b+A₃", "-mAgy+A3", True),
+        ("magyny",   "Mastar+D₃b+A₄", "-mAgy+A4", False),
+        ("megini",   "Mastar+D₃b+A₄", "-mAgy+A4", True),
         # ── Mastar + hal (uzundan kısaya) ──
         ("magyň",  "Mastar+İlgi",     "-mAk+A2", False),
         ("megiň",  "Mastar+İlgi",     "-mAk+A2", True),
@@ -647,6 +674,33 @@ class MorphologicalAnalyzer:
         # ── Gelecek ortaç -jAk ──
         ("jak", "Ortaç-g", "-jAk", False),
         ("jek", "Ortaç-g", "-jAk", True),
+        # ── Gelecek ortaç + -dIgI bildiriş (uzundan kısaya) ──
+        ("jakdygynyň", "Ortaç-g+Bild+A₂",  "-jAk+dIgI+A2", False),
+        ("jekdiginiň",  "Ortaç-g+Bild+A₂",  "-jAk+dIgI+A2", True),
+        ("jakdygyndan", "Ortaç-g+Bild+A₆",  "-jAk+dIgI+A6", False),
+        ("jekdiginden",  "Ortaç-g+Bild+A₆",  "-jAk+dIgI+A6", True),
+        ("jakdygynda",  "Ortaç-g+Bild+A₅",  "-jAk+dIgI+A5", False),
+        ("jekdiginde",   "Ortaç-g+Bild+A₅",  "-jAk+dIgI+A5", True),
+        ("jakdygyna",   "Ortaç-g+Bild+A₃",  "-jAk+dIgI+A3", False),
+        ("jekdigine",    "Ortaç-g+Bild+A₃",  "-jAk+dIgI+A3", True),
+        ("jakdygyny",   "Ortaç-g+Bild+A₄",  "-jAk+dIgI+A4", False),
+        ("jekdigini",    "Ortaç-g+Bild+A₄",  "-jAk+dIgI+A4", True),
+        ("jakdygy",     "Ortaç-g+Bild",      "-jAk+dIgI",    False),
+        ("jekdigi",      "Ortaç-g+Bild",      "-jAk+dIgI",    True),
+        # ── Şimdiki ortaç + -dIgI bildiriş ──
+        ("ýändiginiň",  "Ortaç-ş+Bild+A₂",  "-ýAn+dIgI+A2", True),
+        ("ýandigynyň",  "Ortaç-ş+Bild+A₂",  "-ýAn+dIgI+A2", False),
+        ("ýändigini",   "Ortaç-ş+Bild+A₄",  "-ýAn+dIgI+A4", True),
+        ("ýandigyny",   "Ortaç-ş+Bild+A₄",  "-ýAn+dIgI+A4", False),
+        ("ýändigi",     "Ortaç-ş+Bild",      "-ýAn+dIgI",    True),
+        ("ýandigy",     "Ortaç-ş+Bild",      "-ýAn+dIgI",    False),
+        # ── Geçmiş ortaç + -dIgI bildiriş ──
+        ("endiginiň",   "Ortaç+Bild+A₂",    "-An+dIgI+A2",  True),
+        ("andigynyň",   "Ortaç+Bild+A₂",    "-An+dIgI+A2",  False),
+        ("endigini",    "Ortaç+Bild+A₄",    "-An+dIgI+A4",  True),
+        ("andigyny",    "Ortaç+Bild+A₄",    "-An+dIgI+A4",  False),
+        ("endigi",      "Ortaç+Bild",        "-An+dIgI",     True),
+        ("andigy",      "Ortaç+Bild",        "-An+dIgI",     False),
         # ── Sonlu çekim (finite) — sık karşılaşılan 3.şahıs ──
         # Geçmiş -dI  (3.şahıs)
         ("dylar", "Geçmiş-3ç",  "Z1+3ç", False),
@@ -733,6 +787,38 @@ class MorphologicalAnalyzer:
                 break  # tek kopula yeterli
 
         for base_w, copula in bases_to_try:
+
+            # ═══ 0) Çatısız (bare stem):  base + outer ═══
+            for o_suf, o_lbl, o_code, o_fr in self._DERIVED_OUTER:
+                if not base_w.endswith(o_suf):
+                    continue
+                raw = base_w[:-len(o_suf)]
+                if len(raw) < 2:
+                    continue
+
+                for base in self._reverse_soften(raw):
+                    if not self._is_verb(base):
+                        continue
+                    sig = f"dv0|{base}|{o_suf}|{copula}"
+                    if sig in seen:
+                        continue
+                    seen.add(sig)
+
+                    suf_list = [
+                        {"suffix": o_suf, "type": o_lbl, "code": o_code},
+                    ]
+                    parts = f"{base.capitalize()} (Kök) + {o_suf} ({o_lbl})"
+                    if copula:
+                        suf_list.append({"suffix": copula, "type": "Bildiriş", "code": "-dIr"})
+                        parts += f" + {copula} (Bildiriş)"
+
+                    results.append(AnalysisResult(
+                        success=True, original=word,
+                        stem=base.capitalize(),
+                        suffixes=suf_list,
+                        breakdown=parts,
+                        word_type="verb"
+                    ))
 
             # ═══ 1) Tek çatı:  base + voice + outer ═══
             for o_suf, o_lbl, o_code, o_fr in self._DERIVED_OUTER:
@@ -1081,10 +1167,16 @@ class MorphologicalAnalyzer:
         ("nyň",    "İlgi",            "A₂"),
         ("nuň",    "İlgi",            "A₂"),
         ("nüň",    "İlgi",            "A₂"),
+        ("iň",     "İlgi",            "A₂"),
+        ("yň",     "İlgi",            "A₂"),
         ("na",     "Yönelme",         "A₃"),
         ("ne",     "Yönelme",         "A₃"),
+        ("ä",      "Yönelme",         "A₃"),
+        ("a",      "Yönelme",         "A₃"),
         ("ny",     "Belirtme",        "A₄"),
         ("ni",     "Belirtme",        "A₄"),
+        ("y",      "Belirtme",        "A₄"),
+        ("i",      "Belirtme",        "A₄"),
         ("da",     "Bulunma",         "A₅"),
         ("de",     "Bulunma",         "A₅"),
         ("dan",    "Çıkma",           "A₆"),
@@ -1128,6 +1220,90 @@ class MorphologicalAnalyzer:
                 )]
 
         return []
+
+    # ------------------------------------------------------------------
+    #  BİLDİRİŞ (PREDİCATİVE) -dIgI ÇÖZÜMLEMESİ
+    # ------------------------------------------------------------------
+    # Sıfat/İsim + -dIgI + iyelik + hal:
+    #   wajypdygy, möhümdigi, ygrarlydygyny, taýýardygyny, eýedigini
+    # ------------------------------------------------------------------
+
+    # Suffix patterns: (suffix, label, code)
+    _DIGI_PATTERNS = [
+        # 3sg poss + case (longest first)
+        ("dygynyň", "-dIgI+D₃b+A₂"), ("diginiň", "-dIgI+D₃b+A₂"),
+        ("dygyndan", "-dIgI+D₃b+A₆"), ("diginden", "-dIgI+D₃b+A₆"),
+        ("dygynda", "-dIgI+D₃b+A₅"), ("diginde", "-dIgI+D₃b+A₅"),
+        ("dygyna", "-dIgI+D₃b+A₃"), ("digine", "-dIgI+D₃b+A₃"),
+        ("dygyny", "-dIgI+D₃b+A₄"), ("digini", "-dIgI+D₃b+A₄"),
+        # 1sg poss
+        ("dygym", "-dIgI+D₁b"), ("digim", "-dIgI+D₁b"),
+        # 2sg poss
+        ("dygyň", "-dIgI+D₂b"), ("digiň", "-dIgI+D₂b"),
+        # 3sg poss bare (nominative)
+        ("dygy", "-dIgI+D₃b"), ("digi", "-dIgI+D₃b"),
+    ]
+
+    def parse_predicative(self, word: str) -> list[AnalysisResult]:
+        """
+        Bildiriş (predicative) -dIgI formlarını çözümler.
+        Sıfat veya isim köküne -dIgI + iyelik + hal ekleri:
+          wajyp + dygy → wajypdygy (önemli olduğu)
+          möhüm + digi → möhümdigi (önemli olduğu)
+          ygrarly + dygyny → ygrarlydygyny
+        Ayrıca fiil ortaç bazları da desteklenir:
+          goýýan + dygym → goýýandygym
+        """
+        w = word.lower().strip()
+        if len(w) < 6:
+            return []
+
+        results = []
+        for suf, code in self._DIGI_PATTERNS:
+            if not w.endswith(suf):
+                continue
+            base = w[:-len(suf)]
+            if len(base) < 2:
+                continue
+
+            # 1) Base sözlükte var mı? (isim, sıfat, zarf)
+            if self.lexicon and self.lexicon.exists(base):
+                entries = self.lexicon.lookup(base)
+                for entry in entries:
+                    if entry.pos in ("n", "adj", "adv", "n?"):
+                        pos_label = {"n": "İsim", "adj": "Sıfat", "adv": "Zarf", "n?": "İsim"}.get(entry.pos, "İsim")
+                        results.append(AnalysisResult(
+                            success=True,
+                            original=word,
+                            stem=base.capitalize(),
+                            suffixes=[{"suffix": suf, "type": "Bildiriş", "code": code}],
+                            breakdown=f"{base.capitalize()} ({pos_label}) + {suf} ({code})",
+                            word_type="noun"
+                        ))
+                        break
+
+            # 2) Base fiil ortaç formu mu? (goýýan, boljak, edilen, ...)
+            if not results and len(base) >= 4:
+                sub_results = self.parse_verb(base) + self.parse_derived_verb(base)
+                for sr in sub_results:
+                    if sr.word_type == "verb":
+                        new_suf = list(sr.suffixes) + [
+                            {"suffix": suf, "type": "Bildiriş", "code": code}
+                        ]
+                        results.append(AnalysisResult(
+                            success=True,
+                            original=word,
+                            stem=sr.stem,
+                            suffixes=new_suf,
+                            breakdown=sr.breakdown + f" + {suf} ({code})",
+                            word_type="verb"
+                        ))
+                        break
+
+            if results:
+                break
+
+        return results
 
     # ------------------------------------------------------------------
     #  ANA GİRİŞ NOKTASI
@@ -1239,6 +1415,9 @@ class MorphologicalAnalyzer:
 
         # İşaret zamirleri (bu/şu/ol/şol paradigması)
         all_results.extend(self.parse_pronoun(word))
+
+        # Bildiriş (predicative) -dIgI: sıfat/isim + dIgI + iyelik + hal
+        all_results.extend(self.parse_predicative(word))
 
         # ── Kopula denemesi: kelime -dIr ile bitiyorsa, soyup altını analiz et ──
         if copula_base and not all_results:

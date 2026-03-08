@@ -32063,27 +32063,6 @@ meýilleş	%<v%>
 ösüş	%<n%>	softening
 galkynyş	%<n%>	softening
 yglan	%<n%>
-kabinet	%<n%>	softening
-birnäçe	%<det%>
-oňyn	%<adj%>
-döwletara	%<adj%>
-halkbank	%<np%>
-köpugur	%<n%>
-şunda	%<adv%>
-ösüş	%<n%>	softening
-galkynyş	%<n%>	softening
-yglan	%<n%>
-kabinet	%<n%>	softening
-birnäçe	%<det%>
-oňyn	%<adj%>
-döwletara	%<adj%>
-halkbank	%<np%>
-köpugur	%<n%>
-şunda	%<adv%>
-ösüş	%<n%>	softening
-galkynyş	%<n%>	softening
-yglan	%<n%>
-kabinet	%<n%>	softening
 birnäçe	%<det%>
 oňyn	%<adj%>
 döwletara	%<adj%>
@@ -32099,3 +32078,650 @@ möwsümleýin	%<adj%>
 sebitleýin	%<adj%>
 toplumlaýyn	%<adj%>
 üçtaraplaýyn	%<adj%>
+
+# === Özel isimler ve kısaltmalar (otomatik, 283 giriş) ===
+Abadan	%<np%>
+ABŞ	%<np%>
+Agamuhammet	%<np%>	no_softening
+Ahal	%<np%>
+Akdepe	%<np%>
+Altyn	%<np%>
+Aman	%<np%>
+Amangeldi	%<np%>
+Amerika	%<np%>
+Amerikanyň Birleşen Ştatlary	%<np%>
+Andalyp	%<np%>	no_softening
+Angliýa	%<np%>
+Angola	%<np%>
+Ankara	%<np%>
+Anna	%<np%>
+Antarktida	%<np%>
+Antigua we Barbuda	%<np%>
+Aprel	%<np%>
+Arkadag	%<np%>
+Armeniýa	%<np%>
+Arslan	%<np%>
+Astana	%<np%>
+Atageldy	%<np%>
+Ataýew	%<np%>
+Awgust	%<np%>	no_softening
+Azady	%<np%>
+Azarbeýjan	%<np%>
+Aýgözel	%<np%>
+Aýna	%<np%>
+Babadaýhan	%<np%>
+Bagtyýarlyk	%<np%>	softening
+Bahar	%<np%>
+Baku	%<np%>
+Balkan	%<np%>
+Balkanabat	%<np%>	no_softening
+Barbados	%<np%>
+Bathyz	%<np%>
+Batyr	%<np%>
+Baýgeldi	%<np%>
+Baýmuhammet	%<np%>	no_softening
+Baýramaly	%<np%>
+Begenç	%<np%>	no_softening
+Begmuhammet	%<np%>	no_softening
+Benin	%<np%>
+Berdimuhamedow	%<np%>
+Berkararlyk	%<np%>	no_softening
+Berlin	%<np%>
+Bermuda	%<np%>
+Bhutan	%<np%>
+Bibi	%<np%>
+BMG	%<np%>
+Boldumsaz	%<np%>
+Botswana	%<np%>
+Brýussel	%<np%>
+BSG	%<np%>
+Burkina-Faso	%<np%>
+Burundi	%<np%>
+Büzmeýin	%<np%>
+Darganata	%<np%>
+Daşoguz	%<np%>
+Dekabr	%<np%>
+Delý	%<np%>
+Demirgazyk Kipr Türk Respublikasy	%<np%>
+Derweze	%<np%>
+Dominikan	%<np%>
+Dubaý	%<np%>
+Durdyguly	%<np%>
+Durdymuhammet	%<np%>	no_softening
+Durdynabat	%<np%>	no_softening
+Duşanbe	%<np%>
+Duşenbe	%<np%>
+Döwran	%<np%>
+Dünýägözel	%<np%>
+Efiopiýa	%<np%>
+Ejegül	%<np%>
+EKO	%<np%>
+Enebaý	%<np%>
+Er-Riýad	%<np%>
+Eritreýa	%<np%>
+Esenguly	%<np%>
+Etrek	%<np%>	no_softening
+Farap	%<np%>	no_softening
+Fewral	%<np%>
+Gaaga	%<np%>
+Gabon	%<np%>
+Gadam	%<np%>
+Gaiti	%<np%>
+Gambiýa	%<np%>
+Gana	%<np%>
+Garabogaz	%<np%>
+Gazojak	%<np%>	no_softening
+GDA	%<np%>
+Gonduras	%<np%>
+Gonkong	%<np%>
+Gorkut	%<np%>	no_softening
+Gowurdak	%<np%>	no_softening
+Grenada	%<np%>
+Gubadag	%<np%>
+Gulmanowa	%<np%>
+Gumdag	%<np%>
+Gurban	%<np%>
+Gurbansoltan	%<np%>
+Gwatemala	%<np%>
+Gwineýa	%<np%>
+Gökdepe	%<np%>
+Görogly	%<np%>
+Gözel	%<np%>
+Güljemal	%<np%>
+Gülälek	%<np%>	no_softening
+Günorta Afrika Respublikasy	%<np%>
+Halmyrat	%<np%>	no_softening
+Halnabat	%<np%>	no_softening
+Hazar	%<np%>
+Hojaguly	%<np%>
+Hojamgulyýew	%<np%>
+HWF	%<np%>
+Ilýas	%<np%>
+Islamabad	%<np%>
+Iýul	%<np%>
+Iýun	%<np%>
+Jahan	%<np%>
+Jennet	%<np%>	no_softening
+Jepbar	%<np%>
+Jumageldi	%<np%>
+Jumaguly	%<np%>
+Kabul	%<np%>
+Kaka	%<np%>
+Kakabaý	%<np%>
+Kamerun	%<np%>
+Kanada	%<np%>
+Kawkaz	%<np%>
+Kaýyr	%<np%>
+Keniýa	%<np%>
+Kerim	%<np%>
+Kerki	%<np%>
+Kongo	%<np%>
+Koreýa Respublikasy	%<np%>
+Kosta-Rika	%<np%>
+Kuwat	%<np%>	no_softening
+Köneürgenç	%<np%>	no_softening
+Köpetdag	%<np%>
+Köýtendag	%<np%>
+Kýiw	%<np%>
+Laçyn	%<np%>
+Lebap	%<np%>	no_softening
+Liberiýa	%<np%>
+Liwiýa	%<np%>
+London	%<np%>
+Madagaskar	%<np%>
+Madrid	%<np%>
+Maksat	%<np%>	no_softening
+Mali	%<np%>
+Maral	%<np%>
+Mart	%<np%>	no_softening
+Mawritaniýa	%<np%>
+Maý	%<np%>
+Maýagözel	%<np%>
+Maýsa	%<np%>
+Maňgyşlak	%<np%>	no_softening
+Mekan	%<np%>
+Meksika	%<np%>
+Merdan	%<np%>
+Meredow	%<np%>
+Meretgeldi	%<np%>
+Mergen	%<np%>
+Minsk	%<np%>	no_softening
+Moskwa	%<np%>
+Mozambik	%<np%>	no_softening
+Murad	%<np%>
+Murgap	%<np%>	no_softening
+Myrat	%<np%>	no_softening
+Nabat	%<np%>	no_softening
+Namibiýa	%<np%>
+Nargül	%<np%>
+NATO	%<np%>
+Nepes	%<np%>
+Niger	%<np%>
+Nikaragua	%<np%>
+Nowruz	%<np%>
+Noýabr	%<np%>
+Nurgözel	%<np%>
+Nurmuhammet	%<np%>	no_softening
+Nurmyrat	%<np%>	no_softening
+Nyýazow	%<np%>
+Nýu-Ýork	%<np%>	no_softening
+Ogulbibi	%<np%>
+Ogulhajat	%<np%>	no_softening
+Ogulnabat	%<np%>	no_softening
+Ogulsona	%<np%>
+Oguz	%<np%>
+Oktýabr	%<np%>
+OPEK	%<np%>	no_softening
+Orazmuhammet	%<np%>	no_softening
+Oraztäç	%<np%>	no_softening
+Owadan	%<np%>
+Panama	%<np%>
+Papua-Täze Gwineýa	%<np%>
+Parahat	%<np%>	no_softening
+Paropamiz	%<np%>
+Pekin	%<np%>
+Penşenbe	%<np%>
+Pälwan	%<np%>
+Repetek	%<np%>	no_softening
+Rim	%<np%>
+Rozymuhammet	%<np%>	no_softening
+Ruhy	%<np%>
+Rustam	%<np%>
+Rwanda	%<np%>
+San-Fransisko	%<np%>
+Sapar	%<np%>
+Saparguly	%<np%>
+Sarahs	%<np%>
+Sarygamyş	%<np%>
+Saud Arabystan	%<np%>
+Saýat	%<np%>	no_softening
+Selbi	%<np%>
+Senegal	%<np%>
+Sentýabr	%<np%>
+Seul	%<np%>
+Seýit	%<np%>	no_softening
+Seýitnazar	%<np%>
+Sişenbe	%<np%>
+Skandinawiýa	%<np%>
+Somali	%<np%>
+SSSR	%<np%>
+Stambul	%<np%>
+Sudan	%<np%>
+Sumbar	%<np%>
+Söhbet	%<np%>	no_softening
+Sülgün	%<np%>
+Tagta	%<np%>
+Tailand	%<np%>
+Tanzaniýa	%<np%>
+Tawus	%<np%>
+Tawusgül	%<np%>
+Taşkent	%<np%>	no_softening
+Tbilisi	%<np%>
+TDH	%<np%>
+TDP	%<np%>	no_softening
+Tejen	%<np%>
+Tirkeş	%<np%>
+TMT	%<np%>	no_softening
+Togo	%<np%>
+Tokio	%<np%>
+Toýly	%<np%>
+TSSR	%<np%>
+Tunis	%<np%>
+TYA	%<np%>
+Tyllaly	%<np%>
+Türkmenabat	%<np%>	no_softening
+Türkmenbaşy	%<np%>
+Uganda	%<np%>
+Uzboý	%<np%>
+Watan	%<np%>
+Waşington	%<np%>
+Wena	%<np%>
+Wepa	%<np%>
+Ystambul	%<np%>
+Zambiýa	%<np%>
+Zelili	%<np%>
+Zimbabwe	%<np%>
+Änew	%<np%>
+Çarşenbe	%<np%>
+Çeleken	%<np%>
+Üstýurt	%<np%>	no_softening
+Ýagşymyrat	%<np%>	no_softening
+Ýanwar	%<np%>
+Ýazmyrat	%<np%>	no_softening
+ÝB	%<np%>
+Ýekşenbe	%<np%>
+Ýerewan	%<np%>
+ÝHHG	%<np%>
+Ýolöten	%<np%>
+ÝUNESKO	%<np%>
+ÝUNISEF	%<np%>
+Şamyrat	%<np%>	no_softening
+Şeker	%<np%>
+Şemşat	%<np%>	no_softening
+Şenbe	%<np%>
+ŞHG	%<np%>
+Şirmyrat	%<np%>	no_softening
+Şöhrat	%<np%>	no_softening
+Ženewa	%<np%>
+
+# === Faz 1: Yaygın eksik kelimeler (otomatik, 266 giriş) ===
+kararnama	%<n%>
+itergi	%<n%>
+sammit	%<n%>
+wekiliýet	%<n%>
+kafedra	%<n%>
+geçiriji	%<n%>
+ediş	%<n%>
+metan	%<n%>
+noutbuk	%<n%>
+sürüji	%<n%>
+tälimçi	%<n%>
+logistika	%<n%>
+kararlar	%<n%>
+sagbolsun	%<n%>
+telekommunikasiýa	%<n%>
+innowasiýa	%<n%>
+nawigasiýa	%<n%>
+demografiýa	%<n%>
+narkologiýa	%<n%>
+horeografiýa	%<n%>
+delimitasiýa	%<n%>
+monetizasiýa	%<n%>
+reabilitasiýa	%<n%>
+paralimpiýa	%<n%>
+alternatiwa	%<n%>
+inisiatiwа	%<n%>
+inklýuziw	%<n%>
+menejment	%<n%>
+monitoring	%<n%>
+klaster	%<n%>
+terminal	%<n%>
+robotika	%<n%>
+pandemiýa	%<n%>
+kottej	%<n%>
+reýting	%<n%>
+briefing	%<n%>
+brend	%<n%>
+brifing	%<n%>
+hosting	%<n%>
+startup	%<n%>
+startap	%<n%>
+heýkeltaraşlyk	%<n%>
+keşdeçilik	%<n%>
+itşynaslyk	%<n%>
+geçirijilik	%<n%>
+araçyllyk	%<n%>
+seçgiçilik	%<n%>
+goşulyşmazlyk	%<n%>
+inženerçilik	%<n%>
+şahamça	%<n%>
+tertipnama	%<n%>
+geňeşlik	%<n%>
+birleşme	%<n%>
+urş	%<n%>
+peder	%<n%>
+barş	%<n%>
+nygtalyş	%<n%>
+ulanyş	%<n%>
+jemleýji	%<n%>
+ýetiriji	%<n%>
+innowasion	%<adj%>
+innowatiw	%<adj%>
+geoykdysady	%<adj%>
+geosyýasy	%<adj%>
+parlamentara	%<adj%>
+hökümetara	%<adj%>
+sebitara	%<adj%>
+konsultatiw	%<adj%>
+nusgawy	%<adj%>
+plenar	%<adj%>
+transmilli	%<adj%>
+inklýuziw	%<adj%>
+interaktiw	%<adj%>
+kreatiw	%<adj%>
+operatiw	%<adj%>
+amaly	%<adj%>
+kliniki	%<adj%>
+gezekki	%<adj%>
+fransuz	%<adj%>
+gatly	%<adj%>
+nebitgaz	%<n%>
+ahalteke	%<n%>	no_softening
+umumybilim	%<n%>
+hazarýaka	%<n%>
+şähergurluşyk	%<n%>
+türkmennebit	%<np%>	no_softening
+türkmengaz	%<np%>	no_softening
+türkmenhimiýa	%<np%>	no_softening
+türkmenobahyzmat	%<np%>	no_softening
+türkmenpagta	%<np%>	no_softening
+türkmengeologiýa	%<np%>	no_softening
+türkmengala	%<np%>	no_softening
+türkmentel	%<np%>	no_softening
+türkmendeňizderýaýollary	%<np%>	no_softening
+türkmenawtoulaglary	%<np%>	no_softening
+türkmenhowaýollary	%<np%>	no_softening
+türkmenhaly	%<np%>	no_softening
+türkmengallaönümleri	%<np%>	no_softening
+teleradioýaýlym	%<n%>
+teleýaýlym	%<n%>
+article	%<n%>	no_softening
+golf	%<n%>	no_softening
+holding	%<n%>	no_softening
+expo	%<n%>	no_softening
+smart	%<adj%>	no_softening
+online	%<adj%>	no_softening
+annaýew	%<np%>	no_softening
+çakyýew	%<np%>	no_softening
+atagulyýew	%<np%>	no_softening
+annamämmedow	%<np%>	no_softening
+atahallyýew	%<np%>	no_softening
+garryýew	%<np%>	no_softening
+çaryýew	%<np%>	no_softening
+amanow	%<np%>	no_softening
+geldimyradow	%<np%>	no_softening
+berdiýew	%<np%>	no_softening
+myradow	%<np%>	no_softening
+rejepow	%<np%>	no_softening
+taganow	%<np%>	no_softening
+baýramow	%<np%>	no_softening
+öwezow	%<np%>	no_softening
+saparlyýew	%<np%>	no_softening
+allaberdiýew	%<np%>	no_softening
+nurymow	%<np%>	no_softening
+saparowa	%<np%>	no_softening
+hudaýberdiýew	%<np%>	no_softening
+baýramsähedow	%<np%>	no_softening
+durdymyradow	%<np%>	no_softening
+hojamyradow	%<np%>	no_softening
+ýazmyradow	%<np%>	no_softening
+islamow	%<np%>	no_softening
+baýmyradow	%<np%>	no_softening
+handurdyýew	%<np%>	no_softening
+sapardurdyýew	%<np%>	no_softening
+jumadurdyýew	%<np%>	no_softening
+abdyllaýew	%<np%>	no_softening
+hydyrow	%<np%>	no_softening
+nurberdiýew	%<np%>	no_softening
+atageldiýew	%<np%>	no_softening
+baýgeldiýew	%<np%>	no_softening
+agamyradow	%<np%>	no_softening
+hajymyradow	%<np%>	no_softening
+jumaýew	%<np%>	no_softening
+gurbannazarow	%<np%>	no_softening
+muhammetberdiýew	%<np%>	no_softening
+abdyrahymow	%<np%>	no_softening
+annagurbanow	%<np%>	no_softening
+atadurdyýew	%<np%>	no_softening
+gylyjow	%<np%>	no_softening
+durdylyýew	%<np%>	no_softening
+öwezmyradow	%<np%>	no_softening
+hallyýew	%<np%>	no_softening
+soltanowa	%<np%>	no_softening
+kulyýewa	%<np%>	no_softening
+orazdurdyýewa	%<np%>	no_softening
+seýidowa	%<np%>	no_softening
+atabaýewa	%<np%>	no_softening
+türkmenowa	%<np%>	no_softening
+geldiýewa	%<np%>	no_softening
+durdyýewa	%<np%>	no_softening
+hojamyradowa	%<np%>	no_softening
+myradowa	%<np%>	no_softening
+baýramowa	%<np%>	no_softening
+saparowa	%<np%>	no_softening
+annagurbanowa	%<np%>	no_softening
+gurbangulyýewiç	%<np%>	no_softening
+gurbangeldiýewiç	%<np%>	no_softening
+mälikgulyýewiç	%<np%>	no_softening
+annageldiýewiç	%<np%>	no_softening
+orazmyradowiç	%<np%>	no_softening
+muhammedowiç	%<np%>	no_softening
+mirziýoýew	%<np%>	no_softening
+tokaýew	%<np%>	no_softening
+lukaşenko	%<np%>	no_softening
+rahmоn	%<np%>	no_softening
+raisi	%<np%>	no_softening
+modi	%<np%>	no_softening
+makron	%<np%>	no_softening
+erdogan	%<np%>	no_softening
+putinow	%<np%>	no_softening
+guttereş	%<np%>	no_softening
+stoltenberg	%<np%>	no_softening
+laýen	%<np%>	no_softening
+şawkat	%<np%>	no_softening
+oguljahan	%<np%>	no_softening
+emomali	%<np%>	no_softening
+wladimir	%<np%>	no_softening
+antoniu	%<np%>	no_softening
+masud	%<np%>	no_softening
+ilham	%<np%>	no_softening
+hamad	%<np%>	no_softening
+binali	%<np%>	no_softening
+kassym-jomart	%<np%>	no_softening
+nursultan	%<np%>	no_softening
+recep	%<np%>	no_softening
+taýýip	%<np%>	no_softening
+emanuel	%<np%>	no_softening
+olaf	%<np%>	no_softening
+fumio	%<np%>	no_softening
+narendra	%<np%>	no_softening
+mohammed	%<np%>	no_softening
+muhammad	%<np%>	no_softening
+abdulaziz	%<np%>	no_softening
+haçaturýan	%<np%>	no_softening
+awagýan	%<np%>	no_softening
+patrisiýa	%<np%>	no_softening
+alfiýa	%<np%>	no_softening
+ursula	%<np%>	no_softening
+šarl	%<np%>	no_softening
+žan	%<np%>	no_softening
+žak	%<np%>	no_softening
+tatarystan	%<np%>	no_softening
+hyrat	%<np%>	no_softening
+astrahan	%<np%>	no_softening
+serhetabat	%<np%>	no_softening
+rossiýa	%<np%>	no_softening
+bosniýa	%<np%>	no_softening
+hersegowinа	%<np%>	no_softening
+ulgamlaýyn	%<adv%>
+mowzuklaýyn	%<adv%>
+şertnamalaýyn	%<adv%>
+tapgyrlaýyn	%<adv%>
+bäştaraplaýyn	%<adv%>
+meýilnamalaýyn	%<adv%>
+altytaraplaýyn	%<adv%>
+bulutlaýyn	%<adv%>
+taglymlaýyn	%<adv%>
+öňtaraplaýyn	%<adv%>
+birtaraplaýyn	%<adv%>
+dörttaraplaýyn	%<adv%>
+ählitaraplaýyn	%<adv%>
+senenamalaýyn	%<adv%>
+rulonlaýyn	%<adv%>
+düzümleýin	%<adv%>
+durmuş-ykdysady	%<adj%>
+söwda-ykdysady	%<adj%>
+haýyr-sahawat	%<n%>
+ýaşaýyş-durmuş	%<adj%>
+syýasy-diplomatik	%<adj%>
+maddy-enjamlaýyn	%<adj%>
+ýangyç-energetika	%<n%>
+medeni-durmuş	%<adj%>
+söwda-senagat	%<n%>
+ulag-aragatnaşyk	%<n%>
+aýdym-saz	%<n%>
+il-ýurt	%<n%>
+ylym-bilim	%<n%>
+many-mazmunly	%<adj%>
+many-mazmun	%<n%>
+ulag-logistika	%<n%>
+medeni-ynsanperwer	%<adj%>
+dost-doganlyk	%<n%>
+taryhy-medeni	%<adj%>
+ylmy-tehniki	%<adj%>
+ylmy-amaly	%<adj%>
+ylmy-kliniki	%<adj%>
+premýer-ministr	%<n%>
+jemgyýetçilik-syýasy	%<adj%>
+senagat-innowasion	%<adj%>
+durmuş-medeni	%<adj%>
+neft-gaz	%<n%>
+sport-sagaldyş	%<n%>
+çeper-halyçylyk	%<n%>
+hukuk-goraýjy	%<adj%>
+saglygy-goraýyş	%<n%>
+oba-hojalyk	%<n%>
+
+# === Faz 2: Motor düzeltmeleri sonrası eklenen kelimeler (otomatik) ===
+bin	%<n%>
+birek	%<n%>
+beriji	%<n%>
+dikeldiş	%<n%>
+önümhana	%<n%>
+olimpiýaçy	%<n%>
+çemeleşme	%<n%>
+maslahatlaşma	%<n%>
+knýazlyk	%<n%>
+raýatsyz	%<adj%>
+köpasyrlyk	%<adj%>
+ygrarly	%<adj%>
+Saud	%<np%>
+Wise	%<np%>
+Alhaj	%<np%>
+Şanhaý	%<np%>
+Anžali	%<np%>
+Öweznepesow	%<np%>
+Annamyradow	%<np%>
+Aliýew	%<np%>
+Döwletgeldi	%<np%>
+Döwletmämmet	%<np%>
+Sini	%<np%>
+ýaryş	%<n%>
+klub	%<n%>
+karbamid	%<n%>
+şygryýet	%<n%>
+ynandyrma	%<n%>
+awtordaş	%<n%>
+hazarüsti	%<adj%>
+belleýiş	%<n%>
+printer	%<n%>
+ygtyýarnama	%<n%>
+goldaw	%<n%>
+ýaryşlar	%<n%>
+açylyş	%<n%>
+satyn	%<adv%>
+barlaghana	%<n%>
+olimpiada	%<n%>
+bolş	%<n%>
+ewi	%<n%>
+Öweznepesow	%<np%>
+Jumamyradow	%<np%>
+Beglow	%<np%>
+Mämmedowa	%<np%>
+Berdiniýazow	%<np%>
+Kakaýew	%<np%>
+Annameredow	%<np%>
+Welinazarow	%<np%>
+Amangeldiýew	%<np%>
+Taganow	%<np%>
+Ataýew	%<np%>
+Žomart	%<np%>
+Mihail	%<np%>
+Abdulla	%<np%>
+Dmitriý	%<np%>
+Amandurdy	%<np%>
+Ýagşygeldi	%<np%>
+Ýazgeldi	%<np%>
+Döwletgeldi	%<np%>
+Sanabar	%<np%>
+Pirýar	%<np%>
+Mämmetguly	%<np%>
+Toýguly	%<np%>
+Dänew	%<np%>
+Frankfurt	%<np%>
+Lanka	%<np%>
+Almaty	%<np%>
+Hirosi	%<np%>
+Kaha	%<np%>
+Mäne	%<np%>
+Putin	%<np%>
+Pezeşkian	%<np%>
+Zaýed	%<np%>
+Nicklaus	%<np%>
+Isa	%<np%>
+sanlylaşdyr	%<v%>
+döwrebaplaşdyr	%<v%>
+çylşyrymlaşdyr	%<v%>
+awtomatlaşdyr	%<v%>
+senagatlaşdyr	%<v%>
+diwersifikasiýalaşdyr	%<v%>
+pugtalandyr	%<v%>
+esaslandyr	%<v%>
+ýokarlandyr	%<v%>
+ornaşdyr	%<v%>
+sanlylaş	%<v%>
+döwrebaplaş	%<v%>
+senagatlaş	%<v%>
+Öweznepesowiç	%<np%>
+Jumamyradowiç	%<np%>
+Welinazarowiç	%<np%>

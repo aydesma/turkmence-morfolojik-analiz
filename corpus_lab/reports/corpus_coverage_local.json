@@ -1,549 +1,607 @@
 {
-  "test_date": "2026-03-08T02:21:26.938986",
+  "test_date": "2026-03-08T06:13:46.783013",
   "corpus_file": "metbugat_corpus.txt",
-  "total_corpus_words": 658864,
-  "sample_size": 20000,
+  "total_corpus_words": 658881,
+  "sample_size": 658881,
   "results": {
-    "total_tokens": 20000,
-    "total_types": 5380,
-    "recognized_tokens": 18375,
-    "unrecognized_tokens": 1625,
-    "recognized_types": 4283,
-    "unrecognized_types": 1097,
-    "token_coverage_pct": 91.88,
-    "type_coverage_pct": 79.61,
+    "total_tokens": 658881,
+    "total_types": 29187,
+    "recognized_tokens": 632437,
+    "unrecognized_tokens": 26444,
+    "recognized_types": 20466,
+    "unrecognized_types": 8721,
+    "token_coverage_pct": 95.99,
+    "type_coverage_pct": 70.12,
     "pos_distribution": {
-      "noun": 3326,
-      "verb": 896,
-      "pronoun": 32,
-      "adjective": 29
+      "noun": 14650,
+      "verb": 5616,
+      "adjective": 140,
+      "pronoun": 60
     }
   },
   "error_categories": {
     "diger": {
-      "type_count": 924,
-      "token_count": 1295,
+      "type_count": 7380,
+      "token_count": 22020,
       "top_examples": [
         [
           "and",
-          19
+          502
         ],
         [
           "services",
-          19
+          501
         ],
         [
-          "bin",
-          10
+          "şatdyryn",
+          100
         ],
         [
-          "gatnaşmagynda",
-          10
+          "wekiliýetiniň",
+          88
         ],
         [
-          "işläp",
-          8
+          "belleýşi",
+          63
         ],
         [
-          "gülläp",
-          8
+          "allatagaladan",
+          60
         ],
         [
-          "kafedrasynyň",
-          7
+          "wekiliýeti",
+          60
         ],
         [
-          "bolşy",
-          6
+          "nýu",
+          52
         ],
         [
-          "sürüjisi",
-          6
+          "ali",
+          52
         ],
         [
-          "geçirilmegine",
-          6
+          "sammite",
+          47
         ],
         [
-          "akmyradowiç",
-          6
+          "wezipäni",
+          41
         ],
         [
-          "atabaýewa",
-          6
+          "monte",
+          41
         ],
         [
-          "saud",
-          5
+          "astynda",
+          39
         ],
         [
-          "belläp",
-          5
+          "den",
+          38
         ],
         [
-          "kararnama",
-          5
+          "sammitine",
+          38
         ],
         [
-          "ýetiriji",
-          5
-        ],
-        [
-          "barşynda",
-          5
-        ],
-        [
-          "logistika",
-          5
-        ],
-        [
-          "ugry",
-          5
-        ],
-        [
-          "derejä",
-          5
-        ]
-      ]
-    },
-    "ozel_isim": {
-      "type_count": 5,
-      "token_count": 73,
-      "top_examples": [
-        [
-          "berdimuhamedow",
+          "tejribäni",
           35
         ],
         [
-          "berdimuhamedowyň",
-          19
+          "ýork",
+          35
         ],
         [
-          "berdimuhamedowa",
-          16
+          "taýýardyrys",
+          34
         ],
         [
-          "türkmenistanlylaryň",
-          2
+          "karlo",
+          33
         ],
         [
-          "türkmenistanly",
-          1
+          "türksoý",
+          32
         ]
       ]
     },
     "fiil_cekimi": {
-      "type_count": 49,
-      "token_count": 72,
+      "type_count": 448,
+      "token_count": 1395,
       "top_examples": [
         [
-          "wise",
-          5
+          "alşyldy",
+          59
         ],
         [
-          "şertnamalaýyn",
-          4
+          "iberenler",
+          53
         ],
         [
-          "plenar",
-          4
+          "alber",
+          32
         ],
         [
-          "döwletgeldi",
-          3
+          "turgundy",
+          30
         ],
         [
-          "wekilbazar",
-          3
+          "gurbangeldi",
+          27
         ],
         [
-          "ulgamlaýyn",
-          2
+          "makroykdysady",
+          26
         ],
         [
-          "geoykdysady",
-          2
+          "alyşmalar",
+          26
         ],
         [
-          "bilermenler",
-          2
+          "geňeşmeler",
+          25
+        ],
+        [
+          "jaber",
+          22
         ],
         [
           "edenler",
-          2
+          17
         ],
         [
-          "mowzuklaýyn",
-          2
+          "visa",
+          15
         ],
         [
-          "düzümleýin",
-          2
+          "bilermenler",
+          14
         ],
         [
-          "telekommunikasiýalar",
-          2
+          "anwar",
+          13
         ],
         [
-          "alşyldy",
-          2
+          "draupadi",
+          12
         ],
         [
-          "kararnamalar",
-          2
+          "wekilbazar",
+          12
         ],
         [
-          "wideoşekiller",
-          1
+          "çarygeldi",
+          11
         ],
         [
-          "pirýar",
-          1
+          "naser",
+          11
         ],
         [
-          "amer",
-          1
+          "orazdurdy",
+          11
         ],
         [
-          "baýramgeldi",
-          1
+          "walter",
+          10
         ],
         [
-          "innowasiýalar",
-          1
-        ],
-        [
-          "meýilnamalaýyn",
-          1
-        ]
-      ]
-    },
-    "ettirgen_edilgen": {
-      "type_count": 35,
-      "token_count": 51,
-      "top_examples": [
-        [
-          "ösdürilmegine",
-          6
-        ],
-        [
-          "pugtalandyryljakdygyna",
-          4
-        ],
-        [
-          "döwrebaplaşdyrmak",
-          4
-        ],
-        [
-          "ösdüriljekdigine",
-          3
-        ],
-        [
-          "diwersifikasiýalaşdyrmaga",
-          2
-        ],
-        [
-          "bildirýändigini",
-          2
-        ],
-        [
-          "ösdürilmeginde",
-          2
-        ],
-        [
-          "deňeşdirilende",
-          1
-        ],
-        [
-          "döredilendigi",
-          1
-        ],
-        [
-          "meýilleşdirilýändigi",
-          1
-        ],
-        [
-          "pugtalandyrylmagyny",
-          1
-        ],
-        [
-          "taslamalaşdyrmak",
-          1
-        ],
-        [
-          "awtomatizasiýalaşdyryş",
-          1
-        ],
-        [
-          "bildirilýändigi",
-          1
-        ],
-        [
-          "edilendigi",
-          1
-        ],
-        [
-          "şertlendirilendir",
-          1
-        ],
-        [
-          "ösdürilýändigini",
-          1
-        ],
-        [
-          "sanlylaşdyrma",
-          1
-        ],
-        [
-          "gönükdirilipdi",
-          1
-        ],
-        [
-          "ýokarlandyrar",
-          1
+          "berger",
+          10
         ]
       ]
     },
     "cok_ekli_isim": {
-      "type_count": 38,
-      "token_count": 45,
+      "type_count": 338,
+      "token_count": 1064,
       "top_examples": [
         [
-          "türkmengallaönümleri",
-          3
-        ],
-        [
-          "sagalmaklary",
-          3
-        ],
-        [
           "gazananlaryny",
-          2
-        ],
-        [
-          "innowasiýalary",
-          2
-        ],
-        [
-          "innowasiýalaryň",
-          2
-        ],
-        [
-          "şahamçalary",
-          1
-        ],
-        [
-          "sanamalary",
-          1
-        ],
-        [
-          "geçirmekleri",
-          1
+          48
         ],
         [
           "gazananlary",
-          1
+          32
         ],
         [
-          "alyşmalary",
-          1
-        ],
-        [
-          "geçenlerini",
-          1
-        ],
-        [
-          "okaýanlaryň",
-          1
-        ],
-        [
-          "peýdalanmaklary",
-          1
-        ],
-        [
-          "demirbetonönümleri",
-          1
-        ],
-        [
-          "türkmenstandartlary",
-          1
+          "kuwwatlyklaryny",
+          28
         ],
         [
           "taýýarlamalary",
-          1
+          28
         ],
         [
-          "türkmenhowaýollary",
-          1
+          "taýýardyklaryny",
+          23
         ],
         [
-          "kararnamalaryň",
-          1
+          "alyşmalaryň",
+          22
         ],
         [
-          "dizaýnerleri",
-          1
+          "bolanlaryň",
+          22
+        ],
+        [
+          "amatlyklary",
+          21
+        ],
+        [
+          "almaklary",
+          21
+        ],
+        [
+          "geňeşmeleri",
+          20
+        ],
+        [
+          "türkmenstandartlary",
+          20
+        ],
+        [
+          "geňeşmeleriň",
+          19
+        ],
+        [
+          "bilermenleriň",
+          18
+        ],
+        [
+          "sagalmaklary",
+          18
         ],
         [
           "edijileri",
-          1
+          17
+        ],
+        [
+          "kuwwatlyklary",
+          15
+        ],
+        [
+          "ygrarlydyklaryny",
+          15
+        ],
+        [
+          "gatnaşmaklary",
+          13
+        ],
+        [
+          "demirbetonönümleri",
+          13
+        ],
+        [
+          "türkmendemirýollary",
+          13
         ]
       ]
     },
     "yabanci": {
-      "type_count": 13,
-      "token_count": 43,
+      "type_count": 72,
+      "token_count": 756,
       "top_examples": [
         [
           "other",
-          17
-        ],
-        [
-          "innowasion",
-          14
-        ],
-        [
-          "menejment",
-          2
-        ],
-        [
-          "brifing",
-          1
-        ],
-        [
-          "ratings",
-          1
-        ],
-        [
-          "phethongthan",
-          1
+          501
         ],
         [
           "corporation",
-          1
-        ],
-        [
-          "boeing",
-          1
-        ],
-        [
-          "reýting",
-          1
-        ],
-        [
-          "holding",
-          1
+          20
         ],
         [
           "engineering",
-          1
+          16
         ],
         [
-          "golf",
-          1
+          "toph",
+          15
         ],
         [
-          "hasaphanasynyň",
-          1
+          "institusional",
+          15
+        ],
+        [
+          "türkmentelekom",
+          15
+        ],
+        [
+          "nebithimiýa",
+          14
+        ],
+        [
+          "international",
+          12
+        ],
+        [
+          "construction",
+          11
+        ],
+        [
+          "turkmentextile",
+          10
+        ],
+        [
+          "pauerlifting",
+          7
+        ],
+        [
+          "ratings",
+          7
+        ],
+        [
+          "mämmethan",
+          6
+        ],
+        [
+          "parlamentarileriň",
+          6
+        ],
+        [
+          "boeing",
+          5
+        ],
+        [
+          "kikboksing",
+          5
+        ],
+        [
+          "parlamentariler",
+          5
+        ],
+        [
+          "integrasion",
+          4
+        ],
+        [
+          "the",
+          4
+        ],
+        [
+          "marketing",
+          4
         ]
       ]
     },
     "yapim_ekli": {
-      "type_count": 27,
-      "token_count": 40,
+      "type_count": 214,
+      "token_count": 536,
       "top_examples": [
         [
-          "köpasyrlyk",
-          5
+          "köpöwüşginli",
+          19
         ],
         [
-          "inženerçilik",
-          3
+          "kiberhowpsuzlyk",
+          18
         ],
         [
-          "goşulyşmazlyk",
-          3
+          "fizuli",
+          18
         ],
         [
-          "fransuz",
-          3
+          "çarigali",
+          15
         ],
         [
-          "leýli",
-          2
+          "umumymilli",
+          12
         ],
         [
-          "gatly",
-          2
-        ],
-        [
-          "görogly",
-          2
+          "muhammetguly",
+          11
         ],
         [
           "dustlik",
-          1
+          10
         ],
         [
-          "badamowiçi",
-          1
-        ],
-        [
-          "saparguly",
-          1
-        ],
-        [
-          "darajali",
-          1
-        ],
-        [
-          "seçgiçilik",
-          1
-        ],
-        [
-          "dörtguly",
-          1
-        ],
-        [
-          "türkmenhaly",
-          1
-        ],
-        [
-          "köpöwüşginli",
-          1
-        ],
-        [
-          "fuzuli",
-          1
-        ],
-        [
-          "transmilli",
-          1
+          "ahlaklylyk",
+          10
         ],
         [
           "woltly",
-          1
+          10
         ],
         [
-          "heýkeltaraşlyk",
-          1
+          "köpşahaly",
+          9
         ],
         [
-          "metanoly",
-          1
+          "darajali",
+          9
+        ],
+        [
+          "gidimli",
+          7
+        ],
+        [
+          "amatlykly",
+          7
+        ],
+        [
+          "duslyk",
+          7
+        ],
+        [
+          "lazuli",
+          6
+        ],
+        [
+          "dörtguly",
+          6
+        ],
+        [
+          "taňryguly",
+          6
+        ],
+        [
+          "köpdilli",
+          6
+        ],
+        [
+          "aşyrguly",
+          5
+        ],
+        [
+          "şaýoly",
+          5
+        ]
+      ]
+    },
+    "ettirgen_edilgen": {
+      "type_count": 219,
+      "token_count": 511,
+      "top_examples": [
+        [
+          "deňeşdirilende",
+          38
+        ],
+        [
+          "aýdylanda",
+          37
+        ],
+        [
+          "etdiriler",
+          20
+        ],
+        [
+          "gönükdiriler",
+          13
+        ],
+        [
+          "bildirýändiklerini",
+          11
+        ],
+        [
+          "gözelleşdirmek",
+          11
+        ],
+        [
+          "meýilnamalaşdyryş",
+          10
+        ],
+        [
+          "meýilleşdiriş",
+          10
+        ],
+        [
+          "şertlendirilendir",
+          9
+        ],
+        [
+          "enjamlaşdyrylyşy",
+          7
+        ],
+        [
+          "kämilleşdiriler",
+          6
+        ],
+        [
+          "ösdürmekdäki",
+          6
+        ],
+        [
+          "suwuklandyrylan",
+          6
+        ],
+        [
+          "hususylaşdyrmak",
+          6
+        ],
+        [
+          "sertifikatlaşdyrmak",
+          6
+        ],
+        [
+          "özleşdirilende",
+          5
+        ],
+        [
+          "kepillendirmek",
+          5
+        ],
+        [
+          "karzlaşdyryş",
+          5
+        ],
+        [
+          "pugtalandyrmakdaky",
+          5
+        ],
+        [
+          "seredilende",
+          5
         ]
       ]
     },
     "fiilimsi_zarf": {
-      "type_count": 4,
-      "token_count": 4,
+      "type_count": 36,
+      "token_count": 98,
       "top_examples": [
         [
-          "gözelleşýär",
-          1
+          "nahaýýan",
+          24
         ],
         [
           "tanşyp",
+          14
+        ],
+        [
+          "sarpalamak",
+          7
+        ],
+        [
+          "alşylmagy",
+          6
+        ],
+        [
+          "group",
+          5
+        ],
+        [
+          "henip",
+          4
+        ],
+        [
+          "çölleşmek",
+          3
+        ],
+        [
+          "championship",
+          2
+        ],
+        [
+          "sýuesýan",
+          2
+        ],
+        [
+          "sarpalanýan",
+          2
+        ],
+        [
+          "gözelleşýär",
+          2
+        ],
+        [
+          "lýaýen",
+          2
+        ],
+        [
+          "çölleşmäge",
+          2
+        ],
+        [
+          "kodlamak",
+          1
+        ],
+        [
+          "zarip",
+          1
+        ],
+        [
+          "ylalaşmak",
           1
         ],
         [
@@ -551,21 +609,89 @@
           1
         ],
         [
-          "haçaturýan",
+          "gatnadyp",
+          1
+        ],
+        [
+          "integrirlemek",
+          1
+        ],
+        [
+          "ylalaşmakda",
+          1
+        ]
+      ]
+    },
+    "ozel_isim": {
+      "type_count": 9,
+      "token_count": 56,
+      "top_examples": [
+        [
+          "türkmenistanlylaryň",
+          25
+        ],
+        [
+          "türkmenistanly",
+          12
+        ],
+        [
+          "türkmenistanlylar",
+          6
+        ],
+        [
+          "türkmenistanlylara",
+          5
+        ],
+        [
+          "türkmenistanlynyň",
+          3
+        ],
+        [
+          "türkmenistanlylary",
+          2
+        ],
+        [
+          "türkmenistanlyny",
+          1
+        ],
+        [
+          "türkmenistanlylarda",
+          1
+        ],
+        [
+          "berdimuhamedowanyň",
           1
         ]
       ]
     },
     "tireli_bilesik": {
-      "type_count": 2,
-      "token_count": 2,
+      "type_count": 4,
+      "token_count": 7,
       "top_examples": [
         [
-          "hhr-iň",
-          1
+          "abş-ly",
+          2
         ],
         [
-          "bsg-ä",
+          "dçböbd-nä",
+          2
+        ],
+        [
+          "eho-barlag",
+          2
+        ],
+        [
+          "qr-kodlary",
+          1
+        ]
+      ]
+    },
+    "sira_sayi": {
+      "type_count": 1,
+      "token_count": 1,
+      "top_examples": [
+        [
+          "kenji",
           1
         ]
       ]
@@ -573,404 +699,404 @@
   },
   "top_unrecognized_100": [
     [
-      "berdimuhamedow",
-      35
-    ],
-    [
-      "berdimuhamedowyň",
-      19
-    ],
-    [
       "and",
-      19
-    ],
-    [
-      "services",
-      19
+      502
     ],
     [
       "other",
-      17
+      501
     ],
     [
-      "berdimuhamedowa",
-      16
+      "services",
+      501
     ],
     [
-      "innowasion",
-      14
+      "şatdyryn",
+      100
     ],
     [
-      "bin",
-      10
+      "wekiliýetiniň",
+      88
     ],
     [
-      "gatnaşmagynda",
-      10
+      "belleýşi",
+      63
     ],
     [
-      "işläp",
-      8
+      "allatagaladan",
+      60
     ],
     [
-      "gülläp",
-      8
+      "wekiliýeti",
+      60
     ],
     [
-      "kafedrasynyň",
-      7
+      "alşyldy",
+      59
     ],
     [
-      "ösdürilmegine",
-      6
+      "iberenler",
+      53
     ],
     [
-      "bolşy",
-      6
+      "nýu",
+      52
     ],
     [
-      "sürüjisi",
-      6
+      "ali",
+      52
     ],
     [
-      "geçirilmegine",
-      6
+      "gazananlaryny",
+      48
     ],
     [
-      "akmyradowiç",
-      6
+      "sammite",
+      47
     ],
     [
-      "atabaýewa",
-      6
+      "wezipäni",
+      41
     ],
     [
-      "saud",
-      5
+      "monte",
+      41
     ],
     [
-      "belläp",
-      5
+      "astynda",
+      39
     ],
     [
-      "köpasyrlyk",
-      5
+      "den",
+      38
     ],
     [
-      "kararnama",
-      5
+      "deňeşdirilende",
+      38
     ],
     [
-      "ýetiriji",
-      5
+      "sammitine",
+      38
     ],
     [
-      "barşynda",
-      5
+      "aýdylanda",
+      37
     ],
     [
-      "logistika",
-      5
-    ],
-    [
-      "wise",
-      5
-    ],
-    [
-      "ugry",
-      5
-    ],
-    [
-      "derejä",
-      5
-    ],
-    [
-      "içine",
-      4
-    ],
-    [
-      "edilmegine",
-      4
-    ],
-    [
-      "pugtalandyryljakdygyna",
-      4
-    ],
-    [
-      "gurbangulyýewiç",
-      4
-    ],
-    [
-      "şertnamalaýyn",
-      4
-    ],
-    [
-      "boljakdygyna",
-      4
-    ],
-    [
-      "plenar",
-      4
-    ],
-    [
-      "kliniki",
-      4
-    ],
-    [
-      "türkmengeologiýa",
-      4
-    ],
-    [
-      "hepdäniň",
-      4
-    ],
-    [
-      "türkmenabat",
-      4
-    ],
-    [
-      "metan",
-      4
-    ],
-    [
-      "itergi",
-      4
-    ],
-    [
-      "nebitgaz",
-      4
-    ],
-    [
-      "ulanyş",
-      4
-    ],
-    [
-      "döwrebaplaşdyrmak",
-      4
-    ],
-    [
-      "mohammed",
-      4
-    ],
-    [
-      "birek",
-      4
-    ],
-    [
-      "ynandyrmalarymy",
-      4
-    ],
-    [
-      "kararnamanyň",
-      4
-    ],
-    [
-      "ornaşdyrylmagyna",
-      4
-    ],
-    [
-      "edýändigini",
-      4
-    ],
-    [
-      "inženerçilik",
-      3
-    ],
-    [
-      "türkmengallaönümleri",
-      3
-    ],
-    [
-      "derýaýew",
-      3
-    ],
-    [
-      "hökümetara",
-      3
-    ],
-    [
-      "çäräniň",
-      3
-    ],
-    [
-      "geňeşliginiň",
-      3
-    ],
-    [
-      "barşy",
-      3
-    ],
-    [
-      "nusgawy",
-      3
-    ],
-    [
-      "türkmengaz",
-      3
-    ],
-    [
-      "karlo",
-      3
-    ],
-    [
-      "miromonowiç",
-      3
-    ],
-    [
-      "goşulyşmazlyk",
-      3
-    ],
-    [
-      "inklýuziw",
-      3
-    ],
-    [
-      "garryýew",
-      3
-    ],
-    [
-      "dikeldiş",
-      3
-    ],
-    [
-      "orazdurdyýewa",
-      3
-    ],
-    [
-      "hamad",
-      3
-    ],
-    [
-      "gelýändigini",
-      3
-    ],
-    [
-      "garamagyna",
-      3
-    ],
-    [
-      "döwletgeldi",
-      3
-    ],
-    [
-      "enäniň",
-      3
-    ],
-    [
-      "peterburg",
-      3
-    ],
-    [
-      "ataýewi",
-      3
-    ],
-    [
-      "ýokarda",
-      3
-    ],
-    [
-      "sagalmaklary",
-      3
-    ],
-    [
-      "açylyş",
-      3
-    ],
-    [
-      "mälikgulyýewiç",
-      3
-    ],
-    [
-      "nygtalyşy",
-      3
-    ],
-    [
-      "edilýändiginiň",
-      3
-    ],
-    [
-      "wekilbazar",
-      3
-    ],
-    [
-      "döredilmegini",
-      3
-    ],
-    [
-      "tertipnamasynyň",
-      3
-    ],
-    [
-      "žomart",
-      3
-    ],
-    [
-      "ösdüriljekdigine",
-      3
-    ],
-    [
-      "guramagynda",
-      3
-    ],
-    [
-      "geçirilýändiginiň",
-      3
-    ],
-    [
-      "döredilmeginiň",
-      3
-    ],
-    [
-      "nyýazow",
-      3
-    ],
-    [
-      "üýtgemegine",
-      3
-    ],
-    [
-      "gulmanowa",
-      3
-    ],
-    [
-      "atagulyýew",
-      3
-    ],
-    [
-      "sergä",
-      3
+      "tejribäni",
+      35
     ],
     [
       "ýork",
-      3
+      35
     ],
     [
-      "şähergurluşyk",
-      3
+      "taýýardyrys",
+      34
     ],
     [
-      "içinde",
-      3
+      "karlo",
+      33
     ],
     [
-      "umumybilim",
-      3
+      "türksoý",
+      32
     ],
     [
-      "myradowy",
-      3
+      "gazananlary",
+      32
     ],
     [
-      "fransuz",
-      3
+      "ltd",
+      32
     ],
     [
-      "gatnaşmagyny",
-      3
+      "alber",
+      32
     ],
     [
-      "teleradioýaýlymynyň",
-      3
+      "buig",
+      32
+    ],
+    [
+      "nygtaýşy",
+      31
+    ],
+    [
+      "ynanmagyňyzy",
+      31
+    ],
+    [
+      "amangeldiýewiç",
+      31
+    ],
+    [
+      "bazarow",
+      31
+    ],
+    [
+      "multimodal",
+      31
+    ],
+    [
+      "ştab",
+      31
+    ],
+    [
+      "petronas",
+      31
+    ],
+    [
+      "abdelaziz",
+      30
+    ],
+    [
+      "onlaýn",
+      30
+    ],
+    [
+      "akmyradowiç",
+      30
+    ],
+    [
+      "sakarçäge",
+      30
+    ],
+    [
+      "ynsanperwerligiň",
+      30
+    ],
+    [
+      "dörän",
+      30
+    ],
+    [
+      "turgundy",
+      30
+    ],
+    [
+      "raşid",
+      29
+    ],
+    [
+      "etjeklerine",
+      29
+    ],
+    [
+      "bölümçesiniň",
+      29
+    ],
+    [
+      "ýüzbe",
+      29
+    ],
+    [
+      "ahmed",
+      29
+    ],
+    [
+      "saparowy",
+      29
+    ],
+    [
+      "kuwwatlyklaryny",
+      28
+    ],
+    [
+      "taýýarlamalary",
+      28
+    ],
+    [
+      "mämmedowy",
+      28
+    ],
+    [
+      "goraglylygyny",
+      28
+    ],
+    [
+      "bedenterbiýäni",
+      27
+    ],
+    [
+      "sankt",
+      27
+    ],
+    [
+      "tani",
+      27
+    ],
+    [
+      "gurbangeldi",
+      27
+    ],
+    [
+      "makroykdysady",
+      26
+    ],
+    [
+      "ediji",
+      26
+    ],
+    [
+      "mämmedow",
+      26
+    ],
+    [
+      "şabat",
+      26
+    ],
+    [
+      "alyşmalar",
+      26
+    ],
+    [
+      "garamazdan",
+      26
+    ],
+    [
+      "walentina",
+      26
+    ],
+    [
+      "sammitiniň",
+      25
+    ],
+    [
+      "seljeriş",
+      25
+    ],
+    [
+      "türkmenistanlylaryň",
+      25
+    ],
+    [
+      "geňeşmeler",
+      25
+    ],
+    [
+      "rahmon",
+      25
+    ],
+    [
+      "halaç",
+      25
+    ],
+    [
+      "nahaýýan",
+      24
+    ],
+    [
+      "sabah",
+      24
+    ],
+    [
+      "uludyr",
+      24
+    ],
+    [
+      "portunyň",
+      24
+    ],
+    [
+      "orazowy",
+      24
+    ],
+    [
+      "berdimuhamet",
+      24
+    ],
+    [
+      "surata",
+      23
+    ],
+    [
+      "taýýardyklaryny",
+      23
+    ],
+    [
+      "speca",
+      23
+    ],
+    [
+      "jiu",
+      23
+    ],
+    [
+      "jitsu",
+      23
+    ],
+    [
+      "ýetirende",
+      23
+    ],
+    [
+      "ýarymaý",
+      23
+    ],
+    [
+      "durdyýewi",
+      23
+    ],
+    [
+      "jaber",
+      22
+    ],
+    [
+      "alyşmalaryň",
+      22
+    ],
+    [
+      "bolanlaryň",
+      22
+    ],
+    [
+      "peterburg",
+      22
+    ],
+    [
+      "şarif",
+      22
+    ],
+    [
+      "daýhanbank",
+      22
+    ],
+    [
+      "gurbanowy",
+      22
+    ],
+    [
+      "babaýewi",
+      22
+    ],
+    [
+      "guterriş",
+      22
+    ],
+    [
+      "durkuny",
+      21
+    ],
+    [
+      "amatlyklary",
+      21
+    ],
+    [
+      "ygrarlydygymyzy",
+      21
+    ],
+    [
+      "serhetüsti",
+      21
+    ],
+    [
+      "agamyradowiç",
+      21
+    ],
+    [
+      "ýokarda",
+      21
     ]
   ]
 }
