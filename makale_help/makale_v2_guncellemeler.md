@@ -37,9 +37,9 @@ Corpus analizi ile keşfedilen 58 alıntı kelime **istisna** olarak işaretlend
 
 | Metrik | Önceki | Şimdi | Artış |
 |--------|--------|-------|-------|
-| softening=True (kural dahilinde) | 6,997 | 6,939 | -58 |
-| no_softening (istisna) | 0 | 58 | +58 |
-| Corpus token kapsamı | %71.84 | %78.3 | +6.46pp |
+| softening=True (kural dahilinde) | 6,997 | 8,192 | +1,195 |
+| no_softening (istisna) | 0 | 251 | +251 |
+| Corpus token kapsamı | %71.84 | %96.37 | +24.53pp |
 
 ---
 
@@ -94,7 +94,7 @@ kitap	%<n%>	softening
 > Each noun entry ending in K/P/T/Ç carries an explicit morphophonemic
 > flag: `softening` (default, consonant alternation applies) or
 > `no_softening` (exception, consonant remains unchanged). The current
-> lexicon contains 6,939 softening entries and 58 no_softening entries.
+> lexicon contains 8,192 softening entries and 251 no_softening entries.
 
 ---
 

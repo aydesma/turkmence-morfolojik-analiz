@@ -1,6 +1,6 @@
 # Yapılan İşler — Tamamlanan Özellikler ve Düzeltmeler
 
-> **Son güncelleme:** 28 Şubat 2026
+> **Son güncelleme:** 10 Mart 2026
 
 ---
 
@@ -16,7 +16,7 @@
 | Şubat 2026 | Büyük temizlik (Aşama 8) | 54.795 → 32.051 (n? ve çekimli form silme) |
 | Şubat 2026 | Tek harfli kök temizliği | 36 giriş silindi (yalnızca `o` zamir korundu) → 32.015 |
 
-**Nihai:** 32.015 giriş · 30.154 benzersiz kelime · 5 kaynak
+**Nihai:** 32.738 giriş · 30.753 benzersiz kelime · 5 kaynak + corpus keşfi
 
 ---
 

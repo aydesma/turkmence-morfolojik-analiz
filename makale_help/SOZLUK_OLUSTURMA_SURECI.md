@@ -1,7 +1,7 @@
 # Türkmence Morfolojik Sözlük: Kaynak, Yöntem ve Nihai Yapı
 
-> **Son güncelleme:** 27 Şubat 2026
-> **Nihai sözlük:** 32.015 giriş · 30.154 benzersiz kelime
+> **Son güncelleme:** 10 Mart 2026
+> **Nihai sözlük:** 32.738 giriş · 30.753 benzersiz kelime
 > **Dosya:** `turkmen-fst/data/turkmence_sozluk.txt`
 
 ---
@@ -122,26 +122,27 @@ burun	%<n%>	vowel_drop
 
 | Etiket | Tür | Sayı | Yüzde |
 |--------|-----|------|-------|
-| `%<n%>` | İsim | 21.798 | %68,1 |
-| `%<v%>` | Fiil | 6.471 | %20,2 |
-| `%<adj%>` | Sıfat | 3.094 | %9,7 |
-| `%<np%>` | Özel isim | 548 | %1,7 |
-| `%<adv%>` | Zarf | 36 | %0,11 |
+| `%<n%>` | İsim | 21.929 | %66,97 |
+| `%<v%>` | Fiil | 6.494 | %19,83 |
+| `%<adj%>` | Sıfat | 3.152 | %9,63 |
+| `%<np%>` | Özel isim | 1.036 | %3,16 |
+| `%<adv%>` | Zarf | 56 | %0,17 |
 | `%<unk%>` | Bilinmeyen | 2 | %0,01 |
 | `%<num%>` | Sayı | 26 | %0,08 |
 | `%<pro%>` | Zamir | 14 | %0,04 |
-| Diğer | suf, postp, interj, conj, det, phr, prep | 26 | %0,08 |
-| **Toplam** | | **32.015** | **%100** |
+| Diğer | suf, postp, interj, conj, det, phr, prep | 29 | %0,09 |
+| **Toplam** | | **32.738** | **%100** |
 
 ### Morfolojik Özellikler
 
 | Özellik | Açıklama | Sayı |
 |---------|----------|------|
-| `softening` | Son ünsüzü k/p/t/ç → g/b/d/j yumuşaması alan kelimeler | 7.001 |
-| `vowel_drop` | Ek alırken ünlü düşmesi gösteren kelimeler (burun→burn-, ogul→ogl-) | 20 |
-| `exception_drop:<form>` | İstisnai ünlü düşmesi (asyl→asl, nesil→nesl, ylym→ylm, mähir→mähr, pasyl→pasl) | 5 |
-| `homonym:<detay>` | Eş sesli kelime bilgisi (at, but, gurt, saç, ot, yok) | 6 |
+| `softening` | Son ünsüzü k/p/t/ç → g/b/d/j yumuşaması alan kelimeler | 8.192 |
+| `vowel_drop` | Ek alırken ünlü düşmesi gösteren kelimeler (burun→burn-, ogul→ogl-) | 22 |
+| `exception_drop:<form>` | İstisnai ünlü düşmesi (asyl→asl, nesil→nesl, ylym→ylm, mähir→mähr, pasyl→pasl) | 7 |
+| `homonym:<detay>` | Eş sesli kelime bilgisi (at, but, gurt, saç, ot, yok) | 8 |
 | `rounding` | Yuvarlaklaşma | 3 |
+| `no_softening` | Yumuşama istisnası (alıntı kelimeler) | 251 |
 
 ---
 
@@ -204,7 +205,7 @@ Sözlükteki 4.109 kelime (%13,6) türetilmiş formdur (kökü de sözlükte mev
 
 ## 6. Kısıtlamalar
 
-1. **Softening istisnaları:** Sistem son harfi k/p/t/ç olan tüm isimlere otomatik softening uygular. Bazı yabancı kökenli kelimelerin softening almama durumu henüz sistematik olarak işaretlenmemiştir.
+1. **Softening istisnaları:** Data-driven pipeline ile 251 alıntı kelime `no_softening` olarak işaretlenmiştir. Daha büyük corpus'larda çalıştırılarak liste genişletilebilir.
 
 2. **Hunspell POS belirsizliği:** Düşük güvenilirlikli bayrak gruplarından (%60–70 arası) gelen kelimelerde POS hatası olabilir.
 

@@ -1,6 +1,6 @@
 # Gelecek Planları ve Notlar
 
-> **Son güncelleme:** 27 Şubat 2026
+> **Son güncelleme:** 10 Mart 2026
 
 ---
 
@@ -95,19 +95,21 @@
 
 | Metrik | Değer |
 |--------|-------|
-| Sözlük girişi | 32.015 |
-| Benzersiz kelime | 30.165 |
-| İsim | 21.798 |
-| Fiil | 6.471 |
-| Sıfat | 3.094 |
-| Özel isim | 548 |
+| Sözlük girişi | 32.738 |
+| Benzersiz kelime | 30.753 |
+| İsim | 21.929 |
+| Fiil | 6.494 |
+| Sıfat | 3.152 |
+| Özel isim | 1.036 |
 | Bilinmeyen | 2 |
 | Birim testi | 105 (%100) |
 | Kapsamlı test | 1.192 (%100) |
 | v26 referans | 4.788 (%100) |
 | API testi | 18 (%100) |
 | API endpoint | 7 |
-| Commit sayısı | ~15+ |
+| Token kapsam | %96.37 |
+| Type kapsam | %70.84 |
+| Commit sayısı | ~20+ |
 
 ---
 
