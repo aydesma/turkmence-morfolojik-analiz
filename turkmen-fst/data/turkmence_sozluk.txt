@@ -32725,3 +32725,63 @@ senagatlaş	%<v%>
 Öweznepesowiç	%<np%>
 Jumamyradowiç	%<np%>
 Welinazarowiç	%<np%>
+
+# === Faz3: task.md kayıp analizi eklentileri (2025-06-08) ===
+allatagala	%<n%>
+garamazdan	%<postp%>
+bölümçe	%<n%>
+ştab	%<n%>	no_softening
+onlaýn	%<adj%>
+ýarymaý	%<n%>
+serhetüsti	%<adj%>
+goraglylyk	%<n%>	no_softening
+ediji	%<n%>
+amatlyk	%<n%>	no_softening
+kuwwatlyk	%<n%>	no_softening
+ýokarda	%<adv%>
+astynda	%<postp%>
+seljeriş	%<n%>
+daýhanbank	%<np%>
+berdimuhamet	%<np%>
+türksoý	%<np%>
+multimodal	%<adj%>
+parlamentari	%<n%>
+nebithimiýa	%<n%>
+şabat	%<np%>
+nahaýýan	%<adv%>
+alşyl	%<v%>
+iber	%<v%>
+geňeşme	%<n%>
+alyşma	%<n%>
+bilermen	%<n%>
+taýýarlama	%<n%>
+
+# Faz3b: Eksik özel isimler ve sözler
+Mämmedow	%<np%>
+Saparow	%<np%>
+Bazarow	%<np%>
+Halaç	%<np%>
+Walentina	%<np%>
+Ali	%<np%>
+Rahmon	%<np%>
+Abdelaziz	%<np%>
+Karlo	%<np%>
+Ahmed	%<np%>
+Raşid	%<np%>
+Amangeldiýewiç	%<np%>
+Akmyradowiç	%<np%>
+Sankt	%<np%>
+Tani	%<np%>
+Monte	%<np%>
+Den	%<np%>
+Jaber	%<np%>
+Anwar	%<np%>
+Draupadi	%<np%>
+Güzbe	%<np%>
+Sakargäge	%<np%>
+Turgundy	%<np%>
+Abşly	%<np%>
+Petronas	%<np%>
+Buig	%<np%>
+nygta	%<v%>
+taggardyr	%<v%>

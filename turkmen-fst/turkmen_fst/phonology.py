@@ -83,6 +83,14 @@ SOFTENING_EXCEPTIONS = frozenset({
     "ştat", "üst", "öňk", "gallaç", "ik", "paýtagt",
     # --- Yumuşamayan yerli kelimeler ---
     "iç", "saç", "dost",
+    # --- Corpus analizinden eklenen -ýet kelimeleri (2026-03-08) ---
+    "wekiliýet", "häkimiýet", "jemhuriýet", "jemhuryýet", "niýet",
+    "ynsanyýet", "hususyýet", "aslyýet", "şygryýet", "wesýet",
+    "hoşniýet", "betniýet", "makroykdysadyýet", "mikroykdysadyýet",
+    "ezýet", "gazýet", "bethäsiýet",
+    # --- Corpus analizinden eklenen diğer alıntılar ---
+    "sammit", "ast", "port", "durk", "surat",
+    "adalat", "amanat", "hossarlyk",
 })
 
 

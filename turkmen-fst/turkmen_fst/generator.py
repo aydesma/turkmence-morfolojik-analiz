@@ -242,6 +242,11 @@ class NounGenerator:
                 if n_kay:
                     ek = "ny" if nit == "yogyn" else "ni"
                 elif is_unlu:
+                    # Ünlüyle biten köklerde son ünlü değişimi:
+                    # e → ä  (wezipe → wezipäni, tejribe → tejribäni)
+                    son = govde[-1]
+                    if son == "e":
+                        govde = govde[:-1] + "ä"
                     ek = "ny" if nit == "yogyn" else "ni"
                 else:
                     ek = "y" if nit == "yogyn" else "i"
@@ -381,8 +386,7 @@ class VerbGenerator:
                 return govde + ek, [("NEGATION+TENSE", ek)], False
             else:
                 g = self._fiil_yumusama(govde)
-                if g and g[-1] == 'e':
-                    g = g[:-1] + 'ä'
+                # NOT: e→ä dönüşümü geniş zaman gövdesinde uygulanmaz
                 ev = g[-1] in VowelSystem.ALL if g else False
                 ek = "r" if ev else ("ar" if quality == "yogyn" else "er")
                 return g + ek, [("TENSE", ek)], False
@@ -592,8 +596,20 @@ class VerbGenerator:
                 )
             person_suffix = table[govde][person]
             morphemes.append(("PERSON", person_suffix))
+            base_form = govde + person_suffix
+            if negative:
+                # H2 olumsuzluk: analitik yapı — fiil + "yok"
+                # otyrynym yok, durunym yok
+                morphemes.append(("NEGATION", "yok"))
+                return GenerationResult(
+                    word=base_form + " yok",
+                    breakdown=f"{stem} + {person_suffix if person_suffix else '(0)'} + yok",
+                    stem=stem,
+                    morphemes=morphemes,
+                    is_valid=True
+                )
             return GenerationResult(
-                word=govde + person_suffix,
+                word=base_form,
                 breakdown=f"{stem} + {person_suffix if person_suffix else '(0)'}",
                 stem=stem,
                 morphemes=morphemes,
@@ -683,9 +699,7 @@ class VerbGenerator:
             else:
                 # k/t yumuşaması
                 govde = self._fiil_yumusama(govde)
-                # e→ä dönüşümü
-                if govde and govde[-1] == 'e':
-                    govde = govde[:-1] + 'ä'
+                # NOT: e→ä dönüşümü G2'de uygulanmaz (gel+er=geler, ÇEK+er=çeker)
                 tense_suffix = "r" if ends_vowel else ("ar" if quality == "yogyn" else "er")
             person_suffix = self._person_suffix_extended(quality, person)
 
@@ -869,6 +883,9 @@ class VerbGenerator:
             else:
                 govde = self._fiil_yumusama(govde)
                 if ends_vowel:
+                    # e→ä dönüşümü: döre+n → dörän, güle+n → gülän
+                    if govde.endswith("e"):
+                        govde = govde[:-1] + "ä"
                     suffix = "n"
                 else:
                     suffix = "an" if quality == "yogyn" else "en"

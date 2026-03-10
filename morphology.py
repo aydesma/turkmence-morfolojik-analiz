@@ -52,6 +52,16 @@ YUMUSAMA_ISTISNALARI = frozenset({
     "mart", "awgust", "türk",
     # --- Diğer ---
     "ştat", "üst", "öňk", "gallaç", "ik",
+    # --- Yumuşamayan yerli kelimeler ---
+    "iç", "saç", "dost",
+    # --- Corpus analizinden eklenen -ýet kelimeleri ---
+    "wekiliýet", "häkimiýet", "jemhuriýet", "jemhuryýet", "niýet",
+    "ynsanyýet", "hususyýet", "aslyýet", "şygryýet", "wesýet",
+    "hoşniýet", "betniýet", "makroykdysadyýet", "mikroykdysadyýet",
+    "ezýet", "gazýet", "bethäsiýet",
+    # --- Corpus analizinden eklenen diğer alıntılar ---
+    "sammit", "ast", "port", "durk", "surat",
+    "adalat", "amanat",
 })
 
 # Eş sesli kelimeler sözlüğü
@@ -308,6 +318,11 @@ def isim_cekimle(kok, cokluk=False, iyelik=None, i_tip="tek", hal=None, yumusama
             if n_kay:
                 ek = "ny" if nit == "yogyn" else "ni"
             elif is_unlu:
+                # Ünlüyle biten köklerde son ünlü değişimi:
+                # e → ä  (wezipe → wezipäni, tejribe → tejribäni)
+                son = govde[-1]
+                if son == "e":
+                    govde = govde[:-1] + "ä"
                 ek = "ny" if nit == "yogyn" else "ni"
             else:
                 ek = "y" if nit == "yogyn" else "i"
@@ -589,7 +604,11 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         if govde not in tablo:
             return f"HATA: '{kok}' fiili Anyk Häzirki zamanda çekimlenemez", ""
         sahis_eki = tablo[govde][sahis]
-        return govde + sahis_eki, f"{kok} + {sahis_eki if sahis_eki else '(0)'}"
+        base_form = govde + sahis_eki
+        if olumsuz:
+            # H2 olumsuzluk: analitik yapı — fiil + "yok"
+            return base_form + " yok", f"{kok} + {sahis_eki if sahis_eki else '(0)'} + yok"
+        return base_form, f"{kok} + {sahis_eki if sahis_eki else '(0)'}"
 
     # --- Diğer zamanlar ---
     olumsuz_eki = ("ma" if sesli_tipi == "yogyn" else "me") if olumsuz else ""
@@ -654,9 +673,7 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         else:
             # k/t yumuşaması
             govde = _fiil_yumusama(govde)
-            # e→ä dönüşümü
-            if govde and govde[-1] == 'e':
-                govde = govde[:-1] + 'ä'
+            # NOT: e→ä dönüşümü G2'de uygulanmaz (gel+er=geler)
             zaman_eki = "r" if unluylebiter else ("ar" if sesli_tipi == "yogyn" else "er")
         sahis_eki = _sahis_ekleri_genisletilmis(sesli_tipi, sahis)
 
@@ -779,11 +796,16 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
 
     elif zaman == "13":
         # Hal işlik (converb): kök + yp/ip/up/üp/p (neg: man/män)
+        # Fiil yumuşaması: et→ed, git→gid (ünlü başlayan ek öncesi)
         if olumsuz:
             olumsuz_eki = ""
             zaman_eki = "man" if sesli_tipi == "yogyn" else "män"
         else:
+            govde = _fiil_yumusama(govde)
             if unluylebiter:
+                # e→ä dönüşümü: gülle+p → gülläp, beze+p → bezäp
+                if govde.endswith("e"):
+                    govde = govde[:-1] + "ä"
                 zaman_eki = "p"
             else:
                 if _tek_heceli_dodak(govde):
@@ -796,11 +818,16 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
 
     elif zaman == "14":
         # Öten ortak işlik (past participle): kök + an/en (neg: madyk/medik)
+        # Fiil yumuşaması: et→ed+en=eden, git→gid+en=giden
         if olumsuz:
             olumsuz_eki = ""
             zaman_eki = "madyk" if sesli_tipi == "yogyn" else "medik"
         else:
+            govde = _fiil_yumusama(govde)
             if unluylebiter:
+                # e→ä dönüşümü: döre+n → dörän, güle+n → gülän
+                if govde.endswith("e"):
+                    govde = govde[:-1] + "ä"
                 zaman_eki = "n"
             else:
                 zaman_eki = "an" if sesli_tipi == "yogyn" else "en"
@@ -965,8 +992,7 @@ def _gosma_govde(govde, sesli_tipi, unluylebiter, alt_zaman, olumsuz):
             return govde + ek, [("Olumsuz+Zaman", ek)], False
         else:
             g = _fiil_yumusama(govde)
-            if g and g[-1] == 'e':
-                g = g[:-1] + 'ä'
+            # NOT: e→ä dönüşümü geniş zaman gövdesinde uygulanmaz
             ev = g[-1] in TUM_UNLULER if g else False
             ek = "r" if ev else ("ar" if sesli_tipi == "yogyn" else "er")
             return g + ek, [("Zaman", ek)], False

@@ -941,9 +941,15 @@ class MorphologicalAnalyzer:
         # -çI  → meslek eki (isim/fiilden isim)
         ("çy",  "noun", "Meslek eki", "-çI", False, None),
         ("çi",  "noun", "Meslek eki", "-çI", True,  None),
+        # -çIlIk → soyut isim eki (isimden isim, -çI genişletmesi)
+        ("çylyk", "noun", "Soyut isim eki", "-çIlIk", False, None),
+        ("çilik", "noun", "Soyut isim eki", "-çIlIk", True,  None),
         # -dAş → ortaklık eki (isimden isim)
         ("daş", "noun", "Ortaklık eki", "-dAş", False, "n"),
         ("deş", "noun", "Ortaklık eki", "-dAş", True,  "n"),
+        # -Iş → fiilden isim (barlaýyş, gidiş, seljeriş)
+        ("yş", "noun", "Fiilden isim", "-Iş", False, None),
+        ("iş", "noun", "Fiilden isim", "-Iş", True,  None),
     ]
 
     def parse_derivation(self, word: str) -> list[AnalysisResult]:
