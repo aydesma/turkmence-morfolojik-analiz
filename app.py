@@ -10,7 +10,7 @@ API:  POST /api/generate/noun, /api/generate/verb, /api/analyze,
 """
 import os, sys, re
 from flask import Flask, render_template, request, jsonify
-from morphology import analyze, analyze_verb
+from morphology import analyze_verb
 from parser import parse_kelime, parse_kelime_multi, parse_cumle
 
 # turkmen-fst modülünü import et (paradigma tablosu için)
@@ -112,7 +112,7 @@ def index():
                 selected_hal = h_code or "H1"
 
                 if root:
-                    results_list, is_dual = analyze(root, s_code, i_code, h_code)
+                    results_list, is_dual = _generator.analyze_noun(root, s_code, i_code, h_code)
                     if is_dual:
                         dual_results = results_list
                     # İlk sonucu her durumda result/final_word'e ata
@@ -138,7 +138,10 @@ def index():
                 selected_olumsuz = olumsuz
 
                 if root and zaman_kodu and sahis_kodu:
-                    parts, final_word = analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz, dereje_kodu or None)
+                    if dereje_kodu:
+                        parts, final_word = analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz, dereje_kodu)
+                    else:
+                        parts, final_word = _generator.analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz)
                     if parts and parts[0].get("type") == "Hata":
                         result = parts
                         final_word = ""
@@ -361,7 +364,7 @@ def api_generate_noun():
 
     plural = data.get("plural", False)
     possessive = data.get("possessive")
-    poss_type = data.get("poss_type", "tek")
+    poss_type = data.get("poss_type") or "tek"
     case = data.get("case")
 
     result = _generator.generate_noun(stem, plural=plural,

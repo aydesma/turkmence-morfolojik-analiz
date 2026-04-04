@@ -1337,11 +1337,6 @@ def analyze_verb(root, zaman_kodu, sahis_kodu, olumsuz=False, dereje_kodu=None):
             modified = _fiil_yumusama(root.lower())
             if modified != root.lower():
                 parts[-1] = {"text": modified, "type": "Kök", "code": "Kök"}
-            # e→ä dönüşümü
-            display_root = modified
-            if display_root and display_root[-1] == 'e':
-                display_root = display_root[:-1] + 'ä'
-                parts[-1] = {"text": display_root, "type": "Kök", "code": "Kök"}
             zaman_eki = "r" if unluylebiter else ("ar" if sesli_tipi == "yogyn" else "er")
         parts.append({"text": zaman_eki, "type": "Zaman", "code": zaman_kodu})
 
