@@ -598,12 +598,12 @@ class VerbGenerator:
             morphemes.append(("PERSON", person_suffix))
             base_form = govde + person_suffix
             if negative:
-                # H2 olumsuzluk: analitik yapı — fiil + "yok"
-                # otyrynym yok, durunym yok
-                morphemes.append(("NEGATION", "yok"))
+                # H2 olumsuzluk: analitik yapı — fiil + "ýok"
+                # otyryn ýok, durun ýok
+                morphemes.append(("NEGATION", "ýok"))
                 return GenerationResult(
-                    word=base_form + " yok",
-                    breakdown=f"{stem} + {person_suffix if person_suffix else '(0)'} + yok",
+                    word=base_form + " ýok",
+                    breakdown=f"{stem} + {person_suffix if person_suffix else '(0)'} + ýok",
                     stem=stem,
                     morphemes=morphemes,
                     is_valid=True

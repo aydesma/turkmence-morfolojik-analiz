@@ -1426,7 +1426,16 @@ class MorphologicalAnalyzer:
         all_results.extend(self.parse_predicative(word))
 
         # ── Kopula denemesi: kelime -dIr ile bitiyorsa, soyup altını analiz et ──
-        if copula_base and not all_results:
+        # Sözlükte işlik olmayan esasa dereje (ETT/EDL) çözümlemesi (ör. kitap+dyr
+        # "Caus") ýalňyşdyr; şeýle çözümleme bar bolsa kopula hem synanyşylýar
+        # we kopula çözümlemesi tapylsa, ýalňyş dereje çözümlemeleri aýrylýar.
+        def _spurious_voice(r):
+            return (r.word_type == "verb" and self.lexicon is not None
+                    and not self._is_verb(r.stem.lower())
+                    and any(s.get("code") in ("Caus", "Pass") for s in r.suffixes))
+        has_spurious = any(_spurious_voice(r) for r in all_results)
+        if copula_base and (not all_results or has_spurious):
+            copula_results = []
             sub = self.parse(copula_base)
             if sub.results and sub.results[0].word_type != "unknown":
                 for sr in sub.results:
@@ -1436,7 +1445,7 @@ class MorphologicalAnalyzer:
                         {"suffix": copula_suf, "type": "Bildiriş", "code": "-dIr"}
                     ]
                     new_breakdown = sr.breakdown + f" + {copula_suf} (Bildiriş)"
-                    all_results.append(AnalysisResult(
+                    copula_results.append(AnalysisResult(
                         success=True,
                         original=word,
                         stem=sr.stem,
@@ -1445,6 +1454,9 @@ class MorphologicalAnalyzer:
                         word_type=sr.word_type,
                         meaning=sr.meaning
                     ))
+            if copula_results:
+                all_results = [r for r in all_results
+                               if not _spurious_voice(r)] + copula_results
 
         # İsim–fiil arası çapraz tekilleştirme (ot/at gibi eş sesliler)
         seen_breakdowns = set()

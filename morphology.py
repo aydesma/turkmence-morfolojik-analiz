@@ -606,8 +606,8 @@ def fiil_cekimle(kok, zaman, sahis, olumsuz=False):
         sahis_eki = tablo[govde][sahis]
         base_form = govde + sahis_eki
         if olumsuz:
-            # H2 olumsuzluk: analitik yapı — fiil + "yok"
-            return base_form + " yok", f"{kok} + {sahis_eki if sahis_eki else '(0)'} + yok"
+            # H2 olumsuzluk: analitik yapı — fiil + "ýok"
+            return base_form + " ýok", f"{kok} + {sahis_eki if sahis_eki else '(0)'} + ýok"
         return base_form, f"{kok} + {sahis_eki if sahis_eki else '(0)'}"
 
     # --- Diğer zamanlar ---
